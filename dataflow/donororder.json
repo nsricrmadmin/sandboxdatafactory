@@ -22,11 +22,37 @@
 			"sinks": [],
 			"transformations": [
 				{
-					"name": "select1"
+					"name": "bankdetailcolumns"
+				},
+				{
+					"name": "joindonororderbankdetails"
 				}
 			],
 			"scriptLines": [
-				"source(allowSchemaDrift: false,",
+				"source(output(",
+				"          cog_donororderid as string,",
+				"          statecode as long,",
+				"          statecodename as string,",
+				"          statuscode as long,",
+				"          statuscodename as string,",
+				"          cog_donationtype as long,",
+				"          cog_donationtypename as string,",
+				"          cog_donororderfrom as long,",
+				"          cog_donororderfromname as string,",
+				"          cog_competition as long,",
+				"          cog_competitionname as string,",
+				"          cog_ticketamount as double,",
+				"          cog_donationamount as double,",
+				"          cog_account as string,",
+				"          cog_accountname as string,",
+				"          cog_contact as string,",
+				"          cog_contactname as string,",
+				"          cog_bankdetails as string,",
+				"          cog_bankdetailsname as string,",
+				"          cog_paymenttype as long,",
+				"          cog_paymenttypename as string",
+				"     ),",
+				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     ignoreNoFilesFound: false,",
 				"     entity: 'cog_donororder',",
@@ -133,7 +159,12 @@
 				"          organizationid",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> select1"
+				"     skipDuplicateMapOutputs: true) ~> bankdetailcolumns",
+				"donororder, bankdetailcolumns join(cog_bankdetails == cog_bankdetailsid,",
+				"     joinType:'inner',",
+				"     matchType:'exact',",
+				"     ignoreSpaces: false,",
+				"     broadcast: 'auto')~> joindonororderbankdetails"
 			]
 		}
 	}
