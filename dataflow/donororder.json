@@ -25,7 +25,10 @@
 					"name": "joindonororderbankdetails"
 				},
 				{
-					"name": "ConvertedorPaidMonthly"
+					"name": "accountcontact"
+				},
+				{
+					"name": "contacttransaction"
 				}
 			],
 			"scriptLines": [
@@ -94,7 +97,11 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonororderbankdetails",
 				"joindonororderbankdetails split((statuscodename==\"Converted\"||statuscodename==\"Paid Monthly\")&&cog_donororderfrom==181310000,",
-				"     disjoint: false) ~> ConvertedorPaidMonthly@(Convertedpaidmonthly)"
+				"     (statuscodename==\"Converted\"||statuscodename==\"Paid Monthly\")&&cog_donororderfrom==181310001,",
+				"     disjoint: false) ~> accountcontact@(contactconvertedpaidmonthly, accountconvertedpaidmonthly)",
+				"accountcontact@contactconvertedpaidmonthly aggregate(groupBy(cog_contactid,",
+				"          cog_bankdetails),",
+				"     cog_donationamount = sum()) ~> contacttransaction"
 			]
 		}
 	}
