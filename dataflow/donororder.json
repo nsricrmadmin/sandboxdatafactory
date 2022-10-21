@@ -100,8 +100,9 @@
 				"     (statuscodename==\"Converted\"||statuscodename==\"Paid Monthly\")&&cog_donororderfrom==181310001,",
 				"     disjoint: false) ~> accountcontact@(contactconvertedpaidmonthly, accountconvertedpaidmonthly)",
 				"accountcontact@contactconvertedpaidmonthly aggregate(groupBy(cog_contactid,",
+				"          cog_contactname,",
 				"          cog_bankdetails),",
-				"     cog_donationamount = sum()) ~> contacttransaction"
+				"     cog_donationamount = sum(cog_donationamount)) ~> contacttransaction"
 			]
 		}
 	}
