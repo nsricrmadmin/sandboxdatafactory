@@ -161,7 +161,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> bankdetailcolumns",
 				"donororder, bankdetailcolumns join(cog_bankdetails == cog_bankdetailsid,",
-				"     joinType:'inner',",
+				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonororderbankdetails"
