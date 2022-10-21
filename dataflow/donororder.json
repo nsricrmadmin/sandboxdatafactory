@@ -281,8 +281,8 @@
 				"     mapColumn(",
 				"          cog_contact,",
 				"          cog_paymentmethod,",
-				"          cog_transactionamount = cog_donationamount,",
 				"          cog_transactionfrom = cog_donororderfrom,",
+				"          cog_transactionamount = cog_donationamount,",
 				"          cog_transactiondate",
 				"     )) ~> sandbox"
 			]
