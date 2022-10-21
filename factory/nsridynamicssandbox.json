@@ -1,0 +1,9 @@
+{
+	"name": "nsridynamicssandbox",
+	"location": "westeurope",
+	"identity": {
+		"type": "SystemAssigned",
+		"principalId": "7cb960cf-7d9c-45a6-a5f2-89fa2de5022e",
+		"tenantId": "adc954c8-4e48-4dc2-8bfc-642191590ed1"
+	}
+}
