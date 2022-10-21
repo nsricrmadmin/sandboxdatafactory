@@ -23,6 +23,9 @@
 			"transformations": [
 				{
 					"name": "joindonororderbankdetails"
+				},
+				{
+					"name": "ConvertedorPaidMonthly"
 				}
 			],
 			"scriptLines": [
@@ -89,7 +92,9 @@
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
-				"     broadcast: 'auto')~> joindonororderbankdetails"
+				"     broadcast: 'auto')~> joindonororderbankdetails",
+				"joindonororderbankdetails split((statuscodename==\"Converted\"||statuscodename==\"Paid Monthly\")&&cog_donororderfrom==181310000,",
+				"     disjoint: false) ~> ConvertedorPaidMonthly@(Convertedpaidmonthly)"
 			]
 		}
 	}
