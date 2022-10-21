@@ -119,7 +119,7 @@
 				"          cog_competition),",
 				"     cog_donationamount = sum(cog_donationamount)) ~> contacttransaction",
 				"contacttransaction derive(cog_transactiondate = currentUTC()) ~> trxdate",
-				"trxdate sink(allowSchemaDrift: true,",
+				"trxdate sink(allowSchemaDrift: false,",
 				"     validateSchema: true,",
 				"     input(",
 				"          cog_account as string,",
@@ -279,7 +279,8 @@
 				"          cog_division = cog_competition,",
 				"          cog_transactionfrom = cog_donororderfrom,",
 				"          cog_contact,",
-				"          cog_transactionamount = cog_donationamount",
+				"          cog_transactionamount = cog_donationamount,",
+				"          cog_transactiondate",
 				"     )) ~> sandbox"
 			]
 		}
