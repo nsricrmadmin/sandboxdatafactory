@@ -117,7 +117,8 @@
 				"          cog_contactname,",
 				"          cog_bankdetails,",
 				"          cog_paymentmethod,",
-				"          cog_donororderfrom),",
+				"          cog_donororderfrom,",
+				"          cog_competition),",
 				"     cog_donationamount = sum(cog_donationamount)) ~> contacttransaction",
 				"contacttransaction derive(cog_transactiondate = currentUTC()) ~> trxdate",
 				"trxdate sink(allowSchemaDrift: true,",
@@ -283,7 +284,8 @@
 				"          cog_paymentmethod,",
 				"          cog_transactionfrom = cog_donororderfrom,",
 				"          cog_transactionamount = cog_donationamount,",
-				"          cog_transactiondate",
+				"          cog_transactiondate,",
+				"          cog_division = cog_competition",
 				"     )) ~> sandbox"
 			]
 		}

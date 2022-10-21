@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "Create Transactions",
 	"properties": {
 		"activities": [
 			{
