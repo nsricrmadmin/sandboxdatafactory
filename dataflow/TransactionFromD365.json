@@ -305,8 +305,6 @@
 				"     mapColumn(",
 				"          cog_contact,",
 				"          cog_paymentmethod,",
-				"          cog_bankdetails,",
-				"          contactkey,",
 				"          cog_transactionamount,",
 				"          cog_division = cog_competition",
 				"     )) ~> SandboxUpdate"
