@@ -49,6 +49,9 @@
 				},
 				{
 					"name": "UniqueTransaction"
+				},
+				{
+					"name": "FilterDonorOrders"
 				}
 			],
 			"scriptLines": [
@@ -265,7 +268,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> CleanupBankDetailColumns",
-				"donororder select(mapColumn(",
+				"FilterDonorOrders select(mapColumn(",
 				"          cog_donororderid,",
 				"          statecode,",
 				"          statuscode,",
@@ -292,6 +295,7 @@
 				"          cog_competition,",
 				"          contactkey),",
 				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
+				"donororder filter(statecode==0&&(statuscode==181310001||statuscode==2)) ~> FilterDonorOrders",
 				"UniqueTransaction sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     store: 'dynamics',",
