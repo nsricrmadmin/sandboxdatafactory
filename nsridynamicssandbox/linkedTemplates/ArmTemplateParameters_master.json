@@ -5,17 +5,17 @@
 		"factoryName": {
 			"value": "nsridynamicssandbox"
 		},
-		"sandboxdatalake_accountKey": {
-			"value": ""
-		},
 		"nsridynamicssandox_password": {
 			"value": ""
 		},
-		"sandboxdatalake_properties_typeProperties_url": {
-			"value": "https://nsridynamicssandbox.dfs.core.windows.net/"
+		"sandboxdatalake_accountKey": {
+			"value": ""
 		},
 		"nsridynamicssandox_properties_typeProperties_username": {
 			"value": "crmadmin@searescue.org.za"
+		},
+		"sandboxdatalake_properties_typeProperties_url": {
+			"value": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		},
 		"containerUri": {
 			"value": ""

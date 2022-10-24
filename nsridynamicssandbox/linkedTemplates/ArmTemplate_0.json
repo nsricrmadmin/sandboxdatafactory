@@ -7,44 +7,27 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "nsridynamicssandbox"
 		},
-		"sandboxdatalake_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'sandboxdatalake'"
-		},
 		"nsridynamicssandox_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'nsridynamicssandox'"
 		},
-		"sandboxdatalake_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
+		"sandboxdatalake_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'sandboxdatalake'"
 		},
 		"nsridynamicssandox_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "crmadmin@searescue.org.za"
+		},
+		"sandboxdatalake_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		}
 	},
 	"variables": {
 		"factoryId": "[concat('Microsoft.DataFactory/factories/', parameters('factoryName'))]"
 	},
 	"resources": [
-		{
-			"name": "[concat(parameters('factoryName'), '/sandboxdatalake')]",
-			"type": "Microsoft.DataFactory/factories/linkedServices",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"annotations": [],
-				"type": "AzureBlobFS",
-				"typeProperties": {
-					"url": "[parameters('sandboxdatalake_properties_typeProperties_url')]",
-					"accountKey": {
-						"type": "SecureString",
-						"value": "[parameters('sandboxdatalake_accountKey')]"
-					}
-				}
-			},
-			"dependsOn": []
-		},
 		{
 			"name": "[concat(parameters('factoryName'), '/nsridynamicssandox')]",
 			"type": "Microsoft.DataFactory/factories/linkedServices",
@@ -66,7 +49,346 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/donororder')]",
+			"name": "[concat(parameters('factoryName'), '/sandboxdatalake')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('sandboxdatalake_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('sandboxdatalake_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TransactionFromD365')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"linkedService": {
+								"referenceName": "nsridynamicssandox",
+								"type": "LinkedServiceReference"
+							},
+							"name": "donororder"
+						},
+						{
+							"linkedService": {
+								"referenceName": "sandboxdatalake",
+								"type": "LinkedServiceReference"
+							},
+							"name": "bankdetails"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "nsridynamicssandox",
+								"type": "LinkedServiceReference"
+							},
+							"name": "SandboxUpdate"
+						}
+					],
+					"transformations": [
+						{
+							"name": "joindonororderbankdetails"
+						},
+						{
+							"name": "accountcontact"
+						},
+						{
+							"name": "CleanupBankDetailColumns"
+						},
+						{
+							"name": "CleanupdonorOrder"
+						},
+						{
+							"name": "derivedColumnTrxDateAmount"
+						},
+						{
+							"name": "contactkey"
+						},
+						{
+							"name": "UniqueTransaction"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          cog_donorleadname as string,",
+						"          cof_datecancelled as timestamp,",
+						"          cog_donationreason as integer,",
+						"          cog_paymentmethodname as string,",
+						"          cog_ticketamount_base as decimal(38,0),",
+						"          cog_npodocumentafrikaanstext as string,",
+						"          cog_donotcreatenpodocumentname as string,",
+						"          cog_paidamount as decimal(38,0),",
+						"          cog_sendpaymentdetails as boolean,",
+						"          cog_assignticketnumbers as boolean,",
+						"          cog_noofdonortickets_state as integer,",
+						"          cog_shutoffdate as timestamp,",
+						"          cog_donationamount_base as decimal(38,0),",
+						"          cog_sendpaymentdetailsdate as timestamp,",
+						"          cog_npodoc_sendmethodname as string,",
+						"          cog_paymenttype as integer,",
+						"          cog_paidamount_base as decimal(38,0),",
+						"          cog_delivery_receipt as boolean,",
+						"          createdbyname as string,",
+						"          cog_administered as boolean,",
+						"          cog_sendwelcomepackname as string,",
+						"          modifiedbyname as string,",
+						"          cog_npodoc_tax_trans as boolean,",
+						"          createdonbehalfbyyominame as string,",
+						"          cog_sendtickets as boolean,",
+						"          statuscodename as string,",
+						"          cog_datasource as integer,",
+						"          statuscode as integer,",
+						"          cog_npodoc_receiptname as string,",
+						"          cog_sendticketsname as string,",
+						"          createdonbehalfbyname as string,",
+						"          cog_administrationcontactname as string,",
+						"          cog_contactname as string,",
+						"          cog_donationreasonname as string,",
+						"          cog_nameonvessel as string,",
+						"          cog_name as string,",
+						"          cog_npodoc_sendmethod as integer,",
+						"          cog_noofdonortickets_date as timestamp,",
+						"          cog_leadtypename as string,",
+						"          cog_npodocumentenglishtext as string,",
+						"          cog_cancellreasonname as string,",
+						"          exchangerate as decimal(38,10),",
+						"          cog_contactyominame as string,",
+						"          cog_administrationaccountname as string,",
+						"          cog_followupdate as timestamp,",
+						"          versionnumber as long,",
+						"          cog_paymentmade as boolean,",
+						"          cog_administrationaccountyominame as string,",
+						"          cog_totalticketamount_state as integer,",
+						"          cog_communicationlanguagename as string,",
+						"          cog_paymenttypename as string,",
+						"          cog_createticketrows as boolean,",
+						"          cog_stationname as string,",
+						"          cog_delivery_tax_transname as string,",
+						"          cog_paymentmethod as integer,",
+						"          cog_sendpaymentdetailsname as string,",
+						"          modifiedonbehalfbyname as string,",
+						"          cog_delivery_equity as boolean,",
+						"          cog_sourcename as string,",
+						"          importsequencenumber as integer,",
+						"          createdon as timestamp,",
+						"          cog_resendname as string,",
+						"          overriddencreatedon as timestamp,",
+						"          cog_npodoc_equityname as string,",
+						"          cog_bankreference as string,",
+						"          utcconversiontimezonecode as integer,",
+						"          cog_upsellname as string,",
+						"          cog_donororderid as string,",
+						"          cog_competition as integer,",
+						"          cog_totalticketamount_date as timestamp,",
+						"          cog_balanceamount as decimal(38,2),",
+						"          cog_balanceamount_base as decimal(38,2),",
+						"          cog_transactionname as string,",
+						"          cog_donationamount as decimal(38,0),",
+						"          cog_completedonororder as boolean,",
+						"          cog_npoadministrationafrikaanstext as string,",
+						"          cog_npodoc_tax_annuallyname as string,",
+						"          cog_source as integer,",
+						"          cog_numberoftickets as integer,",
+						"          cog_administrationcontactyominame as string,",
+						"          cog_accessdb_lnglogno as string,",
+						"          cog_ticketamount as decimal(38,0),",
+						"          cog_donationtypename as string,",
+						"          statecode as integer,",
+						"          cog_datasourcename as string,",
+						"          owneridyominame as string,",
+						"          cog_donationtype as integer,",
+						"          statecodename as string,",
+						"          cog_donororderfrom as integer,",
+						"          cog_accountyominame as string,",
+						"          cog_delivery_receiptname as string,",
+						"          createdbyyominame as string,",
+						"          transactioncurrencyidname as string,",
+						"          cog_npodoc_tax_transname as string,",
+						"          modifiedon as timestamp,",
+						"          cog_cancellreason as integer,",
+						"          cog_donotcreatenpodocument as boolean,",
+						"          cog_dateconverted as timestamp,",
+						"          cog_paymentmadename as string,",
+						"          cog_npodoc_tax_annually as boolean,",
+						"          cog_delivery_tax_trans as boolean,",
+						"          cog_sendwelcomepack as boolean,",
+						"          cog_delivery_equityname as string,",
+						"          cog_bankdetailsname as string,",
+						"          cog_leadtype as integer,",
+						"          modifiedbyyominame as string,",
+						"          cog_searescuecampaignname as string,",
+						"          modifiedonbehalfbyyominame as string,",
+						"          cog_datebanked as timestamp,",
+						"          cog_npodoc_equity as boolean,",
+						"          cog_resend as boolean,",
+						"          cog_totalticketamount_base as decimal(38,0),",
+						"          cog_completedonorordername as string,",
+						"          cog_createticketrowsname as string,",
+						"          cog_donororderfromname as string,",
+						"          cog_npodoc_receipt as boolean,",
+						"          cog_npoadministrationenglishtext as string,",
+						"          owneridname as string,",
+						"          cog_datepaid as timestamp,",
+						"          cog_administeredname as string,",
+						"          cog_communicationlanguage as integer,",
+						"          owningbusinessunitname as string,",
+						"          cog_noofdonortickets as integer,",
+						"          cog_searescuecampaign as integer,",
+						"          cog_accountname as string,",
+						"          cog_dateassigned as timestamp,",
+						"          cog_accessdb_strcompanyname as string,",
+						"          owneridtype as string,",
+						"          cog_totalticketamount as decimal(38,0),",
+						"          cog_competitionname as string,",
+						"          cog_sendwelcomepackdate as timestamp,",
+						"          cog_assignticketnumbersname as string,",
+						"          cog_upsell as boolean,",
+						"          timezoneruleversionnumber as integer,",
+						"          cog_description as string,",
+						"          cog_campaignname as string,",
+						"          cog_donorlead as string,",
+						"          cog_station as string,",
+						"          createdonbehalfby as string,",
+						"          cog_administrationcontact as string,",
+						"          owninguser as string,",
+						"          cog_bankdetails as string,",
+						"          cog_contact as string,",
+						"          modifiedby as string,",
+						"          transactioncurrencyid as string,",
+						"          cog_administrationaccount as string,",
+						"          modifiedonbehalfby as string,",
+						"          cog_transaction as string,",
+						"          ownerid as string,",
+						"          cog_campaign as string,",
+						"          {@odata.etag} as string,",
+						"          createdby as string,",
+						"          owningbusinessunit as string,",
+						"          cog_account as string,",
+						"          owningteam as string",
+						"     ),",
+						"     allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     store: 'dynamics',",
+						"     format: 'dynamicsformat',",
+						"     entity: 'cog_donororder',",
+						"     timeout: 30,",
+						"     manifestType: 'model') ~> donororder",
+						"source(output(",
+						"          cog_bankdetailsid as string,",
+						"          statecode as long,",
+						"          statecodename as string,",
+						"          cog_accountnumber as string,",
+						"          cog_accountid as string,",
+						"          cog_accounttype as long,",
+						"          cog_accounttypename as string,",
+						"          cog_bank as string,",
+						"          cog_branchcode as string,",
+						"          cog_contactid as string,",
+						"          cog_cvc as string,",
+						"          cog_expireydate as timestamp,",
+						"          cog_accountidname as string,",
+						"          cog_bankname as string,",
+						"          cog_contactidname as string,",
+						"          cog_creditcardtype as long,",
+						"          cog_creditcardtypename as string,",
+						"          cog_accountholder as string",
+						"     ),",
+						"     allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     ignoreNoFilesFound: false,",
+						"     entity: 'cog_bankdetails',",
+						"     format: 'cdm',",
+						"     manifestType: 'model',",
+						"     folderPath: 'environments/nsridev/HOF Donor Orders',",
+						"     fileSystem: 'power-platform-dataflows') ~> bankdetails",
+						"CleanupdonorOrder, CleanupBankDetailColumns join(cog_bankdetails == cog_bankdetailsid,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindonororderbankdetails",
+						"derivedColumnTrxDateAmount split((statuscode==181310001||statuscode==2)&&cog_donororderfrom==181310000&&(cog_paymentmethod==181310003||cog_paymentmethod==181310001)&&cog_donationtype==181310001,",
+						"     (statuscode==181310001||statuscode==2)&&cog_donororderfrom==181310001&&(cog_paymentmethod==181310003||cog_paymentmethod==181310001)&&cog_donationtype==181310001,",
+						"     disjoint: false) ~> accountcontact@(contactconvertedpaidmonthly, accountconvertedpaidmonthly)",
+						"bankdetails select(mapColumn(",
+						"          cog_bankdetailsid,",
+						"          cog_accountnumber,",
+						"          cog_accounttype,",
+						"          cog_bank,",
+						"          cog_branchcode,",
+						"          cog_cvc,",
+						"          cog_expireydate,",
+						"          cog_creditcardtype,",
+						"          cog_accountholder",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> CleanupBankDetailColumns",
+						"donororder select(mapColumn(",
+						"          cog_donororderid,",
+						"          statecode,",
+						"          statuscode,",
+						"          cog_donationtype,",
+						"          cog_donororderfrom,",
+						"          cog_competition,",
+						"          cog_ticketamount,",
+						"          cog_donationamount,",
+						"          cog_account,",
+						"          cog_contact,",
+						"          cog_bankdetails,",
+						"          cog_paymenttype,",
+						"          cog_paymentmethod",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> CleanupdonorOrder",
+						"joindonororderbankdetails derive(cog_transactiondate = currentUTC(),",
+						"          cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount)) ~> derivedColumnTrxDateAmount",
+						"accountcontact@contactconvertedpaidmonthly derive(contactkey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> contactkey",
+						"contactkey aggregate(groupBy(cog_contact,",
+						"          cog_donororderfrom,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_competition,",
+						"          contactkey),",
+						"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
+						"UniqueTransaction sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     store: 'dynamics',",
+						"     format: 'dynamicsformat',",
+						"     entity: 'cog_donororder',",
+						"     timeout: 30,",
+						"     deletable: false,",
+						"     insertable: true,",
+						"     updateable: false,",
+						"     upsertable: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_transactionamount,",
+						"          cog_division = cog_competition",
+						"     )) ~> SandboxUpdate"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/nsridynamicssandox')]",
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TransactionfromLakeFile')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -94,7 +416,11 @@
 								"referenceName": "nsridynamicssandox",
 								"type": "LinkedServiceReference"
 							},
-							"name": "sandbox"
+							"schemaLinkedService": {
+								"referenceName": "sandboxdatalake",
+								"type": "LinkedServiceReference"
+							},
+							"name": "sink1"
 						}
 					],
 					"transformations": [
@@ -105,10 +431,19 @@
 							"name": "accountcontact"
 						},
 						{
-							"name": "contacttransaction"
+							"name": "CleanupBankDetailColumns"
 						},
 						{
-							"name": "trxdate"
+							"name": "CleanupdonorOrder"
+						},
+						{
+							"name": "derivedColumnTrxDateAmount"
+						},
+						{
+							"name": "contactkey"
+						},
+						{
+							"name": "UniqueTransaction"
 						}
 					],
 					"scriptLines": [
@@ -139,7 +474,6 @@
 						"     ),",
 						"     allowSchemaDrift: false,",
 						"     validateSchema: false,",
-						"     limit: 100,",
 						"     ignoreNoFilesFound: false,",
 						"     entity: 'cog_donororder',",
 						"     format: 'cdm',",
@@ -174,192 +508,173 @@
 						"     manifestType: 'model',",
 						"     folderPath: 'environments/nsridev/HOF Donor Orders',",
 						"     fileSystem: 'power-platform-dataflows') ~> bankdetails",
-						"donororder, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
+						"CleanupdonorOrder, CleanupBankDetailColumns join(cog_bankdetails == cog_bankdetailsid,",
 						"     joinType:'left',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
 						"     broadcast: 'auto')~> joindonororderbankdetails",
-						"joindonororderbankdetails split((statuscodename==\"Converted\"||statuscodename==\"Paid Monthly\")&&cog_donororderfrom==181310000&&(cog_paymentmethodname==\"Debit Order\"||cog_paymentmethodname==\"Credit Card\"),",
-						"     (statuscodename==\"Converted\"||statuscodename==\"Paid Monthly\")&&cog_donororderfrom==181310001,",
+						"derivedColumnTrxDateAmount split((statuscode==181310001||statuscode==2)&&cog_donororderfrom==181310000&&(cog_paymentmethod==181310003||cog_paymentmethod==181310001)&&cog_donationtype==181310001,",
+						"     (statuscode==181310001||statuscode==2)&&cog_donororderfrom==181310001&&(cog_paymentmethod==181310003||cog_paymentmethod==181310001)&&cog_donationtype==181310001,",
 						"     disjoint: false) ~> accountcontact@(contactconvertedpaidmonthly, accountconvertedpaidmonthly)",
-						"accountcontact@contactconvertedpaidmonthly aggregate(groupBy(cog_contact,",
-						"          cog_contactname,",
-						"          cog_bankdetails,",
-						"          cog_paymentmethod,",
-						"          cog_donororderfrom),",
-						"     cog_donationamount = sum(cog_donationamount)) ~> contacttransaction",
-						"contacttransaction derive(cog_transactiondate = currentUTC()) ~> trxdate",
-						"trxdate sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          cog_account as string,",
-						"          cog_expireydate as timestamp,",
-						"          versionnumber as long,",
-						"          cog_searescuecampaignname as string,",
-						"          createdon as timestamp,",
-						"          cog_accountyominame as string,",
-						"          cog_nameonvessel as string,",
-						"          cog_branchcode as string,",
-						"          statuscodename as string,",
-						"          cog_bankname as string,",
-						"          cog_paymenttype as integer,",
-						"          cog_transactiondate as timestamp,",
-						"          modifiedbyyominame as string,",
-						"          cog_transactionamountpaid as decimal(38,2),",
-						"          owneridtype as string,",
-						"          cog_npodoc_sendmethodname as string,",
-						"          cog_transactionamount_base as decimal(38,2),",
-						"          cog_accountname as string,",
-						"          modifiedbyname as string,",
-						"          cog_delivery_receiptname as string,",
-						"          cog_cancelledtransactionamount_base as decimal(38,2),",
-						"          cog_delivery_receipt as boolean,",
-						"          cog_paymentmethodname as string,",
-						"          cog_cvc as string,",
-						"          owneridname as string,",
-						"          cog_administrationaccount as string,",
-						"          overriddencreatedon as timestamp,",
-						"          cog_npodoc_tax_transname as string,",
-						"          cog_npodoc_equityname as string,",
-						"          cog_delivery_equityname as string,",
-						"          cog_npoadministrationenglishtext as string,",
-						"          createdonbehalfbyyominame as string,",
-						"          cog_transactionclosedate as timestamp,",
-						"          modifiedonbehalfby as string,",
-						"          exchangerate as decimal(38,10),",
-						"          cog_transactionfromname as string,",
-						"          cog_administrationcontactname as string,",
-						"          cog_accountnumber as string,",
-						"          cog_transactionsource as integer,",
-						"          cog_npoadministrationafrikaanstext as string,",
-						"          cog_searescuecampaign as integer,",
-						"          cog_communicationlanguagename as string,",
-						"          cog_delivery_tax_transname as string,",
-						"          cog_stationid as string,",
-						"          cog_transactionfrom as integer,",
-						"          cog_batchno as string,",
-						"          cog_quantity as integer,",
-						"          statecode as integer,",
-						"          timezoneruleversionnumber as integer,",
-						"          cog_transactiontype as integer,",
-						"          cog_transactionsourcename as string,",
-						"          cog_paymenttypename as string,",
-						"          cog_administrationaccountname as string,",
-						"          cog_bank as string,",
-						"          cog_cancelledtransactionamount as decimal(38,2),",
-						"          cog_cancelledtransaction as string,",
-						"          cog_npodoc_tax_annuallyname as string,",
-						"          owninguser as string,",
-						"          statuscode as integer,",
-						"          cog_cancelledtransactionamountnegative as decimal(38,2),",
-						"          cog_cancelledtransactionamountnegative_base as decimal(38,2),",
-						"          cog_npodoc_receipt as boolean,",
-						"          cog_donotcreatenpodocumentname as string,",
-						"          cog_oldtaxcertificateyear as string,",
-						"          cog_transactionno as string,",
-						"          createdonbehalfbyname as string,",
-						"          cog_delivery_tax_annually as boolean,",
-						"          createdonbehalfby as string,",
-						"          createdby as string,",
-						"          cog_delivery_tax_trans as boolean,",
-						"          utcconversiontimezonecode as integer,",
-						"          cog_accounttypename as string,",
-						"          cog_transactionfailurestatus as integer,",
-						"          owningteam as string,",
-						"          modifiedon as timestamp,",
-						"          importsequencenumber as integer,",
-						"          owneridyominame as string,",
-						"          cog_contact as string,",
-						"          cog_administeredname as string,",
-						"          cog_oldtaxcertificatenumber as string,",
-						"          cog_delivery_equity as boolean,",
-						"          cog_oldreceiptnumber as string,",
-						"          ownerid as string,",
-						"          cog_divisionname as string,",
-						"          cog_division as integer,",
-						"          cog_transactiontypename as string,",
-						"          cog_administrationcontact as string,",
-						"          createdbyname as string,",
-						"          cog_delivery_tax_annuallyname as string,",
-						"          cog_cancelledtransactionname as string,",
-						"          cog_stationidname as string,",
-						"          cog_accountholder as string,",
-						"          cog_contactyominame as string,",
-						"          cog_accounttype as integer,",
-						"          cog_npodoc_sendmethod as integer,",
-						"          cog_fiscalyear as integer,",
-						"          cog_nonprofitdocumentreference as string,",
-						"          cog_transactionid as string,",
-						"          cog_communicationlanguage as integer,",
-						"          cog_campaign as string,",
-						"          cog_donotcreatenpodocument as boolean,",
-						"          transactioncurrencyid as string,",
-						"          cog_administrationcontactyominame as string,",
-						"          cog_npodoc_tax_annually as boolean,",
-						"          modifiedby as string,",
-						"          cog_campaignname as string,",
-						"          cog_fiscalyearname as string,",
-						"          cog_nonprofitdocumentreferencename as string,",
-						"          createdbyyominame as string,",
-						"          cog_transactionamountpaid_base as decimal(38,2),",
-						"          transactioncurrencyidname as string,",
-						"          cog_reversedreason as string,",
-						"          cog_windirectinglogtrans as string,",
-						"          cog_transactionamount as decimal(38,2),",
-						"          owningbusinessunitname as string,",
-						"          cog_transactiondescription as string,",
-						"          cog_windirectddid as string,",
-						"          cog_paymentmethod as integer,",
-						"          cog_npodoc_tax_trans as boolean,",
-						"          cog_contactname as string,",
-						"          cog_bankreference as string,",
-						"          modifiedonbehalfbyname as string,",
-						"          cog_npodoc_equity as boolean,",
-						"          cog_transactiondatepaid as timestamp,",
-						"          cog_npodocumentafrikaanstext as string,",
-						"          modifiedonbehalfbyyominame as string,",
-						"          statecodename as string,",
-						"          cog_administered as boolean,",
-						"          cog_transactionfailurestatusname as string,",
-						"          cog_administrationaccountyominame as string,",
-						"          cog_npodoc_receiptname as string,",
-						"          cog_npodocumentenglishtext as string,",
-						"          cog_donationtypename as string,",
-						"          owningbusinessunit as string,",
-						"          cog_donationtype as integer,",
-						"          {cog_account@cog_no@cog_erpvendornumber} as string,",
-						"          {cog_administrationaccount@cog_no@cog_erpvendornumber} as string,",
-						"          {modifiedonbehalfby@aadobjectid@azureactivedirectoryobjectid} as string,",
-						"          {owninguser@aadobjectid@azureactivedirectoryobjectid} as string,",
-						"          {createdonbehalfby@aadobjectid@azureactivedirectoryobjectid} as string,",
-						"          {createdby@aadobjectid@azureactivedirectoryobjectid} as string,",
-						"          {owningteam@aadobjectid_membershiptype@azureactivedirectoryobjectid} as string,",
-						"          {owningteam@aadobjectid_membershiptype@membershiptype} as integer,",
-						"          {modifiedby@aadobjectid@azureactivedirectoryobjectid} as string",
+						"bankdetails select(mapColumn(",
+						"          cog_bankdetailsid,",
+						"          cog_accountnumber,",
+						"          cog_accounttype,",
+						"          cog_bank,",
+						"          cog_branchcode,",
+						"          cog_cvc,",
+						"          cog_expireydate,",
+						"          cog_creditcardtype,",
+						"          cog_accountholder",
 						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> CleanupBankDetailColumns",
+						"donororder select(mapColumn(",
+						"          cog_donororderid,",
+						"          statecode,",
+						"          statuscode,",
+						"          cog_donationtype,",
+						"          cog_donororderfrom,",
+						"          cog_competition,",
+						"          cog_ticketamount,",
+						"          cog_donationamount,",
+						"          cog_account,",
+						"          cog_contact,",
+						"          cog_bankdetails,",
+						"          cog_paymenttype,",
+						"          cog_paymentmethod",
+						"     ),",
+						"     skipDuplicateMapInputs: false,",
+						"     skipDuplicateMapOutputs: false) ~> CleanupdonorOrder",
+						"joindonororderbankdetails derive(cog_transactiondate = currentUTC(),",
+						"          cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount)) ~> derivedColumnTrxDateAmount",
+						"accountcontact@contactconvertedpaidmonthly derive(contactkey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> contactkey",
+						"contactkey aggregate(groupBy(cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          contactkey,",
+						"          cog_donororderfrom),",
+						"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
+						"UniqueTransaction sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
 						"     store: 'dynamics',",
 						"     format: 'dynamicsformat',",
-						"     entity: 'cog_transaction',",
+						"     entity: 'cog_donororder',",
 						"     timeout: 30,",
 						"     deletable: false,",
 						"     insertable: true,",
 						"     updateable: false,",
 						"     upsertable: false,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
 						"          cog_contact,",
 						"          cog_paymentmethod,",
-						"          cog_transactionfrom = cog_donororderfrom,",
-						"          cog_transactionamount = cog_donationamount,",
-						"          cog_transactiondate",
-						"     )) ~> sandbox"
+						"          cog_bankdetails,",
+						"          contactkey,",
+						"          cog_transactionamount,",
+						"          cog_donororderfrom",
+						"     )) ~> sink1"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]",
 				"[concat(variables('factoryId'), '/linkedServices/nsridynamicssandox')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Create Transaction D365')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "D365 Donor Order to Transaction",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "TransactionFromD365",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"bankdetails": {},
+									"SandboxUpdate": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/TransactionFromD365')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Create Transaction Lake')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "TransactionfromLakeFile",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"bankdetails": {},
+									"sink1": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/TransactionfromLakeFile')]"
 			]
 		}
 	]
