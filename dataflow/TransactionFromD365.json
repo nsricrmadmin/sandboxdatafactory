@@ -25,7 +25,11 @@
 						"referenceName": "nsridynamicssandox",
 						"type": "LinkedServiceReference"
 					},
-					"name": "SandboxUpdate"
+					"name": "SandboxUpdate",
+					"rejectedDataLinkedService": {
+						"referenceName": "sandboxdatalake",
+						"type": "LinkedServiceReference"
+					}
 				}
 			],
 			"transformations": [
@@ -312,7 +316,8 @@
 				"          cog_contact,",
 				"          cog_paymentmethod,",
 				"          cog_transactionamount,",
-				"          cog_division = cog_competition",
+				"          cog_division = cog_competition,",
+				"          cog_donororderfrom",
 				"     )) ~> SandboxUpdate"
 			]
 		}
