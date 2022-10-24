@@ -1,5 +1,5 @@
 {
-	"name": "Create Transactions",
+	"name": "Create Transaction Lake",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "donororder",
+						"referenceName": "TransactionfromLakeFile",
 						"type": "DataFlowReference"
 					},
 					"compute": {

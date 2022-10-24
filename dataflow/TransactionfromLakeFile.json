@@ -1,5 +1,5 @@
 {
-	"name": "donororder",
+	"name": "TransactionfromLakeFile",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -71,7 +71,6 @@
 				"     ),",
 				"     allowSchemaDrift: false,",
 				"     validateSchema: false,",
-				"     limit: 100,",
 				"     ignoreNoFilesFound: false,",
 				"     entity: 'cog_donororder',",
 				"     format: 'cdm',",
