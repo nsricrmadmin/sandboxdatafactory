@@ -149,7 +149,9 @@
 				"accountcontact@contactconvertedpaidmonthly derive(contactkey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> contactkey",
 				"contactkey aggregate(groupBy(cog_contact,",
 				"          cog_paymentmethod,",
-				"          cog_bankdetails)) ~> UniqueTransaction"
+				"          cog_bankdetails,",
+				"          contactkey),",
+				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction"
 			]
 		}
 	}
