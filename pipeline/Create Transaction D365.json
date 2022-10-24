@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "D365 Donor Order to Transaction",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
