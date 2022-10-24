@@ -312,6 +312,8 @@
 				"     upsertable: false,",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     outputAssertFailedRows: true,",
+				"     assertFailure_fileSystem: 'error-output-adf',",
 				"     mapColumn(",
 				"          cog_contact,",
 				"          cog_paymentmethod,",
