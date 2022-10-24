@@ -19,7 +19,19 @@
 					"name": "bankdetails"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "nsridynamicssandox",
+						"type": "LinkedServiceReference"
+					},
+					"schemaLinkedService": {
+						"referenceName": "sandboxdatalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "joindonororderbankdetails"
@@ -149,8 +161,27 @@
 				"contactkey aggregate(groupBy(cog_contact,",
 				"          cog_paymentmethod,",
 				"          cog_bankdetails,",
-				"          contactkey),",
-				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction"
+				"          contactkey,",
+				"          cog_donororderfrom),",
+				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
+				"UniqueTransaction sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     store: 'dynamics',",
+				"     format: 'dynamicsformat',",
+				"     entity: 'cog_donororder',",
+				"     timeout: 30,",
+				"     deletable: false,",
+				"     insertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
+				"     mapColumn(",
+				"          cog_contact,",
+				"          cog_paymentmethod,",
+				"          cog_bankdetails,",
+				"          contactkey,",
+				"          cog_transactionamount,",
+				"          cog_donororderfrom",
+				"     )) ~> sink1"
 			]
 		}
 	}
