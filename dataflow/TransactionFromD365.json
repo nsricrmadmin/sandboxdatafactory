@@ -49,7 +49,7 @@
 					"name": "derivedColumnTrxDateAmount"
 				},
 				{
-					"name": "contactkey"
+					"name": "TransactionRollup"
 				},
 				{
 					"name": "UniqueTransaction"
@@ -319,15 +319,14 @@
 				"     skipDuplicateMapOutputs: false) ~> CleanupdonorOrder",
 				"joindonororderbankdetails derive(cog_transactiondate = currentUTC(),",
 				"          cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount)) ~> derivedColumnTrxDateAmount",
-				"accountcontact@contactconvertedpaidmonthly derive(contactkey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> contactkey",
-				"contactkey aggregate(groupBy(cog_contact,",
+				"accountcontact@contactconvertedpaidmonthly derive(TransactionAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> TransactionRollup",
+				"TransactionRollup aggregate(groupBy(cog_contact,",
 				"          cog_donororderfrom,",
 				"          cog_paymentmethod,",
 				"          cog_bankdetails,",
-				"          cog_competition,",
-				"          contactkey),",
+				"          TransactionAggregateKey),",
 				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
-				"donororder filter(statecode==0&&(statuscode==181310001||statuscode==2)&&cog_donororderfrom==181310000) ~> FilterDonorOrders",
+				"donororder filter(statecode==0&&(statuscode==181310001||statuscode==2)&&cog_donororderfrom==181310000&&cog_competition==181310000) ~> FilterDonorOrders",
 				"UniqueTransaction sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     input(",
