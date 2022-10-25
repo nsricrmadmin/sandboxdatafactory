@@ -321,6 +321,7 @@
 				"          cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount)) ~> derivedColumnTrxDateAmount",
 				"accountcontact@contactconvertedpaidmonthly derive(TransactionAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> TransactionRollup",
 				"TransactionRollup aggregate(groupBy(cog_contact,",
+				"          cog_transactiondate,",
 				"          cog_donororderfrom,",
 				"          cog_paymentmethod,",
 				"          cog_bankdetails,",
