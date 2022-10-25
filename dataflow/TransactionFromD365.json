@@ -488,7 +488,6 @@
 				"          cog_transactionfrom = cog_donororderfrom,",
 				"          cog_paymentmethod,",
 				"          cog_transactionamount,",
-				"          cog_division = cog_competition,",
 				"          cog_contact,",
 				"          cog_transactionaggregatekey = TransactionAggregateKey",
 				"     )) ~> SandboxUpdate"
