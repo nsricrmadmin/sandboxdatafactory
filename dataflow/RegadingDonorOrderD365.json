@@ -39,13 +39,16 @@
 					"name": "FilterDonorOrders"
 				},
 				{
-					"name": "TransactionAggregateKey"
+					"name": "DonorOrderAggregateKey"
 				},
 				{
 					"name": "SelectTransaction"
 				},
 				{
 					"name": "ActiveTransactions"
+				},
+				{
+					"name": "AlterDonorOrder"
 				}
 			],
 			"scriptLines": [
@@ -359,7 +362,7 @@
 				"     entity: 'cog_transaction',",
 				"     timeout: 30,",
 				"     manifestType: 'model') ~> transaction",
-				"TransactionAggregateKey, ActiveTransactions join(TransactionAggregateKey@cog_transactionaggregatekey == SelectTransaction@cog_transactionaggregatekey,",
+				"DonorOrderAggregateKey, ActiveTransactions join(DonorOrderAggregateKey == cog_transactionaggregatekey,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -375,28 +378,32 @@
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectDonorOrder",
 				"donororder filter(statecode==0&&(statuscode==181310001||statuscode==2)&&cog_donororderfrom==181310000&&cog_competition==181310000) ~> FilterDonorOrders",
-				"SelectDonorOrder derive(cog_transactionaggregatekey = cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> TransactionAggregateKey",
+				"SelectDonorOrder derive(DonorOrderAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> DonorOrderAggregateKey",
 				"transaction select(mapColumn(",
 				"          cog_transactionaggregatekey,",
 				"          statuscode,",
 				"          cog_transactionid,",
 				"          statecode",
 				"     ),",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> SelectTransaction",
-				"SelectTransaction filter(statecode==0) ~> ActiveTransactions",
-				"joindonorordertransaction sink(allowSchemaDrift: false,",
+				"     skipDuplicateMapInputs: false,",
+				"     skipDuplicateMapOutputs: false) ~> SelectTransaction",
+				"SelectTransaction filter(statecode==0&&cog_transactionaggregatekey!='NULL') ~> ActiveTransactions",
+				"joindonorordertransaction alterRow(updateIf(DonorOrderAggregateKey!='NULL')) ~> AlterDonorOrder",
+				"AlterDonorOrder sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     store: 'dynamics',",
 				"     format: 'dynamicsformat',",
 				"     entity: 'cog_donororder',",
 				"     timeout: 30,",
 				"     deletable: false,",
-				"     insertable: true,",
-				"     updateable: false,",
+				"     insertable: false,",
+				"     updateable: true,",
 				"     upsertable: false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> UpdatedonorOrder"
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          cog_transactionid",
+				"     )) ~> UpdatedonorOrder"
 			]
 		}
 	}
