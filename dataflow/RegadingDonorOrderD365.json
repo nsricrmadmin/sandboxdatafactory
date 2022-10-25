@@ -399,9 +399,8 @@
 				"     insertable: false,",
 				"     updateable: true,",
 				"     upsertable: false,",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
+				"          cog_donororderid,",
 				"          cog_transactionid",
 				"     )) ~> UpdatedonorOrder"
 			]
