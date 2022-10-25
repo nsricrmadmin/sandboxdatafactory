@@ -25,6 +25,36 @@
 					},
 					"traceLevel": "Fine"
 				}
+			},
+			{
+				"name": "LookupdonorOrder",
+				"type": "Lookup",
+				"dependsOn": [
+					{
+						"activity": "D365 Donor Order to Transaction",
+						"dependencyConditions": [
+							"Skipped"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DynamicsSource"
+					},
+					"dataset": {
+						"referenceName": "TransactionLookup",
+						"type": "DatasetReference"
+					},
+					"firstRowOnly": false
+				}
 			}
 		],
 		"annotations": []

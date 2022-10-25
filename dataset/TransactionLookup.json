@@ -1,0 +1,15 @@
+{
+	"name": "TransactionLookup",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "nsridynamicssandox",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DynamicsEntity",
+		"schema": [],
+		"typeProperties": {
+			"entityName": "cog_transaction"
+		}
+	}
+}
