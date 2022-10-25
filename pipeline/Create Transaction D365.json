@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "D365 Donor Order to Transaction",
+				"name": "CreateTransaction",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -27,13 +27,13 @@
 				}
 			},
 			{
-				"name": "LookupdonorOrder",
-				"type": "Lookup",
+				"name": "AssociateDonorOrder",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "D365 Donor Order to Transaction",
+						"activity": "CreateTransaction",
 						"dependencyConditions": [
-							"Skipped"
+							"Succeeded"
 						]
 					}
 				],
@@ -46,14 +46,11 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "DynamicsSource"
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
 					},
-					"dataset": {
-						"referenceName": "TransactionLookup",
-						"type": "DatasetReference"
-					},
-					"firstRowOnly": false
+					"traceLevel": "Fine"
 				}
 			}
 		],
