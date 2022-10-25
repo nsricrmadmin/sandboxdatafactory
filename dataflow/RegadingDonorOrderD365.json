@@ -25,7 +25,7 @@
 						"referenceName": "nsridynamicssandox",
 						"type": "LinkedServiceReference"
 					},
-					"name": "UpdatedonorOrder"
+					"name": "UpdateDonorOrder"
 				}
 			],
 			"transformations": [
@@ -49,6 +49,9 @@
 				},
 				{
 					"name": "AlterDonorOrder"
+				},
+				{
+					"name": "SelectDonorOrderFinal"
 				}
 			],
 			"scriptLines": [
@@ -388,8 +391,16 @@
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectTransaction",
 				"SelectTransaction filter(statecode==0&&cog_transactionaggregatekey!='NULL') ~> ActiveTransactions",
-				"joindonorordertransaction alterRow(updateIf(DonorOrderAggregateKey!='NULL')) ~> AlterDonorOrder",
-				"AlterDonorOrder sink(allowSchemaDrift: false,",
+				"SelectDonorOrderFinal alterRow(updateIf(DonorOrderAggregateKey!='NULL')) ~> AlterDonorOrder",
+				"joindonorordertransaction select(mapColumn(",
+				"          cog_donororderid,",
+				"          DonorOrderAggregateKey,",
+				"          cog_transactionaggregatekey,",
+				"          cog_transactionid",
+				"     ),",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectDonorOrderFinal",
+				"AlterDonorOrder sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     store: 'dynamics',",
 				"     format: 'dynamicsformat',",
@@ -402,7 +413,7 @@
 				"     mapColumn(",
 				"          cog_donororderid,",
 				"          cog_transactionid",
-				"     )) ~> UpdatedonorOrder"
+				"     )) ~> UpdateDonorOrder"
 			]
 		}
 	}
