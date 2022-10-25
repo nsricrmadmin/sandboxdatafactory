@@ -485,11 +485,11 @@
 				"     updateable: false,",
 				"     upsertable: false,",
 				"     mapColumn(",
-				"          cog_contact,",
 				"          cog_transactionfrom = cog_donororderfrom,",
 				"          cog_paymentmethod,",
 				"          cog_transactionamount,",
-				"          cog_division = cog_competition",
+				"          cog_division = cog_competition,",
+				"          cog_contact",
 				"     )) ~> SandboxUpdate"
 			]
 		}
