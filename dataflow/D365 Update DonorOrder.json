@@ -367,7 +367,7 @@
 				"     timeout: 30,",
 				"     manifestType: 'model') ~> transaction",
 				"DonorOrderAggregateKey, ActiveTransactions join(DonorOrderAggregateKey == cog_transactionaggregatekey,",
-				"     joinType:'outer',",
+				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonorordertransaction",
