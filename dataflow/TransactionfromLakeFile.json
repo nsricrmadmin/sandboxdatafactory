@@ -53,6 +53,9 @@
 				},
 				{
 					"name": "UniqueTransaction"
+				},
+				{
+					"name": "filterDonorOrder"
 				}
 			],
 			"scriptLines": [
@@ -117,7 +120,7 @@
 				"     manifestType: 'model',",
 				"     folderPath: 'environments/nsridev/HOF Donor Orders',",
 				"     fileSystem: 'power-platform-dataflows') ~> bankdetails",
-				"SelectDonorOrder, CleanupBankDetailColumns join(cog_bankdetails == cog_bankdetailsid,",
+				"filterDonorOrder, CleanupBankDetailColumns join(cog_bankdetails == cog_bankdetailsid,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -149,6 +152,7 @@
 				"          cog_donationamount,",
 				"          cog_account,",
 				"          cog_contact,",
+				"          cog_contactname,",
 				"          cog_bankdetails,",
 				"          cog_paymenttype,",
 				"          cog_paymentmethod",
@@ -164,6 +168,11 @@
 				"          contactkey,",
 				"          cog_donororderfrom),",
 				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
+				"SelectDonorOrder filter(statuscode==181310001&&\r",
+				"cog_competition==181310001&&\r",
+				"cog_donororderfrom==181310000&&\r",
+				"statecode==0&&\r",
+				"(cog_paymentmethod==181310001||cog_paymentmethod==181310003)) ~> filterDonorOrder",
 				"UniqueTransaction sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     store: 'dynamics',",
