@@ -321,7 +321,7 @@
 				"          TransactionAggregateKey,",
 				"          cog_competition),",
 				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
-				"donororder filter(statuscode==181310001&&cog_donororderfrom==181310000&&cog_competition==181310001&&(cog_paymentmethod==181310003||cog_paymentmethod==181310001)) ~> FilterDonorOrders",
+				"donororder filter(cog_donororderfrom==181310000) ~> FilterDonorOrders",
 				"UniqueTransaction sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     input(",
