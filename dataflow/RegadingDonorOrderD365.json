@@ -376,7 +376,8 @@
 				"          statuscode,",
 				"          cog_contact,",
 				"          cog_paymentmethod,",
-				"          cog_bankdetails",
+				"          cog_bankdetails,",
+				"          DO_Transaction = cog_transaction",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectDonorOrder",
@@ -396,7 +397,7 @@
 				"          cog_donororderid,",
 				"          DonorOrderAggregateKey,",
 				"          cog_transactionaggregatekey,",
-				"          cog_transactionid",
+				"          DO_Transaction",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> SelectDonorOrderFinal",
@@ -412,7 +413,7 @@
 				"     upsertable: false,",
 				"     mapColumn(",
 				"          cog_donororderid,",
-				"          cog_transactionid",
+				"          cog_transactionid = DO_Transaction",
 				"     )) ~> UpdateDonorOrder"
 			]
 		}
