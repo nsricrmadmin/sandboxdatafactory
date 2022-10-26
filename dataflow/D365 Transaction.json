@@ -313,6 +313,7 @@
 				"          cog_ticketamount,",
 				"          cog_donationamount,",
 				"          cog_account,",
+				"          cog_accountname,",
 				"          cog_contact,",
 				"          cog_contactname,",
 				"          cog_bankdetails,",
