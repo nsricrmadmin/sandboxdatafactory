@@ -131,7 +131,7 @@
 						},
 						{
 							"linkedService": {
-								"referenceName": "nsridynamicssandox",
+								"referenceName": "sandbox",
 								"type": "LinkedServiceReference"
 							},
 							"name": "bankdetails"
@@ -158,19 +158,19 @@
 							"name": "SelectBankDetail"
 						},
 						{
-							"name": "derivedColumnTrxDateAmount"
+							"name": "DrivedTxDateanndAmount"
 						},
 						{
-							"name": "TransactionAggregateKey"
-						},
-						{
-							"name": "UniqueTransaction"
+							"name": "AggregateTransaction"
 						},
 						{
 							"name": "FilterDonorOrders"
 						},
 						{
 							"name": "SelectDonorOrder"
+						},
+						{
+							"name": "derivedColumnTxDateKey"
 						}
 					],
 					"scriptLines": [
@@ -409,17 +409,12 @@
 						"     ),",
 						"     skipDuplicateMapInputs: false,",
 						"     skipDuplicateMapOutputs: false) ~> SelectBankDetail",
-						"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount),",
-						"          cog_transactiondate = currentUTC()) ~> derivedColumnTrxDateAmount",
-						"derivedColumnTrxDateAmount derive(TransactionAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> TransactionAggregateKey",
-						"TransactionAggregateKey aggregate(groupBy(cog_contact,",
-						"          cog_transactiondate,",
-						"          cog_donororderfrom,",
+						"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount)) ~> DrivedTxDateanndAmount",
+						"DrivedTxDateanndAmount aggregate(groupBy(cog_contact,",
 						"          cog_paymentmethod,",
-						"          cog_bankdetails,",
-						"          TransactionAggregateKey,",
-						"          cog_competition),",
-						"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
+						"          cog_bankdetails),",
+						"     cog_transactionamount = sum(cog_transactionamount),",
+						"          each(match(name=='cog_donororderfrom'||name=='cog_competition'||name=='cog_bankdetailsid'), $$ = first($$))) ~> AggregateTransaction",
 						"SelectDonorOrder filter(statuscode==181310001&&\r",
 						"cog_competition==181310001&&\r",
 						"cog_donororderfrom==181310000&&\r",
@@ -444,7 +439,9 @@
 						"     ),",
 						"     skipDuplicateMapInputs: true,",
 						"     skipDuplicateMapOutputs: true) ~> SelectDonorOrder",
-						"UniqueTransaction sink(allowSchemaDrift: false,",
+						"AggregateTransaction derive(cog_transactiondate = currentUTC(),",
+						"          TransactionAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> derivedColumnTxDateKey",
+						"derivedColumnTxDateKey sink(allowSchemaDrift: false,",
 						"     validateSchema: false,",
 						"     input(",
 						"          cog_account as string,",
