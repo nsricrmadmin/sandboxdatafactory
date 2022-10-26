@@ -1,5 +1,5 @@
 {
-	"name": "Create Transaction D365",
+	"name": "Create Transaction",
 	"properties": {
 		"activities": [
 			{
@@ -17,37 +17,6 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "TransactionFromD365",
-						"type": "DataFlowReference"
-					},
-					"compute": {
-						"coreCount": 8,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
-				"name": "AssociateDonorOrder",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "CreateTransaction",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "RegadingDonorOrderD365",
 						"type": "DataFlowReference"
 					},
 					"compute": {
