@@ -382,7 +382,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectDonorOrder",
-				"donororder filter(statecode==0&&statuscode==181310001&&cog_donororderfrom==181310000&&cog_competition==181310000&&cog_bankdetails!='NULL') ~> FilterDonorOrders",
+				"donororder filter(statuscode==181310001&&cog_donororderfrom==181310000&&cog_competition==181310000&&cog_bankdetails!='NULL') ~> FilterDonorOrders",
 				"SelectDonorOrder derive(DonorOrderAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> DonorOrderAggregateKey",
 				"transaction select(mapColumn(",
 				"          cog_transactionaggregatekey,",
