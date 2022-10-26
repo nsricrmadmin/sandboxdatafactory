@@ -23,7 +23,7 @@
 			"sinks": [
 				{
 					"linkedService": {
-						"referenceName": "nsridynamicssandox",
+						"referenceName": "sandbox",
 						"type": "LinkedServiceReference"
 					},
 					"name": "SandboxUpdate",
