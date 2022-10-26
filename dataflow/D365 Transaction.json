@@ -41,9 +41,6 @@
 					"name": "SelectBankDetail"
 				},
 				{
-					"name": "SelectDonorOrder"
-				},
-				{
 					"name": "derivedColumnTrxDateAmount"
 				},
 				{
@@ -54,6 +51,9 @@
 				},
 				{
 					"name": "FilterDonorOrders"
+				},
+				{
+					"name": "SelectDonorOrder"
 				}
 			],
 			"scriptLines": [
@@ -275,7 +275,7 @@
 				"     entity: 'cog_bankdetails',",
 				"     timeout: 30,",
 				"     manifestType: 'model') ~> bankdetails",
-				"SelectDonorOrder, SelectBankDetail join(cog_bankdetails === cog_bankdetailsid,",
+				"FilterDonorOrders, SelectBankDetail join(cog_bankdetails === cog_bankdetailsid,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -293,7 +293,19 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectBankDetail",
-				"FilterDonorOrders select(mapColumn(",
+				"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount),",
+				"          cog_transactiondate = currentUTC()) ~> derivedColumnTrxDateAmount",
+				"derivedColumnTrxDateAmount derive(TransactionAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> TransactionAggregateKey",
+				"TransactionAggregateKey aggregate(groupBy(cog_contact,",
+				"          cog_transactiondate,",
+				"          cog_donororderfrom,",
+				"          cog_paymentmethod,",
+				"          cog_bankdetails,",
+				"          TransactionAggregateKey,",
+				"          cog_competition),",
+				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
+				"SelectDonorOrder filter(statuscode==181310001&&cog_donororderfrom==181310000&&cog_competition==181310001) ~> FilterDonorOrders",
+				"donororder select(mapColumn(",
 				"          cog_donororderid,",
 				"          statecode,",
 				"          statuscode,",
@@ -308,20 +320,8 @@
 				"          cog_donationtype,",
 				"          cog_paymentmethod",
 				"     ),",
-				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> SelectDonorOrder",
-				"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount),",
-				"          cog_transactiondate = currentUTC()) ~> derivedColumnTrxDateAmount",
-				"derivedColumnTrxDateAmount derive(TransactionAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> TransactionAggregateKey",
-				"TransactionAggregateKey aggregate(groupBy(cog_contact,",
-				"          cog_transactiondate,",
-				"          cog_donororderfrom,",
-				"          cog_paymentmethod,",
-				"          cog_bankdetails,",
-				"          TransactionAggregateKey,",
-				"          cog_competition),",
-				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
-				"donororder filter(cog_donororderfrom==181310000) ~> FilterDonorOrders",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> SelectDonorOrder",
 				"UniqueTransaction sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     input(",
