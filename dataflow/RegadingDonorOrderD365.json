@@ -393,7 +393,7 @@
 				"SelectTransaction filter(statecode==0&&cog_transactionaggregatekey!='NULL') ~> ActiveTransactions",
 				"SelectDonorOrderFinal alterRow(updateIf(DonorOrderAggregateKey!='NULL')) ~> AlterDonorOrder",
 				"joindonorordertransaction select(mapColumn(",
-				"          cog_donororderid,",
+				"          cog_donororderid = SelectDonorOrder@cog_donororderid,",
 				"          DonorOrderAggregateKey,",
 				"          cog_transactionaggregatekey,",
 				"          cog_transactionid",
