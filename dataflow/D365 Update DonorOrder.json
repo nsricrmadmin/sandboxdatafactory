@@ -584,7 +584,9 @@
 				"     upsertable: false,",
 				"     mapColumn(",
 				"          cog_donororderid,",
-				"          cog_transaction = cog_transactionid",
+				"          cog_transaction = cog_transactionid,",
+				"          DonorOrderAggregateKey,",
+				"          cog_transactionaggregatekey",
 				"     )) ~> UpdateDonorOrder"
 			]
 		}
