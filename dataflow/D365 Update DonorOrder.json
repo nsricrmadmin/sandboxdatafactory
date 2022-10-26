@@ -1,6 +1,7 @@
 {
-	"name": "RegadingDonorOrderD365",
+	"name": "D365 Update DonorOrder",
 	"properties": {
+		"description": "Contact, MG, Bankdetails",
 		"type": "MappingDataFlow",
 		"typeProperties": {
 			"sources": [
@@ -366,7 +367,7 @@
 				"     timeout: 30,",
 				"     manifestType: 'model') ~> transaction",
 				"DonorOrderAggregateKey, ActiveTransactions join(DonorOrderAggregateKey == cog_transactionaggregatekey,",
-				"     joinType:'left',",
+				"     joinType:'outer',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonorordertransaction",
@@ -381,7 +382,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectDonorOrder",
-				"donororder filter(statecode==0&&(statuscode==181310001||statuscode==2)&&cog_donororderfrom==181310000&&cog_competition==181310000) ~> FilterDonorOrders",
+				"donororder filter(statecode==0&&statuscode==181310001&&cog_donororderfrom==181310000&&cog_competition==181310000&&cog_bankdetails!='NULL') ~> FilterDonorOrders",
 				"SelectDonorOrder derive(DonorOrderAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> DonorOrderAggregateKey",
 				"transaction select(mapColumn(",
 				"          cog_transactionaggregatekey,",

@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "RegadingDonorOrderD365",
+						"referenceName": "D365 Update DonorOrder",
 						"type": "DataFlowReference"
 					},
 					"compute": {
