@@ -329,7 +329,7 @@
 				"          TransactionAggregateKey,",
 				"          cog_competition),",
 				"     cog_transactionamount = sum(cog_transactionamount)) ~> UniqueTransaction",
-				"donororder filter(statuscode==181310001&&cog_donororderfrom==181310000&&cog_competition==181310000&&cog_bankdetails!='NULL') ~> FilterDonorOrders",
+				"donororder filter(statuscode==181310001&&cog_donororderfrom==181310000&&cog_competition==181310001&&cog_bankdetails!='NULL') ~> FilterDonorOrders",
 				"UniqueTransaction sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     input(",
