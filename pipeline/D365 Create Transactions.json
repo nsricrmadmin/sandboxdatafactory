@@ -1,5 +1,5 @@
 {
-	"name": "D365 Create Transaction",
+	"name": "D365 Create Transactions",
 	"properties": {
 		"activities": [
 			{
