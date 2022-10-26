@@ -397,7 +397,7 @@
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectTransaction",
 				"SelectTransaction filter(statecode==0&&statuscode==1) ~> FilterTransactions",
-				"SelectDonorOrderFinal alterRow(updateIf(DonorOrderAggregateKey!='NULL')) ~> AlterDonorOrder",
+				"SelectDonorOrderFinal alterRow(updateIf(DonorOrderAggregateKey==cog_transactionaggregatekey)) ~> AlterDonorOrder",
 				"joindonorordertransaction select(mapColumn(",
 				"          cog_donororderid,",
 				"          DonorOrderAggregateKey,",
