@@ -1,5 +1,5 @@
 {
-	"name": "Update Donor Order",
+	"name": "D365 Update Donor Order",
 	"properties": {
 		"activities": [
 			{
