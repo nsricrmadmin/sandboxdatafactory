@@ -43,7 +43,7 @@
 					"name": "CleanupBankDetailColumns"
 				},
 				{
-					"name": "CleanupdonorOrder"
+					"name": "SelectDonorOrder"
 				},
 				{
 					"name": "derivedColumnTrxDateAmount"
@@ -117,7 +117,7 @@
 				"     manifestType: 'model',",
 				"     folderPath: 'environments/nsridev/HOF Donor Orders',",
 				"     fileSystem: 'power-platform-dataflows') ~> bankdetails",
-				"CleanupdonorOrder, CleanupBankDetailColumns join(cog_bankdetails == cog_bankdetailsid,",
+				"SelectDonorOrder, CleanupBankDetailColumns join(cog_bankdetails == cog_bankdetailsid,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -154,7 +154,7 @@
 				"          cog_paymentmethod",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
-				"     skipDuplicateMapOutputs: false) ~> CleanupdonorOrder",
+				"     skipDuplicateMapOutputs: false) ~> SelectDonorOrder",
 				"joindonororderbankdetails derive(cog_transactiondate = currentUTC(),",
 				"          cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount)) ~> derivedColumnTrxDateAmount",
 				"accountcontact@contactconvertedpaidmonthly derive(contactkey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> contactkey",
