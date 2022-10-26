@@ -50,7 +50,7 @@
 					"name": "derivedColumnTrxDateAmount"
 				},
 				{
-					"name": "TransactionRollup"
+					"name": "TransactionAggregateKey"
 				},
 				{
 					"name": "UniqueTransaction"
@@ -320,8 +320,8 @@
 				"     skipDuplicateMapOutputs: false) ~> SelectDonorOrder",
 				"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_ticketamount),cog_donationamount,cog_ticketamount),",
 				"          cog_transactiondate = currentUTC()) ~> derivedColumnTrxDateAmount",
-				"accountcontact@contactconvertedpaidmonthly derive(TransactionAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> TransactionRollup",
-				"TransactionRollup aggregate(groupBy(cog_contact,",
+				"accountcontact@contactconvertedpaidmonthly derive(TransactionAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> TransactionAggregateKey",
+				"TransactionAggregateKey aggregate(groupBy(cog_contact,",
 				"          cog_transactiondate,",
 				"          cog_donororderfrom,",
 				"          cog_paymentmethod,",
