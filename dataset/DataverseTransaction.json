@@ -1,0 +1,15 @@
+{
+	"name": "DataverseTransaction",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sandbox",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CommonDataServiceForAppsEntity",
+		"schema": [],
+		"typeProperties": {
+			"entityName": "cog_transaction"
+		}
+	}
+}
