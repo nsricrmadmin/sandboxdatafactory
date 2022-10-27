@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "LookupTransaction",
-				"type": "Lookup",
+				"name": "UpdateDonorOrder",
+				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -18,35 +18,27 @@
 					"source": {
 						"type": "CommonDataServiceForAppsSource"
 					},
-					"dataset": {
+					"sink": {
+						"type": "CommonDataServiceForAppsSink",
+						"writeBatchSize": 10,
+						"writeBehavior": "upsert",
+						"ignoreNullValues": true,
+						"alternateKeyName": "cog_accounttransaction"
+					},
+					"enableStaging": false
+				},
+				"inputs": [
+					{
 						"referenceName": "DataverseTransaction",
 						"type": "DatasetReference"
-					},
-					"firstRowOnly": true
-				}
-			},
-			{
-				"name": "UpdateDonorOrder",
-				"type": "Copy",
-				"dependsOn": [
-					{
-						"activity": "LookupTransaction",
-						"dependencyConditions": [
-							"Succeeded"
-						]
 					}
 				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"enableStaging": false
-				}
+				"outputs": [
+					{
+						"referenceName": "DataverseDonorOrder",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
