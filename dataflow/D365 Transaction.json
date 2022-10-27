@@ -322,8 +322,7 @@
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true) ~> SelectDonorOrder",
-				"AggregateTransaction derive(cog_transactiondate = currentUTC(),",
-				"          TransactionAggregateKey = cog_contact+toString(cog_paymentmethod)+cog_bankdetailsid) ~> derivedColumnTxDateKey",
+				"AggregateTransaction derive(cog_transactiondate = currentUTC()) ~> derivedColumnTxDateKey",
 				"derivedColumnTxDateKey sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     input(",
@@ -486,7 +485,6 @@
 				"          cog_paymentmethod,",
 				"          cog_transactionamount,",
 				"          cog_contact,",
-				"          cog_transactionaggregatekey = TransactionAggregateKey,",
 				"          cog_transactiondate,",
 				"          cog_division = cog_competition",
 				"     )) ~> SandboxUpdate"
