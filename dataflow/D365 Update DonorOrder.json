@@ -403,7 +403,7 @@
 				"          cog_donororderid,",
 				"          DonorOrderAggregateKey,",
 				"          cog_transactionaggregatekey,",
-				"          cog_Transaction = cog_transaction,",
+				"          cog_transaction,",
 				"          cog_transactionid",
 				"     ),",
 				"     skipDuplicateMapInputs: true,",
