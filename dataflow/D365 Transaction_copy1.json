@@ -235,7 +235,13 @@
 				"     updateable:false,",
 				"     upsertable:false,",
 				"     mapColumn(",
-				"          cog_donororderfrom",
+				"          cog_transactionfrom = cog_donororderfrom,",
+				"          cog_contact,",
+				"          cog_bankdetail = cog_bankdetails,",
+				"          cog_transactionamount,",
+				"          cog_paymentmethod,",
+				"          cog_division,",
+				"          cog_transactiondate",
 				"     )) ~> sink1"
 			]
 		}
