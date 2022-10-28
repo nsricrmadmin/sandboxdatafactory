@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "UpdateDonorOrder",
-				"type": "Copy",
+				"name": "Update Donor Order",
+				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -15,30 +15,16 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"source": {
-						"type": "CommonDataServiceForAppsSource"
+					"dataflow": {
+						"referenceName": "D365 Update DonorOrder",
+						"type": "DataFlowReference"
 					},
-					"sink": {
-						"type": "CommonDataServiceForAppsSink",
-						"writeBatchSize": 10,
-						"writeBehavior": "upsert",
-						"ignoreNullValues": true,
-						"alternateKeyName": "cog_accounttransaction"
+					"compute": {
+						"coreCount": 16,
+						"computeType": "General"
 					},
-					"enableStaging": false
-				},
-				"inputs": [
-					{
-						"referenceName": "DataverseTransaction",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "DataverseDonorOrder",
-						"type": "DatasetReference"
-					}
-				]
+					"traceLevel": "Fine"
+				}
 			}
 		],
 		"annotations": []
