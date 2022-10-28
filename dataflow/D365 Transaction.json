@@ -490,11 +490,11 @@
 				"     upsertable: false,",
 				"     mapColumn(",
 				"          cog_transactiondate,",
-				"          cog_bankdetail = cog_bankdetails,",
 				"          cog_contact,",
 				"          cog_division,",
 				"          cog_transactionamount,",
-				"          cog_paymentmethod",
+				"          cog_transactionfrom = cog_donororderfrom,",
+				"          cog_bankdetail = cog_bankdetails",
 				"     )) ~> SandboxUpdate"
 			]
 		}
