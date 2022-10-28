@@ -253,7 +253,7 @@
 				"          createdby as string,",
 				"          organizationid as string",
 				"     ),",
-				"     allowSchemaDrift: false,",
+				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     manifestType: 'model') ~> bankdetails",
 				"FilterDonorOrders, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
@@ -284,9 +284,9 @@
 				"          cog_division,",
 				"          cog_contact,",
 				"          cog_paymentmethod,",
-				"          cog_bankdetailsid,",
+				"          cog_bankdetail = cog_bankdetailsid,",
 				"          cog_transactionamount,",
-				"          cog_donororderfrom,",
+				"          cog_transactionfrom = cog_donororderfrom,",
 				"          cog_transactiondate",
 				"     )) ~> SandboxUpdate"
 			]
