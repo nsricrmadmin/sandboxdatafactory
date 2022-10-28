@@ -440,7 +440,8 @@
 				"          cog_transactionamount,",
 				"          cog_paymentmethod,",
 				"          cog_bankdetails,",
-				"          cog_transactionfrom = cog_donororderfrom",
+				"          cog_transactionfrom = cog_donororderfrom,",
+				"          cog_division = cog_competition",
 				"     )) ~> CreateTransaction"
 			]
 		}
