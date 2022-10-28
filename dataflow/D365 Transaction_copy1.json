@@ -288,8 +288,7 @@
 				"          cog_bankdetail = cog_bankdetails,",
 				"          cog_transactionamount,",
 				"          cog_transactionfrom = cog_donororderfrom,",
-				"          cog_transactiondate,",
-				"          cog_bankdetails",
+				"          cog_transactiondate",
 				"     )) ~> SandboxUpdate"
 			]
 		}
