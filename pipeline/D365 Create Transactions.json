@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "D365 Transaction",
+						"referenceName": "D365 Transaction_copy1",
 						"type": "DataFlowReference"
 					},
 					"compute": {
