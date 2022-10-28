@@ -34,7 +34,8 @@
 					"name": "joindonororderbankdetails"
 				},
 				{
-					"name": "SelectBankDetail"
+					"name": "SelectBankDetail",
+					"description": "g_cvc, cog_expireydate, cog_creditcardtype, cog_accountholder'"
 				},
 				{
 					"name": "DrivedTxDateanndAmount"
@@ -271,7 +272,7 @@
 				"     timeout: 30,",
 				"     manifestType: 'model') ~> bankdetails",
 				"FilterDonorOrders, SelectBankDetail join(cog_bankdetails == cog_bankdetailsid,",
-				"     joinType:'inner',",
+				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonororderbankdetails",
@@ -492,7 +493,8 @@
 				"          cog_contact,",
 				"          cog_division,",
 				"          cog_transactionamount,",
-				"          cog_paymentmethod",
+				"          cog_paymentmethod,",
+				"          cog_bankdetail = cog_bankdetails",
 				"     )) ~> SandboxUpdate"
 			]
 		}
