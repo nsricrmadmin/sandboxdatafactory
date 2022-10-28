@@ -585,9 +585,13 @@
 				"     insertable: false,",
 				"     updateable: true,",
 				"     upsertable: false,",
+				"     alternateKeyName: 'cog_contacttransaction',",
 				"     mapColumn(",
-				"          cog_donororderid,",
-				"          cog_transaction = cog_transactionid",
+				"          cog_bankdetails,",
+				"          cog_contact,",
+				"          cog_paymentmethod,",
+				"          cog_transaction = cog_transactionid,",
+				"          cog_competition",
 				"     )) ~> UpdateDonorOrder"
 			]
 		}
