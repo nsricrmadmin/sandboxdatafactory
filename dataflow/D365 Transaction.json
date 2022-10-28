@@ -270,7 +270,7 @@
 				"     entity: 'cog_bankdetails',",
 				"     timeout: 30,",
 				"     manifestType: 'model') ~> bankdetails",
-				"FilterDonorOrders, SelectBankDetail join(cog_bankdetails === cog_bankdetailsid,",
+				"FilterDonorOrders, SelectBankDetail join(cog_bankdetails == cog_bankdetailsid,",
 				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
