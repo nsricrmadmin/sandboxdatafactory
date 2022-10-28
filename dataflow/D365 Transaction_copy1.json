@@ -279,7 +279,16 @@
 				"     deletable:false,",
 				"     insertable:true,",
 				"     updateable:false,",
-				"     upsertable:false) ~> SandboxUpdate"
+				"     upsertable:false,",
+				"     mapColumn(",
+				"          cog_division,",
+				"          cog_contact,",
+				"          cog_paymentmethod,",
+				"          cog_bankdetailsid,",
+				"          cog_transactionamount,",
+				"          cog_donororderfrom,",
+				"          cog_transactiondate",
+				"     )) ~> SandboxUpdate"
 			]
 		}
 	}
