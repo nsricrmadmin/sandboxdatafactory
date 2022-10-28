@@ -271,7 +271,7 @@
 				"     timeout: 30,",
 				"     manifestType: 'model') ~> bankdetails",
 				"FilterDonorOrders, SelectBankDetail join(cog_bankdetails === cog_bankdetailsid,",
-				"     joinType:'left',",
+				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonororderbankdetails",
