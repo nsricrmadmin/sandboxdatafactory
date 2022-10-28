@@ -587,11 +587,7 @@
 				"     updateable: true,",
 				"     upsertable: false,",
 				"     mapColumn(",
-				"          cog_bankdetails,",
-				"          cog_contact,",
-				"          cog_paymentmethod,",
 				"          cog_transaction = cog_transactionid,",
-				"          cog_competition,",
 				"          cog_donororderid",
 				"     )) ~> UpdateDonorOrder"
 			]
