@@ -424,9 +424,7 @@
 				"          cog_contact,",
 				"          cog_paymentmethod,",
 				"          cog_bankdetails,",
-				"          cog_transactionid,",
-				"          cog_transaction,",
-				"          cog_transactionname",
+				"          cog_transaction = cog_transactionid",
 				"     )) ~> DonorOrderUpdate"
 			]
 		}
