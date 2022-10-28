@@ -409,8 +409,6 @@
 				"SelectDonorOrderFinal alterRow(updateIf(true())) ~> AlterDonorOrder",
 				"joindonorordertransaction select(mapColumn(",
 				"          cog_donororderid,",
-				"          DonorOrderAggregateKey = DonorOrderKey,",
-				"          cog_transactionaggregatekey,",
 				"          cog_transaction,",
 				"          cog_transactionid",
 				"     ),",
