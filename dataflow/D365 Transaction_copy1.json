@@ -237,7 +237,6 @@
 				"     mapColumn(",
 				"          cog_transactionfrom = cog_donororderfrom,",
 				"          cog_contact,",
-				"          cog_bankdetail = cog_bankdetails,",
 				"          cog_transactionamount,",
 				"          cog_paymentmethod,",
 				"          cog_division,",
