@@ -492,8 +492,7 @@
 				"          cog_contact,",
 				"          cog_division,",
 				"          cog_transactionamount,",
-				"          cog_paymentmethod,",
-				"          cog_bankdetail = cog_bankdetails",
+				"          cog_paymentmethod",
 				"     )) ~> SandboxUpdate"
 			]
 		}
