@@ -265,7 +265,7 @@
 				"DrivedTxDateanndAmount aggregate(groupBy(cog_division = cog_competition,",
 				"          cog_contact,",
 				"          cog_paymentmethod,",
-				"          cog_bankdetailsid),",
+				"          cog_bankdetails),",
 				"     cog_transactionamount = sum(cog_transactionamount),",
 				"          each(match(name=='cog_donororderfrom'), $$ = first($$))) ~> AggregateTransaction",
 				"donororder filter(statuscode==181310001&&\r",
@@ -285,10 +285,11 @@
 				"          cog_division,",
 				"          cog_contact,",
 				"          cog_paymentmethod,",
-				"          cog_bankdetail = cog_bankdetailsid,",
+				"          cog_bankdetail = cog_bankdetails,",
 				"          cog_transactionamount,",
 				"          cog_transactionfrom = cog_donororderfrom,",
-				"          cog_transactiondate",
+				"          cog_transactiondate,",
+				"          cog_bankdetails",
 				"     )) ~> SandboxUpdate"
 			]
 		}
