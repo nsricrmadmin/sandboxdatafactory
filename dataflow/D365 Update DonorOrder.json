@@ -400,6 +400,7 @@
 				"SelectTransaction filter(statecode==0&&statuscode==1) ~> FilterTransactions",
 				"SelectDonorOrderFinal alterRow(updateIf(true())) ~> AlterDonorOrder",
 				"joindonorordertransaction select(mapColumn(",
+				"          cog_donororderid,",
 				"          cog_competition,",
 				"          cog_contact = SelectDonorOrder@cog_contact,",
 				"          cog_paymentmethod = SelectDonorOrder@cog_paymentmethod,",
@@ -590,7 +591,8 @@
 				"          cog_contact,",
 				"          cog_paymentmethod,",
 				"          cog_transaction = cog_transactionid,",
-				"          cog_competition",
+				"          cog_competition,",
+				"          cog_donororderid",
 				"     )) ~> UpdateDonorOrder"
 			]
 		}
