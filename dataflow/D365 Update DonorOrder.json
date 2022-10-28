@@ -585,7 +585,6 @@
 				"     insertable: false,",
 				"     updateable: true,",
 				"     upsertable: false,",
-				"     alternateKeyName: 'cog_contacttransaction',",
 				"     mapColumn(",
 				"          cog_bankdetails,",
 				"          cog_contact,",
