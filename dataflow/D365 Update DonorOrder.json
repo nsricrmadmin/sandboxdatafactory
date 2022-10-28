@@ -55,7 +55,7 @@
 					"name": "SelectDonorOrderFinal"
 				},
 				{
-					"name": "derivedTransactionKey"
+					"name": "DerivedTransactionKey"
 				}
 			],
 			"scriptLines": [
@@ -237,7 +237,6 @@
 				"          cog_npodoc_sendmethodname as string,",
 				"          cog_transactionamount_base as decimal(38,2),",
 				"          cog_accountname as string,",
-				"          cog_accounttypename as string,",
 				"          modifiedbyname as string,",
 				"          cog_cancelledtransactionamount_base as decimal(38,2),",
 				"          cog_delivery_receipt as boolean,",
@@ -283,6 +282,7 @@
 				"          cog_paymenttypename as string,",
 				"          cog_delivery_tax_annually as boolean,",
 				"          utcconversiontimezonecode as integer,",
+				"          cog_accounttypename as string,",
 				"          cog_transactionfailurestatus as integer,",
 				"          modifiedon as timestamp,",
 				"          importsequencenumber as integer,",
@@ -362,7 +362,7 @@
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     manifestType: 'model') ~> transaction",
-				"DerivedDonorOrderKey, derivedTransactionKey join(DonorOrderKey == TransactionKey,",
+				"DerivedDonorOrderKey, DerivedTransactionKey join(DonorOrderKey == TransactionKey,",
 				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
@@ -406,11 +406,12 @@
 				"          cog_paymentmethod = SelectDonorOrder@cog_paymentmethod,",
 				"          cog_bankdetails = SelectDonorOrder@cog_bankdetails,",
 				"          cog_transactionid,",
-				"          cog_transaction",
+				"          cog_transaction,",
+				"          cog_transactionname",
 				"     ),",
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectDonorOrderFinal",
-				"FilterTransactions derive(TransactionKey = toString(cog_division)+cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> derivedTransactionKey",
+				"FilterTransactions derive(TransactionKey = toString(cog_division)+cog_contact+toString(cog_paymentmethod)+cog_bankdetails) ~> DerivedTransactionKey",
 				"AlterDonorOrder sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
