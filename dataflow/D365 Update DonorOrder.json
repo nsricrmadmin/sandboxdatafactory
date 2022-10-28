@@ -582,7 +582,6 @@
 				"     insertable: false,",
 				"     updateable: true,",
 				"     upsertable: false,",
-				"     alternateKeyName: 'cog_contacttransaction',",
 				"     mapColumn(",
 				"          cog_donororderid,",
 				"          cog_transaction = cog_transactionid",
