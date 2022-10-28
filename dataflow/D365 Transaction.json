@@ -26,11 +26,7 @@
 						"referenceName": "sandbox",
 						"type": "LinkedServiceReference"
 					},
-					"name": "SandboxUpdate",
-					"rejectedDataLinkedService": {
-						"referenceName": "sandboxdatalake",
-						"type": "LinkedServiceReference"
-					}
+					"name": "SandboxUpdate"
 				}
 			],
 			"transformations": [
