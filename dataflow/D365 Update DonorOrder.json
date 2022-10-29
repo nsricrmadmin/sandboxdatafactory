@@ -590,7 +590,15 @@
 				"     deletable: false,",
 				"     insertable: false,",
 				"     updateable: true,",
-				"     upsertable: false) ~> DonorOrderUpdate"
+				"     upsertable: false,",
+				"     alternateKeyName: 'cog_donorordercontactaggregate',",
+				"     mapColumn(",
+				"          cog_bankdetails,",
+				"          cog_contact,",
+				"          cog_paymentmethod,",
+				"          cog_competition,",
+				"          {cog_transaction@cog_donorodercontactaggregation@cog_division} = cog_competition",
+				"     )) ~> DonorOrderUpdate"
 			]
 		}
 	}
