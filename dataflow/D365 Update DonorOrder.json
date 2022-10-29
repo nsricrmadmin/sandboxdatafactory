@@ -590,10 +590,10 @@
 				"     timeout: 30,",
 				"     deletable: false,",
 				"     insertable: true,",
-				"     updateable: true,",
-				"     upsertable: true,",
+				"     updateable: false,",
+				"     upsertable: false,",
 				"     mapColumn(",
-				"          donor = cog_donororderid",
+				"          {cog_transaction@cog_donorodercontactaggregation@cog_division} = cog_competition",
 				"     )) ~> DonorOrderUpdate"
 			]
 		}
