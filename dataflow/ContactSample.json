@@ -753,7 +753,8 @@
 				"          lastname,",
 				"          mobilephone,",
 				"          salutation,",
-				"          telephone1",
+				"          telephone1,",
+				"          Targetparentcustomerlookup",
 				"     )) ~> trainingcontact"
 			]
 		}
