@@ -23,6 +23,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'training'"
 		},
+		"Dynamics1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Dynamics1'"
+		},
 		"nsridynamicssandox_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "crmadmin@searescue.org.za"
@@ -36,6 +40,10 @@
 			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		},
 		"training_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "crmadmin@searescue.org.za"
+		},
+		"Dynamics1_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "crmadmin@searescue.org.za"
 		},
@@ -78,6 +86,9 @@
 					"training_password": {
 						"value": "[parameters('training_password')]"
 					},
+					"Dynamics1_password": {
+						"value": "[parameters('Dynamics1_password')]"
+					},
 					"nsridynamicssandox_properties_typeProperties_username": {
 						"value": "[parameters('nsridynamicssandox_properties_typeProperties_username')]"
 					},
@@ -89,6 +100,9 @@
 					},
 					"training_properties_typeProperties_username": {
 						"value": "[parameters('training_properties_typeProperties_username')]"
+					},
+					"Dynamics1_properties_typeProperties_username": {
+						"value": "[parameters('Dynamics1_properties_typeProperties_username')]"
 					}
 				}
 			},
