@@ -24,6 +24,9 @@
 			"transformations": [
 				{
 					"name": "alterRow1"
+				},
+				{
+					"name": "parentcustomeridEntityReference"
 				}
 			],
 			"scriptLines": [
@@ -47,7 +50,8 @@
 				"     entity: 'contact',",
 				"     timeout: 30,",
 				"     query: '<fetch mapping=\"logical\" output-format=\"xml-platform\" version=\"1.0\" no-lock=\"false\" distinct=\"true\"><entity name=\"contact\"><attribute name=\"fullname\"/><attribute name=\"entityimage_url\"/><attribute name=\"parent_contactid\"/><order descending=\"false\" attribute=\"cog_contactnumber\"/><attribute name=\"parentcustomerid\"/><attribute name=\"telephone1\"/><attribute name=\"fullname\"/><attribute name=\"emailaddress1\"/><attribute name=\"mobilephone\"/><attribute name=\"jobtitle\"/><attribute name=\"nsri_extensionnumber\"/><attribute name=\"salutation\"/><attribute name=\"cog_contactnumber\"/><attribute name=\"lastname\"/><attribute name=\"firstname\"/><attribute name=\"contactid\"/><filter type=\"and\"><condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/><condition attribute=\"fullname\" operator=\"eq\" value=\"Peter Jones\"/></filter></entity></fetch>') ~> sandboxcontact",
-				"sandboxcontact alterRow(upsertIf(true())) ~> alterRow1",
+				"parentcustomeridEntityReference alterRow(upsertIf(true())) ~> alterRow1",
+				"sandboxcontact derive({parentcustomerid@EntityReference} = \"account\") ~> parentcustomeridEntityReference",
 				"alterRow1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
@@ -747,7 +751,8 @@
 				"          lastname,",
 				"          mobilephone,",
 				"          salutation,",
-				"          telephone1",
+				"          telephone1,",
+				"          TargetEntityReference = {parentcustomerid@EntityReference}",
 				"     )) ~> trainingcontact"
 			]
 		}
