@@ -1,9 +1,9 @@
 {
-	"name": "pipeline1",
+	"name": "CopyDataOnlyContact",
 	"properties": {
 		"activities": [
 			{
-				"name": "Copy data1",
+				"name": "CopyDataContact",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
