@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "ContactSample",
+						"referenceName": "ContactSample_D365",
 						"type": "DataFlowReference"
 					},
 					"compute": {
