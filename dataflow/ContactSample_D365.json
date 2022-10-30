@@ -743,6 +743,7 @@
 				"     upsertable: true,",
 				"     mapColumn(",
 				"          parentcustomerid,",
+				"          Target,",
 				"          cog_contactnumber,",
 				"          contactid,",
 				"          emailaddress1,",
