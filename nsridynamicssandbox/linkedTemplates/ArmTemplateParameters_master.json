@@ -14,6 +14,9 @@
 		"sandboxdatalake_accountKey": {
 			"value": ""
 		},
+		"training_password": {
+			"value": ""
+		},
 		"nsridynamicssandox_properties_typeProperties_username": {
 			"value": "crmadmin@searescue.org.za"
 		},
@@ -22,6 +25,9 @@
 		},
 		"sandboxdatalake_properties_typeProperties_url": {
 			"value": "https://nsridynamicssandbox.dfs.core.windows.net/"
+		},
+		"training_properties_typeProperties_username": {
+			"value": "crmadmin@searescue.org.za"
 		},
 		"containerUri": {
 			"value": ""

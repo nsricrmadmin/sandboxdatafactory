@@ -19,6 +19,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'sandboxdatalake'"
 		},
+		"training_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'training'"
+		},
 		"nsridynamicssandox_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "crmadmin@searescue.org.za"
@@ -30,6 +34,10 @@
 		"sandboxdatalake_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
+		},
+		"training_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "crmadmin@searescue.org.za"
 		},
 		"containerUri": {
 			"type": "string",
@@ -67,6 +75,9 @@
 					"sandboxdatalake_accountKey": {
 						"value": "[parameters('sandboxdatalake_accountKey')]"
 					},
+					"training_password": {
+						"value": "[parameters('training_password')]"
+					},
 					"nsridynamicssandox_properties_typeProperties_username": {
 						"value": "[parameters('nsridynamicssandox_properties_typeProperties_username')]"
 					},
@@ -75,6 +86,9 @@
 					},
 					"sandboxdatalake_properties_typeProperties_url": {
 						"value": "[parameters('sandboxdatalake_properties_typeProperties_url')]"
+					},
+					"training_properties_typeProperties_username": {
+						"value": "[parameters('training_properties_typeProperties_username')]"
 					}
 				}
 			},
