@@ -1,5 +1,5 @@
 {
-	"name": "CopySample",
+	"name": "ContactSample",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
@@ -738,7 +738,6 @@
 				"     updateable: false,",
 				"     upsertable: true,",
 				"     mapColumn(",
-				"          etag = {@odata.etag},",
 				"          parentcustomerid,",
 				"          cog_contactnumber,",
 				"          contactid,",

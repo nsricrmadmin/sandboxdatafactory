@@ -1,5 +1,5 @@
 {
-	"name": "pipeline1",
+	"name": "CopySample",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "CopySample",
+						"referenceName": "ContactSample",
 						"type": "DataFlowReference"
 					},
 					"compute": {
