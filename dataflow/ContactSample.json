@@ -743,6 +743,7 @@
 				"     upsertable: true,",
 				"     mapColumn(",
 				"          parentcustomerid,",
+				"          {parentcustomerid@EntityReference},",
 				"          cog_contactnumber,",
 				"          contactid,",
 				"          emailaddress1,",
