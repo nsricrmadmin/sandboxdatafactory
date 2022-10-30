@@ -1,0 +1,15 @@
+{
+	"name": "DataverseEntityContactSandbox",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sandbox",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "CommonDataServiceForAppsEntity",
+		"schema": [],
+		"typeProperties": {
+			"entityName": "contact"
+		}
+	}
+}
