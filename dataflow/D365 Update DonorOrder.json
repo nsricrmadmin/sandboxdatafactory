@@ -583,7 +583,8 @@
 				"          cog_contact,",
 				"          cog_paymentmethod,",
 				"          cog_competition,",
-				"          {cog_transaction@cog_donorodercontactaggregation@cog_division} = cog_competition",
+				"          {cog_transaction@cog_donorodercontactaggregation@cog_division} = cog_competition,",
+				"          cog_donororderid",
 				"     )) ~> DonorOrderUpdate"
 			]
 		}
