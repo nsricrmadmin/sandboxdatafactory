@@ -81,7 +81,7 @@
 									"type": "String"
 								},
 								"sink": {
-									"name": "parentcustomeris@EntityReference"
+									"name": "parentcustomerid@EntityReference"
 								}
 							}
 						]
