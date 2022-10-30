@@ -382,7 +382,7 @@
 				"     skipDuplicateMapInputs: false,",
 				"     skipDuplicateMapOutputs: false) ~> SelectTransaction",
 				"SelectTransaction filter(statecode==0&&statuscode==1) ~> FilterTransactions",
-				"SelectDonorOrderFinal alterRow(updateIf(true())) ~> AlterDonorOrder",
+				"SelectDonorOrderFinal alterRow(upsertIf(true())) ~> AlterDonorOrder",
 				"joindonorordertransaction select(mapColumn(",
 				"          cog_donororderid,",
 				"          cog_competition,",
@@ -583,8 +583,7 @@
 				"          cog_contact,",
 				"          cog_paymentmethod,",
 				"          cog_competition,",
-				"          cog_donororderid,",
-				"          {cog_transaction@cog_donorodercontactaggregation@cog_division} = cog_competition",
+				"          cog_donororderid",
 				"     )) ~> DonorOrderUpdate"
 			]
 		}
