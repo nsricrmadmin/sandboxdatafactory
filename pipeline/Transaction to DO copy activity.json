@@ -24,7 +24,7 @@
 						"writeBatchSize": 10,
 						"writeBehavior": "upsert",
 						"ignoreNullValues": true,
-						"alternateKeyName": "cog_donorordercontactaggregate"
+						"alternateKeyName": ""
 					},
 					"enableStaging": false,
 					"translator": {
