@@ -3,8 +3,8 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Update Donor Order",
-				"type": "ExecuteDataFlow",
+				"name": "Copy data lookup transaction keys",
+				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
 					"timeout": "0.12:00:00",
@@ -15,16 +15,31 @@
 				},
 				"userProperties": [],
 				"typeProperties": {
-					"dataflow": {
-						"referenceName": "D365 Update DonorOrder",
-						"type": "DataFlowReference"
+					"source": {
+						"type": "CommonDataServiceForAppsSource",
+						"query": "<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\n\t<entity name=\"cog_transaction\">\n\t\t<attribute name=\"cog_transactionno\"/>\n\t\t<attribute name=\"cog_transactiondate\"/>\n\t\t<attribute name=\"cog_contact\"/>\n\t\t<attribute name=\"cog_paymentmethod\"/>\n\t\t<order attribute=\"cog_transactionno\" descending=\"true\"/>\n\t\t<attribute name=\"cog_transactionid\"/>\n\t\t<attribute name=\"cog_division\"/>\n\t\t<attribute name=\"cog_bankdetails\"/>\n\t\t<attribute name=\"statuscode\"/>\n\t\t<filter type=\"and\">\n\t\t\t<condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\n\t\t\t<condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\n\t\t\t<condition attribute=\"cog_transactionfrom\" operator=\"eq\" value=\"181310000\"/>\n\t\t\t<condition attribute=\"cog_paymentmethod\" operator=\"in\">\n\t\t\t\t<value>181310001</value>\n\t\t\t\t<value>181310003</value>\n\t\t\t</condition>\n\t\t</filter>\n\t</entity>\n</fetch>"
 					},
-					"compute": {
-						"coreCount": 16,
-						"computeType": "General"
+					"sink": {
+						"type": "CommonDataServiceForAppsSink",
+						"writeBatchSize": 10,
+						"writeBehavior": "upsert",
+						"ignoreNullValues": true,
+						"alternateKeyName": "cog_donorordercontactaggregate"
 					},
-					"traceLevel": "Fine"
-				}
+					"enableStaging": false
+				},
+				"inputs": [
+					{
+						"referenceName": "DataverseTransaction",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "DataverseDonorOrder",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
