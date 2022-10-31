@@ -43,7 +43,7 @@
 					"name": "derivedColumnTxDateKey"
 				},
 				{
-					"name": "alterRow1"
+					"name": "alterRowTransaction"
 				}
 			],
 			"scriptLines": [
@@ -130,8 +130,8 @@
 				"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
 				"          each(match(name=='cog_donororderfrom'), $$ = first($$))) ~> AggregateTransaction",
 				"AggregateTransaction derive(cog_transactiondate = currentUTC()) ~> derivedColumnTxDateKey",
-				"derivedColumnTxDateKey alterRow(upsertIf(true())) ~> alterRow1",
-				"alterRow1 sink(allowSchemaDrift: true,",
+				"derivedColumnTxDateKey alterRow(upsertIf(true())) ~> alterRowTransaction",
+				"alterRowTransaction sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          cog_account as string,",
@@ -289,6 +289,7 @@
 				"     insertable: false,",
 				"     updateable: false,",
 				"     upsertable: true,",
+				"     alternateKeyName: 'cog_donorodercontactaggregation',",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
