@@ -17,7 +17,7 @@
 				"typeProperties": {
 					"source": {
 						"type": "CommonDataServiceForAppsSource",
-						"query": "<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\n\t<entity name=\"cog_transaction\">\n\t\t<attribute name=\"cog_transactionno\"/>\n\t\t<attribute name=\"cog_transactiondate\"/>\n\t\t<attribute name=\"cog_contact\"/>\n\t\t<attribute name=\"cog_paymentmethod\"/>\n\t\t<order attribute=\"cog_transactionno\" descending=\"true\"/>\n\t\t<attribute name=\"cog_transactionid\"/>\n\t\t<attribute name=\"cog_division\"/>\n\t\t<attribute name=\"cog_bankdetails\"/>\n\t\t<attribute name=\"statuscode\"/>\n\t\t<filter type=\"and\">\n\t\t\t<condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\n\t\t\t<condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\n\t\t\t<condition attribute=\"cog_transactionfrom\" operator=\"eq\" value=\"181310000\"/>\n\t\t\t<condition attribute=\"cog_paymentmethod\" operator=\"in\">\n\t\t\t\t<value>181310001</value>\n\t\t\t\t<value>181310003</value>\n\t\t\t</condition>\n\t\t</filter>\n\t</entity>\n</fetch>"
+						"query": "<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\n\t<entity name=\"cog_transaction\">\n\t\t<attribute name=\"cog_contact\"/>\n\t\t<attribute name=\"cog_paymentmethod\"/>\n\t\t<attribute name=\"cog_transactionid\"/>\n\t\t<attribute name=\"cog_division\"/>\n\t\t<attribute name=\"cog_bankdetails\"/>\n\t\t<attribute name=\"statuscode\"/>\n\t\t<filter type=\"and\">\n\t\t\t<condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\n\t\t\t<condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\n\t\t\t<condition attribute=\"cog_transactionfrom\" operator=\"eq\" value=\"181310000\"/>\n\t\t\t<condition attribute=\"cog_paymentmethod\" operator=\"in\">\n\t\t\t\t<value>181310001</value>\n\t\t\t\t<value>181310003</value>\n\t\t\t</condition>\n\t\t</filter>\n\t</entity>\n</fetch>"
 					},
 					"sink": {
 						"type": "CommonDataServiceForAppsSink",
@@ -26,7 +26,62 @@
 						"ignoreNullValues": true,
 						"alternateKeyName": "cog_donorordercontactaggregate"
 					},
-					"enableStaging": false
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "cog_division",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "cog_competition",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "cog_contact",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "cog_contact",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "cog_paymentmethod",
+									"type": "Int32"
+								},
+								"sink": {
+									"name": "cog_paymentmethod",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "cog_bankdetails",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "cog_bankdetails",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "cog_transactionid",
+									"type": "Guid"
+								},
+								"sink": {
+									"name": "cog_transaction",
+									"type": "Guid"
+								}
+							}
+						]
+					}
 				},
 				"inputs": [
 					{
