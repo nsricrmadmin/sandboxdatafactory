@@ -23,7 +23,7 @@
 			"sinks": [
 				{
 					"linkedService": {
-						"referenceName": "sandbox",
+						"referenceName": "nsridynamicssandox",
 						"type": "LinkedServiceReference"
 					},
 					"name": "DonorOrderUpdate"
@@ -44,6 +44,31 @@
 				}
 			],
 			"scriptLines": [
+				"source(output(",
+				"          {@odata.etag} as string,",
+				"          cog_bankdetails as string,",
+				"          cog_contact as string,",
+				"          ownerid as string,",
+				"          transactioncurrencyid as string,",
+				"          cog_competition as string,",
+				"          cog_donationamount as string,",
+				"          cog_donationtype as string,",
+				"          cog_donororderfrom as string,",
+				"          cog_donororderid as string,",
+				"          cog_name as string,",
+				"          cog_paymentmethod as string,",
+				"          cog_paymenttype as string,",
+				"          cog_totalticketamount as string,",
+				"          statuscode as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     store: 'dynamics',",
+				"     format: 'dynamicsformat',",
+				"     entity: 'cog_donororder',",
+				"     timeout: 30,",
+				"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_donationtype\"/>\\n          <attribute name=\"cog_donortransaction\"/>\\n          <attribute name=\"ownerid\"/>\\n          <order attribute=\"cog_donationtype\" descending=\"false\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_donororderfrom\" operator=\"eq\" value=\"181310000\"/>\\n               <condition attribute=\"cog_bankdetails\" operator=\"not-null\"/>\\n               <filter type=\"or\">\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               </filter>\\n          </filter>\\n     </entity>\\n</fetch>',",
+				"     manifestType: 'model') ~> donororder",
 				"source(output(",
 				"          cog_donororderid as string,",
 				"          cog_paymentmadename as string,",
@@ -204,13 +229,6 @@
 				"          owningteam as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     store: 'dynamics',",
-				"     format: 'dynamicsformat',",
-				"     entity: 'cog_donororder',",
-				"     timeout: 30,",
-				"     manifestType: 'model') ~> donororder",
-				"source(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     store: 'dynamics',",
 				"     format: 'dynamicsformat',",
@@ -398,15 +416,14 @@
 				"     ),",
 				"     store: 'dynamics',",
 				"     format: 'dynamicsformat',",
-				"     entity: 'cog_donororder',",
 				"     timeout: 30,",
 				"     deletable: false,",
 				"     insertable: false,",
 				"     updateable: true,",
 				"     upsertable: false,",
 				"     mapColumn(",
-				"          cog_donororderid,",
-				"          cog_transaction = cog_transactionid",
+				"          each(match(/* All input columns */ true()),",
+				"               /* Input name */ $$ = $$)",
 				"     )) ~> DonorOrderUpdate"
 			]
 		}
