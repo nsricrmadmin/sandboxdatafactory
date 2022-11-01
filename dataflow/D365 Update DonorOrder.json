@@ -383,7 +383,7 @@
 				"     broadcast: 'auto')~> joindonorordertransaction",
 				"donororder derive(DonorOrderKey = cog_bankdetails+toString(cog_competition)+cog_contact+toString(cog_paymentmethod)) ~> DerivedDonorOrderKey",
 				"joindonorordertransaction alterRow(updateIf(true())) ~> AlterDonorOrder",
-				"transaction derive(TransactionKey = cog_bankdetails+toString(cog_division)+cog_contact+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
+				"transaction derive(TransactionKey = cog_bankdetails+toString(cog_competition)+cog_contact+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
 				"AlterDonorOrder sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
