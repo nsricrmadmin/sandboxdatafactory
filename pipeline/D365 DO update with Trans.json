@@ -1,5 +1,5 @@
 {
-	"name": "D365 DonorOrder Transaction Lookup",
+	"name": "D365 DO update with Trans",
 	"properties": {
 		"activities": [
 			{
