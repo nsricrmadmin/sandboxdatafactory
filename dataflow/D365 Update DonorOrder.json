@@ -377,7 +377,7 @@
 				"     timeout: 30,",
 				"     manifestType: 'model') ~> transaction",
 				"DerivedDonorOrderKey, DerivedTransactionKey join(DonorOrderKey == TransactionKey,",
-				"     joinType:'left',",
+				"     joinType:'inner',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonorordertransaction",
@@ -563,8 +563,8 @@
 				"     updateable: true,",
 				"     upsertable: false,",
 				"     mapColumn(",
-				"          each(match(/* All input columns */ true()),",
-				"               /* Input name */ $$ = $$)",
+				"          cog_donororderid = donororder@cog_donororderid,",
+				"          cog_transaction = transaction@cog_donortransaction",
 				"     )) ~> DonorOrderUpdate"
 			]
 		}
