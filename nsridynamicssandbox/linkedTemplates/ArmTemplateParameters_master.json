@@ -5,6 +5,9 @@
 		"factoryName": {
 			"value": "nsridynamicssandbox"
 		},
+		"Dynamics1_password": {
+			"value": ""
+		},
 		"nsridynamicssandox_password": {
 			"value": ""
 		},
@@ -17,8 +20,8 @@
 		"training_password": {
 			"value": ""
 		},
-		"Dynamics1_password": {
-			"value": ""
+		"Dynamics1_properties_typeProperties_username": {
+			"value": "crmadmin@searescue.org.za"
 		},
 		"nsridynamicssandox_properties_typeProperties_username": {
 			"value": "crmadmin@searescue.org.za"
@@ -30,9 +33,6 @@
 			"value": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		},
 		"training_properties_typeProperties_username": {
-			"value": "crmadmin@searescue.org.za"
-		},
-		"Dynamics1_properties_typeProperties_username": {
 			"value": "crmadmin@searescue.org.za"
 		},
 		"containerUri": {

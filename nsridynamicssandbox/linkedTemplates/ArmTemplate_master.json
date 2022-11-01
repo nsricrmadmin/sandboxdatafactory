@@ -7,6 +7,10 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "nsridynamicssandbox"
 		},
+		"Dynamics1_password": {
+			"type": "secureString",
+			"metadata": "Secure string for 'password' of 'Dynamics1'"
+		},
 		"nsridynamicssandox_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'nsridynamicssandox'"
@@ -23,9 +27,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'training'"
 		},
-		"Dynamics1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'Dynamics1'"
+		"Dynamics1_properties_typeProperties_username": {
+			"type": "string",
+			"defaultValue": "crmadmin@searescue.org.za"
 		},
 		"nsridynamicssandox_properties_typeProperties_username": {
 			"type": "string",
@@ -40,10 +44,6 @@
 			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		},
 		"training_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "crmadmin@searescue.org.za"
-		},
-		"Dynamics1_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "crmadmin@searescue.org.za"
 		},
@@ -74,6 +74,9 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
+					"Dynamics1_password": {
+						"value": "[parameters('Dynamics1_password')]"
+					},
 					"nsridynamicssandox_password": {
 						"value": "[parameters('nsridynamicssandox_password')]"
 					},
@@ -86,8 +89,8 @@
 					"training_password": {
 						"value": "[parameters('training_password')]"
 					},
-					"Dynamics1_password": {
-						"value": "[parameters('Dynamics1_password')]"
+					"Dynamics1_properties_typeProperties_username": {
+						"value": "[parameters('Dynamics1_properties_typeProperties_username')]"
 					},
 					"nsridynamicssandox_properties_typeProperties_username": {
 						"value": "[parameters('nsridynamicssandox_properties_typeProperties_username')]"
@@ -100,9 +103,6 @@
 					},
 					"training_properties_typeProperties_username": {
 						"value": "[parameters('training_properties_typeProperties_username')]"
-					},
-					"Dynamics1_properties_typeProperties_username": {
-						"value": "[parameters('Dynamics1_properties_typeProperties_username')]"
 					}
 				}
 			},
