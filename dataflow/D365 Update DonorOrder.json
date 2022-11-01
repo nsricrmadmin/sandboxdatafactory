@@ -575,14 +575,15 @@
 				"     timeout: 30,",
 				"     deletable: false,",
 				"     insertable: false,",
-				"     updateable: false,",
-				"     upsertable: true,",
+				"     updateable: true,",
+				"     upsertable: false,",
 				"     mapColumn(",
 				"          cog_bankdetails,",
 				"          cog_contact,",
 				"          cog_paymentmethod,",
 				"          cog_competition,",
-				"          cog_donororderid",
+				"          cog_donororderid,",
+				"          cog_transaction = cog_transactionid",
 				"     )) ~> DonorOrderUpdate"
 			]
 		}
