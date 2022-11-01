@@ -557,6 +557,7 @@
 				"     ),",
 				"     store: 'dynamics',",
 				"     format: 'dynamicsformat',",
+				"     entity: 'cog_donororder',",
 				"     timeout: 30,",
 				"     deletable: false,",
 				"     insertable: false,",
