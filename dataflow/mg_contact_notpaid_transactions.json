@@ -26,7 +26,7 @@
 						"referenceName": "Sandbox_Transaction",
 						"type": "DatasetReference"
 					},
-					"name": "CreateTransaction"
+					"name": "ceatetransactions"
 				}
 			],
 			"transformations": [
@@ -37,7 +37,7 @@
 					"name": "derivedtransactionamount"
 				},
 				{
-					"name": "AggregateDonorOrders"
+					"name": "agregatedonororders"
 				},
 				{
 					"name": "derivedtransactiondate"
@@ -89,8 +89,8 @@
 				"          cog_paymentmethod,",
 				"          cog_bankdetails),",
 				"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
-				"          each(match(name=='cog_donororderfrom'), $$ = first($$))) ~> AggregateDonorOrders",
-				"AggregateDonorOrders derive(cog_transactiondate = currentUTC()) ~> derivedtransactiondate",
+				"          each(match(name=='cog_donororderfrom'), $$ = first($$))) ~> agregatedonororders",
+				"agregatedonororders derive(cog_transactiondate = currentUTC()) ~> derivedtransactiondate",
 				"derivedtransactiondate sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -105,7 +105,7 @@
 				"          cog_transactionamount,",
 				"          cog_donororderfrom,",
 				"          cog_transactiondate",
-				"     )) ~> CreateTransaction"
+				"     )) ~> ceatetransactions"
 			]
 		}
 	}
