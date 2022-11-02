@@ -1,0 +1,120 @@
+{
+	"name": "donororders_mg_contact",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sandboxdatalake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "donororders_mg_contact.csv",
+				"fileSystem": "datafiles"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "@odata.etag",
+				"type": "String"
+			},
+			{
+				"name": "cog_bankdetails",
+				"type": "String"
+			},
+			{
+				"name": "cog_contact",
+				"type": "String"
+			},
+			{
+				"name": "ownerid",
+				"type": "String"
+			},
+			{
+				"name": "transactioncurrencyid",
+				"type": "String"
+			},
+			{
+				"name": "cog_competition",
+				"type": "String"
+			},
+			{
+				"name": "cog_donationamount",
+				"type": "String"
+			},
+			{
+				"name": "cog_donationtype",
+				"type": "String"
+			},
+			{
+				"name": "cog_donororderfrom",
+				"type": "String"
+			},
+			{
+				"name": "cog_donororderid",
+				"type": "String"
+			},
+			{
+				"name": "cog_name",
+				"type": "String"
+			},
+			{
+				"name": "cog_paymentmethod",
+				"type": "String"
+			},
+			{
+				"name": "cog_paymenttype",
+				"type": "String"
+			},
+			{
+				"name": "cog_totalticketamount",
+				"type": "String"
+			},
+			{
+				"name": "statuscode",
+				"type": "String"
+			},
+			{
+				"name": "DonorOrderKey",
+				"type": "String"
+			},
+			{
+				"name": "Target",
+				"type": "String"
+			},
+			{
+				"name": "cog_division",
+				"type": "String"
+			},
+			{
+				"name": "cog_transactionamount",
+				"type": "String"
+			},
+			{
+				"name": "cog_transactiondate",
+				"type": "String"
+			},
+			{
+				"name": "cog_transactionfrom",
+				"type": "String"
+			},
+			{
+				"name": "cog_transactionid",
+				"type": "String"
+			},
+			{
+				"name": "cog_transactionno",
+				"type": "String"
+			},
+			{
+				"name": "TransactionKey",
+				"type": "String"
+			}
+		]
+	}
+}
