@@ -1,5 +1,5 @@
 {
-	"name": "DataverseTransaction",
+	"name": "Sandbox_Transaction",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandbox",
