@@ -26,7 +26,7 @@
 						"referenceName": "file_do_mg_contact",
 						"type": "DatasetReference"
 					},
-					"name": "sinkdonororder"
+					"name": "dotransmgcontactnotpaid"
 				}
 			],
 			"transformations": [
@@ -98,7 +98,7 @@
 				"          cog_donororderid,",
 				"          cog_transactionid",
 				"     ),",
-				"     partitionBy('hash', 1)) ~> sinkdonororder"
+				"     partitionBy('hash', 1)) ~> dotransmgcontactnotpaid"
 			]
 		}
 	}
