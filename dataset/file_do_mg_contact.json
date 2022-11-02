@@ -1,5 +1,5 @@
 {
-	"name": "donororders_mg_contact",
+	"name": "file_do_mg_contact",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",
