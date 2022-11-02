@@ -1,5 +1,5 @@
 {
-	"name": "D365 DO update with Trans",
+	"name": "mg_contact_notpaid_file",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "D365 Update DonorOrder",
+						"referenceName": "File MG Contact Not Paid",
 						"type": "DataFlowReference"
 					},
 					"compute": {

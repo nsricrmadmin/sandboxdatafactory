@@ -29,13 +29,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DataverseTransaction",
+						"referenceName": "Sandbox_Transaction",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DataverseDonorOrder",
+						"referenceName": "Sandbox_DonorOrder",
 						"type": "DatasetReference"
 					}
 				]

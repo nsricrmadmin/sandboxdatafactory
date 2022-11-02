@@ -7,14 +7,14 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "DataverseDonorOrder",
+						"referenceName": "Sandbox_DonorOrder",
 						"type": "DatasetReference"
 					},
 					"name": "donororder"
 				},
 				{
 					"dataset": {
-						"referenceName": "DataverseBankDetail",
+						"referenceName": "Sandbox_BankDetail",
 						"type": "DatasetReference"
 					},
 					"name": "bankdetails"
