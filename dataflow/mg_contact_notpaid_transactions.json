@@ -103,7 +103,7 @@
 				"          cog_paymentmethod,",
 				"          cog_bankdetails,",
 				"          cog_transactionamount,",
-				"          cog_donororderfrom,",
+				"          cog_transactionfrom = cog_donororderfrom,",
 				"          cog_transactiondate",
 				"     )) ~> ceatetransactions"
 			]
