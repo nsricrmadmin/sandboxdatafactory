@@ -1,5 +1,5 @@
 {
-	"name": "DataverseBankDetail",
+	"name": "Sandbox_BankDetail",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandbox",
