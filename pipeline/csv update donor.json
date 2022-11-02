@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "csvupdatedonor",
+				"name": "mgcontactnotpaidupdatedo",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -20,6 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
+							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -29,7 +30,8 @@
 					"sink": {
 						"type": "CommonDataServiceForAppsSink",
 						"writeBatchSize": 10,
-						"writeBehavior": "upsert"
+						"writeBehavior": "upsert",
+						"ignoreNullValues": true
 					},
 					"enableStaging": false,
 					"translator": {
@@ -67,13 +69,13 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "DonorOrder1",
+						"referenceName": "file_do_mg_contact",
 						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
 					{
-						"referenceName": "DataverseDonorOrder",
+						"referenceName": "Sandbox_DonorOrder",
 						"type": "DatasetReference"
 					}
 				]
