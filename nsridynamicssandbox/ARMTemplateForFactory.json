@@ -27,6 +27,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'training'"
 		},
+		"Error Output_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Error Output'"
+		},
 		"Dynamics1_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "crmadmin@searescue.org.za"
@@ -46,6 +50,10 @@
 		"training_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "crmadmin@searescue.org.za"
+		},
+		"Error Output_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		}
 	},
 	"variables": {
@@ -3604,16 +3612,16 @@
 				"typeProperties": {
 					"sources": [
 						{
-							"dataset": {
-								"referenceName": "DataverseDonorOrder",
-								"type": "DatasetReference"
+							"linkedService": {
+								"referenceName": "nsridynamicssandox",
+								"type": "LinkedServiceReference"
 							},
 							"name": "donororder"
 						},
 						{
-							"dataset": {
-								"referenceName": "DataverseTransaction",
-								"type": "DatasetReference"
+							"linkedService": {
+								"referenceName": "nsridynamicssandox",
+								"type": "LinkedServiceReference"
 							},
 							"name": "transaction"
 						}
@@ -3621,10 +3629,14 @@
 					"sinks": [
 						{
 							"linkedService": {
-								"referenceName": "sandbox",
+								"referenceName": "nsridynamicssandox",
 								"type": "LinkedServiceReference"
 							},
-							"name": "DonorOrderUpdate"
+							"name": "DonorOrderUpdate",
+							"rejectedDataLinkedService": {
+								"referenceName": "Error Output",
+								"type": "LinkedServiceReference"
+							}
 						}
 					],
 					"transformations": [
@@ -3661,7 +3673,11 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\"><entity name=\"cog_donororder\"><attribute name=\"cog_name\"/><attribute name=\"cog_donororderid\"/><attribute name=\"cog_contact\"/><attribute name=\"statuscode\"/><attribute name=\"cog_bankdetails\"/><attribute name=\"cog_competition\"/><attribute name=\"cog_paymentmethod\"/><attribute name=\"cog_paymenttype\"/><attribute name=\"cog_donororderfrom\"/><attribute name=\"cog_donationtype\"/><attribute name=\"ownerid\"/><order attribute=\"cog_donationtype\" descending=\"false\"/><attribute name=\"cog_totalticketamount\"/><attribute name=\"cog_donationamount\"/><attribute name=\"cog_donortransaction\"/><filter type=\"and\"><condition attribute=\"statuscode\" operator=\"eq\" value=\"181310001\"/><condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/><condition attribute=\"cog_donororderfrom\" operator=\"eq\" value=\"181310000\"/><condition attribute=\"cog_bankdetails\" operator=\"not-null\"/><filter type=\"or\"><condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/><condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/></filter></filter></entity></fetch>',",
+						"     store: 'dynamics',",
+						"     format: 'dynamicsformat',",
+						"     entity: 'cog_donororder',",
+						"     timeout: 30,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_donationtype\"/>\\n          <attribute name=\"cog_donortransaction\"/>\\n          <attribute name=\"ownerid\"/>\\n          <order attribute=\"cog_donationtype\" descending=\"false\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_donororderfrom\" operator=\"eq\" value=\"181310000\"/>\\n               <condition attribute=\"cog_bankdetails\" operator=\"not-null\"/>\\n               <filter type=\"or\">\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               </filter>\\n          </filter>\\n     </entity>\\n</fetch>',",
 						"     manifestType: 'model') ~> donororder",
 						"source(output(",
 						"          {@odata.etag} as string,",
@@ -3671,21 +3687,27 @@
 						"          cog_division as string,",
 						"          cog_paymentmethod as string,",
 						"          cog_transactionamount as string,",
+						"          cog_transactiondate as string,",
+						"          cog_transactionfrom as string,",
 						"          cog_transactionid as string,",
 						"          cog_transactionno as string,",
 						"          statuscode as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <attribute name=\"cog_division\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_transactionfrom\" operator=\"eq\" value=\"181310000\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_bankdetails\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     store: 'dynamics',",
+						"     format: 'dynamicsformat',",
+						"     entity: 'cog_transaction',",
+						"     timeout: 30,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <attribute name=\"cog_division\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_transactionfrom\"/>     \\n          <attribute name=\"cog_transactiondate\"/>     \\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_transactionfrom\" operator=\"eq\" value=\"181310000\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_bankdetails\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
 						"     manifestType: 'model') ~> transaction",
 						"DerivedDonorOrderKey, DerivedTransactionKey join(DonorOrderKey == TransactionKey,",
-						"     joinType:'left',",
+						"     joinType:'inner',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
 						"     broadcast: 'auto')~> joindonorordertransaction",
 						"donororder derive(DonorOrderKey = cog_bankdetails+toString(cog_competition)+cog_contact+toString(cog_paymentmethod)) ~> DerivedDonorOrderKey",
-						"joindonorordertransaction alterRow(updateIf(true())) ~> AlterDonorOrder",
+						"joindonorordertransaction alterRow(updateIf(DonorOrderKey==TransactionKey)) ~> AlterDonorOrder",
 						"transaction derive(TransactionKey = cog_bankdetails+toString(cog_division)+cog_contact+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
 						"AlterDonorOrder sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
@@ -3701,7 +3723,7 @@
 						"          overriddencreatedon as timestamp,",
 						"          statuscodename as string,",
 						"          cog_dateassigned as timestamp,",
-						"          cog_delivery_tax_transname as string,",
+						"          cog_delivery_equityname as string,",
 						"          cog_balanceamount_base as decimal(38,2),",
 						"          cog_totalticketamount_base as decimal(38,0),",
 						"          transactioncurrencyidname as string,",
@@ -3724,7 +3746,6 @@
 						"          cog_sendwelcomepackdate as timestamp,",
 						"          statuscode as integer,",
 						"          cog_sendwelcomepackname as string,",
-						"          cog_dateconverted as timestamp,",
 						"          cog_contactyominame as string,",
 						"          cog_paymentmethodname as string,",
 						"          cog_paidamount as decimal(38,0),",
@@ -3749,7 +3770,6 @@
 						"          cog_nameonvessel as string,",
 						"          cog_npodoc_sendmethod as integer,",
 						"          cog_donotcreatenpodocumentname as string,",
-						"          cog_transaction as string,",
 						"          cog_resend as boolean,",
 						"          cog_communicationlanguage as integer,",
 						"          cog_competition as integer,",
@@ -3766,7 +3786,7 @@
 						"          cog_npodoc_receiptname as string,",
 						"          cog_administrationcontact as string,",
 						"          cog_paymenttypename as string,",
-						"          cog_transactionname as string,",
+						"          cog_dateconverted as timestamp,",
 						"          cog_datasource as integer,",
 						"          cog_stationname as string,",
 						"          createdonbehalfbyname as string,",
@@ -3778,7 +3798,6 @@
 						"          owneridname as string,",
 						"          modifiedonbehalfbyname as string,",
 						"          cog_contactname as string,",
-						"          cog_delivery_equityname as string,",
 						"          cog_accessdb_strcompanyname as string,",
 						"          cog_npodoc_equity as boolean,",
 						"          owningteam as string,",
@@ -3802,11 +3821,13 @@
 						"          cog_noofdonortickets_state as integer,",
 						"          cog_noofdonortickets as integer,",
 						"          cog_accountname as string,",
+						"          cog_donortransactionname as string,",
 						"          cog_administeredname as string,",
 						"          cog_donationamount as decimal(38,0),",
 						"          ownerid as string,",
 						"          cog_administrationcontactyominame as string,",
 						"          cog_assignticketnumbersname as string,",
+						"          cog_delivery_tax_transname as string,",
 						"          cog_datepaid as timestamp,",
 						"          cog_delivery_receiptname as string,",
 						"          cog_numberoftickets as integer,",
@@ -3821,7 +3842,7 @@
 						"          cog_administrationcontactname as string,",
 						"          modifiedonbehalfbyyominame as string,",
 						"          createdby as string,",
-						"          cog_account as string,",
+						"          cog_donortransaction as string,",
 						"          utcconversiontimezonecode as integer,",
 						"          cog_sendtickets as boolean,",
 						"          cog_upsellname as string,",
@@ -3836,6 +3857,7 @@
 						"          cog_npodoc_sendmethodname as string,",
 						"          cog_totalticketamount_date as timestamp,",
 						"          modifiedbyname as string,",
+						"          cog_account as string,",
 						"          createdbyyominame as string,",
 						"          cog_administered as boolean,",
 						"          cog_competitionname as string,",
@@ -3845,10 +3867,6 @@
 						"          cog_createticketrows as boolean,",
 						"          cog_datasourcename as string,",
 						"          {cog_administrationaccount@cog_no@cog_erpvendornumber} as string,",
-						"          {cog_transaction@cog_trans_do_contact@cog_bankdetails} as string,",
-						"          {cog_transaction@cog_trans_do_contact@cog_contact} as string,",
-						"          {cog_transaction@cog_trans_do_contact@cog_division} as integer,",
-						"          {cog_transaction@cog_trans_do_contact@cog_paymentmethod} as integer,",
 						"          {modifiedby@aadobjectid@azureactivedirectoryobjectid} as string,",
 						"          {modifiedonbehalfby@aadobjectid@azureactivedirectoryobjectid} as string,",
 						"          {owninguser@aadobjectid@azureactivedirectoryobjectid} as string,",
@@ -3856,6 +3874,10 @@
 						"          {owningteam@aadobjectid_membershiptype@membershiptype} as integer,",
 						"          {createdonbehalfby@aadobjectid@azureactivedirectoryobjectid} as string,",
 						"          {createdby@aadobjectid@azureactivedirectoryobjectid} as string,",
+						"          {cog_donortransaction@cog_trans_do_contact@cog_bankdetails} as string,",
+						"          {cog_donortransaction@cog_trans_do_contact@cog_contact} as string,",
+						"          {cog_donortransaction@cog_trans_do_contact@cog_division} as integer,",
+						"          {cog_donortransaction@cog_trans_do_contact@cog_paymentmethod} as integer,",
 						"          {cog_account@cog_no@cog_erpvendornumber} as string",
 						"     ),",
 						"     store: 'dynamics',",
@@ -3866,17 +3888,17 @@
 						"     insertable: false,",
 						"     updateable: true,",
 						"     upsertable: false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
-						"          cog_donororderid,",
-						"          cog_transaction = cog_transactionid",
+						"          cog_donororderid",
 						"     )) ~> DonorOrderUpdate"
 					]
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DataverseDonorOrder')]",
-				"[concat(variables('factoryId'), '/datasets/DataverseTransaction')]",
-				"[concat(variables('factoryId'), '/linkedServices/sandbox')]"
+				"[concat(variables('factoryId'), '/linkedServices/nsridynamicssandox')]",
+				"[concat(variables('factoryId'), '/linkedServices/Error Output')]"
 			]
 		},
 		{
@@ -4081,6 +4103,23 @@
 				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]",
 				"[concat(variables('factoryId'), '/linkedServices/nsridynamicssandox')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Error Output')]",
+			"type": "Microsoft.DataFactory/factories/linkedServices",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"annotations": [],
+				"type": "AzureBlobFS",
+				"typeProperties": {
+					"url": "[parameters('Error Output_properties_typeProperties_url')]",
+					"accountKey": {
+						"type": "SecureString",
+						"value": "[parameters('Error Output_accountKey')]"
+					}
+				}
+			},
+			"dependsOn": []
 		}
 	]
 }
