@@ -1,5 +1,5 @@
 {
-	"name": "DelimitedText1",
+	"name": "DonorOrder1",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",
