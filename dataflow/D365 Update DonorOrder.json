@@ -568,10 +568,12 @@
 				"     deletable: false,",
 				"     insertable: false,",
 				"     updateable: true,",
-				"     upsertable: false,",
+				"     upsertable: true,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
 				"          cog_donororderid = donororder@cog_donororderid,",
-				"          cog_transaction = transaction@transactioncurrencyid",
+				"          cog_donororderfromname = donororder@cog_donororderfrom",
 				"     )) ~> DonorOrderUpdate"
 			]
 		}
