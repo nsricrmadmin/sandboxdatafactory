@@ -285,7 +285,8 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
-				"          cog_donororderid",
+				"          cog_donororderid,",
+				"          cog_donortransaction = cog_transactionid",
 				"     )) ~> DonorOrderUpdate"
 			]
 		}
