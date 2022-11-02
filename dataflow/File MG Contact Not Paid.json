@@ -113,11 +113,17 @@
 				"          cog_transactionno as string,",
 				"          TransactionKey as string",
 				"     ),",
+				"     partitionFileNames:['donororders_mg_contact_notpaid.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sinkdonororder"
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          cog_donororderid,",
+				"          cog_transactionid",
+				"     ),",
+				"     partitionBy('hash', 1)) ~> sinkdonororder"
 			]
 		}
 	}
