@@ -1,5 +1,5 @@
 {
-	"name": "DataverseDonorOrder",
+	"name": "SandboxDonorOrder",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandbox",
