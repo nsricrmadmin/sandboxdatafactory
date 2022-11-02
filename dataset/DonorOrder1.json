@@ -10,9 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "cog_donororder.csv@snapshot=0a32f572-61d7-4094-9181-2d0161fa1289",
-				"folderPath": "environments/nsridev/HOF Donor Orders/cog_donororder/cog_donororder.csv.snapshots",
-				"fileSystem": "power-platform-dataflows"
+				"fileSystem": "datafiles"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
