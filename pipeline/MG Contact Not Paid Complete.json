@@ -1,9 +1,9 @@
 {
-	"name": "mg_contact_notpaid",
+	"name": "MG Contact Not Paid Complete",
 	"properties": {
 		"activities": [
 			{
-				"name": "MG contact not paid transactions",
+				"name": "Aggregate Donor Orders",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -25,6 +25,121 @@
 					},
 					"traceLevel": "Fine"
 				}
+			},
+			{
+				"name": "Create CSV File with Transactionid",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "Aggregate Donor Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "Create File MG Contact Not Paid",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 16,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "Update DO with Transactionid",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Create CSV File with Transactionid",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFileName": "*",
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "CommonDataServiceForAppsSink",
+						"writeBatchSize": 10,
+						"writeBehavior": "upsert"
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "cog_donororderid",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "cog_donororderid",
+									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "cog_transactionid",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "cog_donortransaction",
+									"type": "Guid"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "file_do_mg_contact",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SandboxDonorOrder",
+						"type": "DatasetReference"
+					}
+				]
 			}
 		],
 		"annotations": []
