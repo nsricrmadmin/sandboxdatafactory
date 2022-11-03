@@ -112,7 +112,8 @@
 				"          cog_branchcode,",
 				"          cog_cvc,",
 				"          cog_expireydate,",
-				"          cog_accountholder",
+				"          cog_accountholder,",
+				"          cog_accountnumber",
 				"     )) ~> ceatetransactions"
 			]
 		}
