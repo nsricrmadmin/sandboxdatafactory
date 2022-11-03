@@ -1,5 +1,5 @@
 {
-	"name": "AccountSample",
+	"name": "Tutorial Account Sample",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

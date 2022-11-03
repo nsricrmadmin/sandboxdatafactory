@@ -1,5 +1,5 @@
 {
-	"name": "ContactSample",
+	"name": "Tutorial Contact Sample",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {

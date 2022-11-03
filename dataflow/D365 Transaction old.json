@@ -1,5 +1,5 @@
 {
-	"name": "D365 Transaction",
+	"name": "D365 Transaction old",
 	"properties": {
 		"description": "Contact, MG, Bankdetails",
 		"type": "MappingDataFlow",

@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Create File MG Contact Not Paid",
+						"referenceName": "MG Contact Not Paid Create File",
 						"type": "DataFlowReference"
 					},
 					"compute": {

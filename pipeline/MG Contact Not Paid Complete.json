@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "mg_contact_notpaid_transactions",
+						"referenceName": "MG Contact Not Paid Aggregate DOs",
 						"type": "DataFlowReference"
 					},
 					"compute": {
@@ -47,7 +47,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Create File MG Contact Not Paid",
+						"referenceName": "MG Contact Not Paid Create File",
 						"type": "DataFlowReference"
 					},
 					"compute": {
