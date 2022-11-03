@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "mgcontactnotpaidupdatedo",
+				"name": "updatedonororderfromfile",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {

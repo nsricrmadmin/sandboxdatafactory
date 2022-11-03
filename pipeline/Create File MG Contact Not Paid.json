@@ -1,5 +1,5 @@
 {
-	"name": "mg_contact_notpaid_file",
+	"name": "Create File MG Contact Not Paid",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "File MG Contact Not Paid",
+						"referenceName": "Create File MG Contact Not Paid",
 						"type": "DataFlowReference"
 					},
 					"compute": {
