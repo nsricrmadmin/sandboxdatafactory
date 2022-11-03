@@ -1,5 +1,5 @@
 {
-	"name": "Create File MG Contact Not Paid",
+	"name": "MG Contact Not Paid Create File",
 	"properties": {
 		"description": "Contact, MG, Bankdetails",
 		"type": "MappingDataFlow",
