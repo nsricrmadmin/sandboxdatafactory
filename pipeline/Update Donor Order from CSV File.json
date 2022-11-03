@@ -1,5 +1,5 @@
 {
-	"name": "csv update donor",
+	"name": "Update Donor Order from CSV File",
 	"properties": {
 		"activities": [
 			{
@@ -40,8 +40,7 @@
 							{
 								"source": {
 									"name": "cog_donororderid",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "cog_donororderid",
@@ -51,31 +50,19 @@
 							{
 								"source": {
 									"name": "cog_transactionid",
-									"type": "String",
-									"physicalType": "String"
+									"type": "String"
 								},
 								"sink": {
 									"name": "cog_donortransaction",
 									"type": "Guid"
 								}
 							}
-						],
-						"typeConversion": true,
-						"typeConversionSettings": {
-							"allowDataTruncation": true,
-							"treatBooleanAsNumber": false
-						}
+						]
 					}
 				},
 				"inputs": [
 					{
 						"referenceName": "file_do_mg_contact",
-						"type": "DatasetReference"
-					}
-				],
-				"outputs": [
-					{
-						"referenceName": "Sandbox_DonorOrder",
 						"type": "DatasetReference"
 					}
 				]
