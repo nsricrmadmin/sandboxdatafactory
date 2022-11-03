@@ -30,8 +30,7 @@
 					"sink": {
 						"type": "CommonDataServiceForAppsSink",
 						"writeBatchSize": 10,
-						"writeBehavior": "upsert",
-						"ignoreNullValues": true
+						"writeBehavior": "upsert"
 					},
 					"enableStaging": false,
 					"translator": {
@@ -40,7 +39,8 @@
 							{
 								"source": {
 									"name": "cog_donororderid",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "cog_donororderid",
@@ -50,19 +50,31 @@
 							{
 								"source": {
 									"name": "cog_transactionid",
-									"type": "String"
+									"type": "String",
+									"physicalType": "String"
 								},
 								"sink": {
 									"name": "cog_donortransaction",
 									"type": "Guid"
 								}
 							}
-						]
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
 					}
 				},
 				"inputs": [
 					{
 						"referenceName": "file_do_mg_contact",
+						"type": "DatasetReference"
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "SandboxDonorOrder",
 						"type": "DatasetReference"
 					}
 				]
