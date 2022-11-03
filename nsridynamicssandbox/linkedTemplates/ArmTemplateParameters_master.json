@@ -8,6 +8,9 @@
 		"Dynamics1_password": {
 			"value": ""
 		},
+		"Error Output_accountKey": {
+			"value": ""
+		},
 		"nsridynamicssandox_password": {
 			"value": ""
 		},
@@ -20,11 +23,11 @@
 		"training_password": {
 			"value": ""
 		},
-		"Error Output_accountKey": {
-			"value": ""
-		},
 		"Dynamics1_properties_typeProperties_username": {
 			"value": "crmadmin@searescue.org.za"
+		},
+		"Error Output_properties_typeProperties_url": {
+			"value": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		},
 		"nsridynamicssandox_properties_typeProperties_username": {
 			"value": "crmadmin@searescue.org.za"
@@ -37,9 +40,6 @@
 		},
 		"training_properties_typeProperties_username": {
 			"value": "crmadmin@searescue.org.za"
-		},
-		"Error Output_properties_typeProperties_url": {
-			"value": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		},
 		"containerUri": {
 			"value": ""

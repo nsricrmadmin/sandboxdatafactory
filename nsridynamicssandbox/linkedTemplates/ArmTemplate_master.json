@@ -11,6 +11,10 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'Dynamics1'"
 		},
+		"Error Output_accountKey": {
+			"type": "secureString",
+			"metadata": "Secure string for 'accountKey' of 'Error Output'"
+		},
 		"nsridynamicssandox_password": {
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'nsridynamicssandox'"
@@ -27,13 +31,13 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'password' of 'training'"
 		},
-		"Error Output_accountKey": {
-			"type": "secureString",
-			"metadata": "Secure string for 'accountKey' of 'Error Output'"
-		},
 		"Dynamics1_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "crmadmin@searescue.org.za"
+		},
+		"Error Output_properties_typeProperties_url": {
+			"type": "string",
+			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		},
 		"nsridynamicssandox_properties_typeProperties_username": {
 			"type": "string",
@@ -50,10 +54,6 @@
 		"training_properties_typeProperties_username": {
 			"type": "string",
 			"defaultValue": "crmadmin@searescue.org.za"
-		},
-		"Error Output_properties_typeProperties_url": {
-			"type": "string",
-			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
 		},
 		"containerUri": {
 			"type": "string",
@@ -85,6 +85,9 @@
 					"Dynamics1_password": {
 						"value": "[parameters('Dynamics1_password')]"
 					},
+					"Error Output_accountKey": {
+						"value": "[parameters('Error Output_accountKey')]"
+					},
 					"nsridynamicssandox_password": {
 						"value": "[parameters('nsridynamicssandox_password')]"
 					},
@@ -97,11 +100,11 @@
 					"training_password": {
 						"value": "[parameters('training_password')]"
 					},
-					"Error Output_accountKey": {
-						"value": "[parameters('Error Output_accountKey')]"
-					},
 					"Dynamics1_properties_typeProperties_username": {
 						"value": "[parameters('Dynamics1_properties_typeProperties_username')]"
+					},
+					"Error Output_properties_typeProperties_url": {
+						"value": "[parameters('Error Output_properties_typeProperties_url')]"
 					},
 					"nsridynamicssandox_properties_typeProperties_username": {
 						"value": "[parameters('nsridynamicssandox_properties_typeProperties_username')]"
@@ -114,9 +117,6 @@
 					},
 					"training_properties_typeProperties_username": {
 						"value": "[parameters('training_properties_typeProperties_username')]"
-					},
-					"Error Output_properties_typeProperties_url": {
-						"value": "[parameters('Error Output_properties_typeProperties_url')]"
 					}
 				}
 			},
