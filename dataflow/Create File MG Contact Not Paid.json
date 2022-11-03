@@ -1,5 +1,5 @@
 {
-	"name": "File MG Contact Not Paid",
+	"name": "Create File MG Contact Not Paid",
 	"properties": {
 		"description": "Contact, MG, Bankdetails",
 		"type": "MappingDataFlow",
@@ -75,7 +75,7 @@
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <attribute name=\"cog_division\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_transactionfrom\"/>          \\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_transactionfrom\" operator=\"eq\" value=\"181310000\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_bankdetails\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+				"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <attribute name=\"cog_division\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_transactionfrom\"/>          \\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_transactionfrom\" operator=\"eq\" value=\"181310000\"/>\\n<condition attribute=\"cog_contact\" operator=\"eq\" value=\"{a2b3949f-a660-eb11-a812-0022489c7bb4}\" uiname=\"Hilton Allison\" uitype=\"contact\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_bankdetails\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
 				"     manifestType: 'model') ~> transaction",
 				"DerivedDonorOrderKey, DerivedTransactionKey join(DonorOrderKey == TransactionKey,",
 				"     joinType:'inner',",
