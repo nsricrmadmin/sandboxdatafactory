@@ -88,8 +88,10 @@
 				"donororder derive(DonorOrderKey = cog_bankdetails+toString(cog_competition)+cog_contact+toString(cog_paymentmethod),",
 				"          Target = 'cog_transaction') ~> DerivedDonorOrderKey",
 				"transaction derive(TransactionKey = cog_bankdetails+toString(cog_division)+cog_contact+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
-				"joindonorordertransaction derive(statuscodeconsub = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001'),",
-				"          statuscodepmsub = iif(equals(donororder@statuscode,'2'),'181310019', '2')) ~> submittecdolumns",
+				"joindonorordertransaction derive(statuscodeconsubmitted = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001'),",
+				"          statuscodepmsubmitted = iif(equals(donororder@statuscode,'2'),'181310019', '2'),",
+				"          statuscodeconsuccessonceoff = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001'),",
+				"          statuscodeconsuccessmonthly = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001')) ~> submittecdolumns",
 				"submittecdolumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['donororders_mg_contact_notpaid.csv'],",
@@ -103,8 +105,8 @@
 				"          cog_donororderid,",
 				"          cog_transactionid,",
 				"          statecode,",
-				"          statuscodeconsub,",
-				"          statuscodepmsub",
+				"          statuscodeconsub = statuscodeconsubmitted,",
+				"          statuscodepmsub = statuscodepmsubmitted",
 				"     ),",
 				"     partitionBy('hash', 1)) ~> dotransmgcontactnotpaidc"
 			]
