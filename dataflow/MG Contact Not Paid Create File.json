@@ -40,13 +40,7 @@
 					"name": "DerivedTransactionKey"
 				},
 				{
-					"name": "split1"
-				},
-				{
-					"name": "convertedsubmitted"
-				},
-				{
-					"name": "paidmonthlysubmitted"
+					"name": "submittecdolumns"
 				}
 			],
 			"scriptLines": [
@@ -94,12 +88,9 @@
 				"donororder derive(DonorOrderKey = cog_bankdetails+toString(cog_competition)+cog_contact+toString(cog_paymentmethod),",
 				"          Target = 'cog_transaction') ~> DerivedDonorOrderKey",
 				"transaction derive(TransactionKey = cog_bankdetails+toString(cog_division)+cog_contact+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
-				"joindonorordertransaction split(equals(donororder@statuscode,'181310001'),",
-				"     equals(donororder@statuscode,'2'),",
-				"     disjoint: true) ~> split1@(converted, paidmonthly)",
-				"split1@converted derive(convertedsubmittedstatus = '181310013') ~> convertedsubmitted",
-				"split1@paidmonthly derive(paidmonthlysubmittedstatus = '181310019') ~> paidmonthlysubmitted",
-				"convertedsubmitted sink(allowSchemaDrift: true,",
+				"joindonorordertransaction derive(statuscodeconsub = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001'),",
+				"          statuscodepmsub = iif(equals(donororder@statuscode,'2'),'181310019', '2')) ~> submittecdolumns",
+				"submittecdolumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['donororders_mg_contact_notpaid.csv'],",
 				"     truncate: true,",
@@ -111,8 +102,9 @@
 				"     mapColumn(",
 				"          cog_donororderid,",
 				"          cog_transactionid,",
-				"          statuscode = split1@converted@{@odata.etag},",
-				"          statecode",
+				"          statecode,",
+				"          statuscodeconsub,",
+				"          statuscodepmsub",
 				"     ),",
 				"     partitionBy('hash', 1)) ~> dotransmgcontactnotpaidc"
 			]

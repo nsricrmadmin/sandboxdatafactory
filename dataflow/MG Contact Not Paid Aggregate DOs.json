@@ -41,11 +41,15 @@
 				},
 				{
 					"name": "derivedtransactiondate"
+				},
+				{
+					"name": "From"
 				}
 			],
 			"scriptLines": [
 				"source(output(",
 				"          {@odata.etag} as string,",
+				"          cog_account as string,",
 				"          cog_bankdetails as string,",
 				"          cog_contact as string,",
 				"          transactioncurrencyid as string,",
@@ -55,13 +59,14 @@
 				"          cog_donororderid as string,",
 				"          cog_name as string,",
 				"          cog_paymentmethod as string,",
+				"          cog_paymenttype as string,",
 				"          cog_totalticketamount as string,",
 				"          statecode as string,",
 				"          statuscode as string",
 				"     ),",
 				"     allowSchemaDrift: true,",
 				"     validateSchema: false,",
-				"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_donororderfrom\" operator=\"eq\" value=\"181310000\"/>\\n               <condition attribute=\"cog_bankdetails\" operator=\"not-null\"/>\\n               <condition attribute=\"cog_datepaid\" operator=\"null\"/>\\n               <filter type=\"or\">\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               </filter>\\n          </filter>\\n     </entity>\\n</fetch>',",
+				"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <filter type=\"or\">\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               </filter>\\n          </filter>\\n     </entity>\\n</fetch>',",
 				"     manifestType: 'model') ~> donororder",
 				"source(output(",
 				"          {@odata.etag} as string,",
@@ -93,7 +98,10 @@
 				"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
 				"          each(match(name=='cog_donororderfrom'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'), $$ = first($$))) ~> agregatedonororders",
 				"agregatedonororders derive(cog_transactiondate = currentUTC()) ~> derivedtransactiondate",
-				"derivedtransactiondate sink(allowSchemaDrift: true,",
+				"derivedtransactiondate split(cog_donororderfrom=='181310001',",
+				"     cog_donororderfrom=='181310000',",
+				"     disjoint: false) ~> From@(FromAccount, FromContact)",
+				"From@FromAccount sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
 				"     insertable:true,",
