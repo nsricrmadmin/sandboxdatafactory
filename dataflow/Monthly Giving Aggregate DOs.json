@@ -1,5 +1,5 @@
 {
-	"name": "MG Contact Not Paid Aggregate DOs",
+	"name": "Monthly Giving Aggregate DOs",
 	"properties": {
 		"description": "Contact, MG, Bankdetails",
 		"type": "MappingDataFlow",
