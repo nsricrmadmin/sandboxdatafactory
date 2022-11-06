@@ -1,5 +1,5 @@
 {
-	"name": "MG Aggregation Create File",
+	"name": "MG Aggregation Create Files",
 	"properties": {
 		"description": "Contact, MG, Bankdetails",
 		"type": "MappingDataFlow",
