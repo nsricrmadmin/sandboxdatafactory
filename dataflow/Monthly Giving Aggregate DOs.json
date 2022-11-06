@@ -48,6 +48,9 @@
 				},
 				{
 					"name": "aggregatefromcontact"
+				},
+				{
+					"name": "TransactionAmount"
 				}
 			],
 			"scriptLines": [
@@ -94,7 +97,7 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonororderbankdetails",
-				"joindonororderbankdetails split(cog_donororderfrom=='181310001',",
+				"TransactionAmount split(cog_donororderfrom=='181310001',",
 				"     cog_donororderfrom=='181310000',",
 				"     disjoint: false) ~> From@(FromAccount, FromContact)",
 				"From@FromAccount aggregate(groupBy(cog_competition,",
@@ -111,6 +114,7 @@
 				"          cog_donororderfrom),",
 				"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
 				"          each(match(name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_transactiondate'), $$ = first($$))) ~> aggregatefromcontact",
+				"joindonororderbankdetails derive(cog_transactionamount = iif(equals(isNull(cog_donationamount),true()),cog_totalticketamount,cog_donationamount)) ~> TransactionAmount",
 				"aggregatefromaccount sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
