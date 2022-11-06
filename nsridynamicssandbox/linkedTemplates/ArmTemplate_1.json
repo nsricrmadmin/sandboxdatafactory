@@ -42,7 +42,7 @@
 								"referenceName": "Sandbox_Transaction",
 								"type": "DatasetReference"
 							},
-							"name": "ceatetransactions"
+							"name": "accounttransactions"
 						},
 						{
 							"dataset": {
@@ -50,24 +50,11 @@
 								"type": "DatasetReference"
 							},
 							"name": "ContactTransactions"
-						},
-						{
-							"dataset": {
-								"referenceName": "MonthlyGivingAggregation",
-								"type": "DatasetReference"
-							},
-							"name": "CreateCSVMGAggregation"
 						}
 					],
 					"transformations": [
 						{
 							"name": "joindonororderbankdetails"
-						},
-						{
-							"name": "derivedtransactionamount"
-						},
-						{
-							"name": "derivedtransactiondate"
 						},
 						{
 							"name": "From"
@@ -77,6 +64,9 @@
 						},
 						{
 							"name": "aggregatefromcontact"
+						},
+						{
+							"name": "TransactionAmount"
 						}
 					],
 					"scriptLines": [
@@ -123,9 +113,7 @@
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
 						"     broadcast: 'auto')~> joindonororderbankdetails",
-						"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_donationamount),cog_totalticketamount,cog_donationamount)) ~> derivedtransactionamount",
-						"derivedtransactionamount derive(cog_transactiondate = currentUTC()) ~> derivedtransactiondate",
-						"derivedtransactiondate split(cog_donororderfrom=='181310001',",
+						"TransactionAmount split(cog_donororderfrom=='181310001',",
 						"     cog_donororderfrom=='181310000',",
 						"     disjoint: false) ~> From@(FromAccount, FromContact)",
 						"From@FromAccount aggregate(groupBy(cog_competition,",
@@ -142,6 +130,8 @@
 						"          cog_donororderfrom),",
 						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
 						"          each(match(name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_transactiondate'), $$ = first($$))) ~> aggregatefromcontact",
+						"joindonororderbankdetails derive(cog_transactionamount = iif(equals(isNull(cog_donationamount),true()),cog_totalticketamount,cog_donationamount),",
+						"          cog_transactiondate = currentUTC()) ~> TransactionAmount",
 						"aggregatefromaccount sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
@@ -164,7 +154,7 @@
 						"          cog_expireydate,",
 						"          cog_accountholder,",
 						"          cog_accountnumber",
-						"     )) ~> ceatetransactions",
+						"     )) ~> accounttransactions",
 						"aggregatefromcontact sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
@@ -188,31 +178,20 @@
 						"          cog_cvc,",
 						"          cog_expireydate,",
 						"          cog_transactiondate",
-						"     )) ~> ContactTransactions",
-						"derivedtransactiondate sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     input(",
-						"          cog_donororderid as string,",
-						"          cog_transactionid as string",
-						"     ),",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true) ~> CreateCSVMGAggregation"
+						"     )) ~> ContactTransactions"
 					]
 				}
 			},
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Create File MG Contact Not Paid')]",
+			"name": "[concat(parameters('factoryName'), '/TEST MG Create Files')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Update Donor Order",
+						"name": "MG Create Files",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -225,14 +204,16 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG Contact Not Paid Create File",
+								"referenceName": "MG Aggregation Create File",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
 									"donororder": {},
 									"transaction": {},
-									"dotransmgcontactnotpaidc": {}
-								}
+									"fromaccount": {},
+									"fromcontact": {}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
@@ -277,9 +258,8 @@
 								"datasetParameters": {
 									"donororder": {},
 									"bankdetails": {},
-									"ceatetransactions": {},
-									"ContactTransactions": {},
-									"CreateCSVMGAggregation": {}
+									"accounttransactions": {},
+									"ContactTransactions": {}
 								}
 							},
 							"staging": {},
@@ -311,13 +291,14 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG Contact Not Paid Create File",
+								"referenceName": "MG Aggregation Create File",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
 									"donororder": {},
 									"transaction": {},
-									"dotransmgcontactnotpaidc": {}
+									"fromaccount": {},
+									"fromcontact": {}
 								}
 							},
 							"staging": {},
@@ -426,13 +407,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/test aggregate only')]",
+			"name": "[concat(parameters('factoryName'), '/TEST Monthly Giving Aggregation')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Data flow1",
+						"name": "Monthly Giving Aggregation",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -451,9 +432,8 @@
 								"datasetParameters": {
 									"donororder": {},
 									"bankdetails": {},
-									"ceatetransactions": {},
-									"ContactTransactions": {},
-									"CreateCSVMGAggregation": {}
+									"accounttransactions": {},
+									"ContactTransactions": {}
 								}
 							},
 							"staging": {},
