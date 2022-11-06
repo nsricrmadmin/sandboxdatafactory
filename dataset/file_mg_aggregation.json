@@ -1,5 +1,5 @@
 {
-	"name": "file_mg_aggregation_source",
+	"name": "file_mg_aggregation",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",
