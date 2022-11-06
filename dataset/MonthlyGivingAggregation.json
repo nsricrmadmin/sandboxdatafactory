@@ -1,0 +1,33 @@
+{
+	"name": "MonthlyGivingAggregation",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sandboxdatalake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"fileName": "monthlygivingaggregation.csv",
+				"folderPath": "Monthly Giving",
+				"fileSystem": "datafiles"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "cog_donororderid",
+				"type": "String"
+			},
+			{
+				"name": "cog_transactionid",
+				"type": "String"
+			}
+		]
+	}
+}
