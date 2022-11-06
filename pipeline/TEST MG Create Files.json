@@ -1,9 +1,9 @@
 {
-	"name": "Create File MG Contact Not Paid",
+	"name": "TEST MG Create Files",
 	"properties": {
 		"activities": [
 			{
-				"name": "Update Donor Order",
+				"name": "MG Create Files",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG Contact Not Paid Create File",
+						"referenceName": "MG Aggregation Create File",
 						"type": "DataFlowReference"
 					},
 					"compute": {
