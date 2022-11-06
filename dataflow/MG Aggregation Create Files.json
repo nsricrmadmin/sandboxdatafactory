@@ -23,7 +23,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "file_mg_aggregation",
+						"referenceName": "file_mg_aggregation_source",
 						"type": "DatasetReference"
 					},
 					"name": "mgaggregationfile"
@@ -97,6 +97,10 @@
 				"          new_statuscodeconsuccessmonthly = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001')) ~> submittecdolumns",
 				"submittecdolumns sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
+				"     input(",
+				"          cog_donororderid as string,",
+				"          cog_transactionid as string",
+				"     ),",
 				"     partitionFileNames:['monthlygivingaggregation.csv'],",
 				"     umask: 0022,",
 				"     preCommands: [],",
