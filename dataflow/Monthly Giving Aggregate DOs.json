@@ -34,13 +34,6 @@
 						"type": "DatasetReference"
 					},
 					"name": "ContactTransactions"
-				},
-				{
-					"dataset": {
-						"referenceName": "MonthlyGivingAggregation",
-						"type": "DatasetReference"
-					},
-					"name": "CreateCSVMGAggregation"
 				}
 			],
 			"transformations": [
@@ -164,18 +157,7 @@
 				"          cog_cvc,",
 				"          cog_expireydate,",
 				"          cog_transactiondate",
-				"     )) ~> ContactTransactions",
-				"joindonororderbankdetails sink(allowSchemaDrift: true,",
-				"     validateSchema: false,",
-				"     input(",
-				"          cog_donororderid as string,",
-				"          cog_transactionid as string",
-				"     ),",
-				"     umask: 0022,",
-				"     preCommands: [],",
-				"     postCommands: [],",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> CreateCSVMGAggregation"
+				"     )) ~> ContactTransactions"
 			]
 		}
 	}
