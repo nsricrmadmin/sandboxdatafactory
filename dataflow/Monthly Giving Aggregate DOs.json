@@ -153,7 +153,7 @@
 				"          cog_contact,",
 				"          cog_paymentmethod,",
 				"          cog_bankdetails,",
-				"          cog_tranactionamount = cog_transactionamount,",
+				"          cog_transactionamount,",
 				"          cog_transactionfrom = cog_donororderfrom,",
 				"          cog_bank,",
 				"          cog_accountholder,",
