@@ -86,7 +86,7 @@
 				"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_bankdetails\">\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_cvc\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <attribute name=\"cog_bank\"/>\\n          <attribute name=\"cog_accounttype\"/>\\n          <attribute name=\"cog_contactid\"/>\\n          <attribute name=\"cog_bankdetailsid\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"cog_contactid\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
 				"     manifestType: 'model') ~> bankdetails",
 				"donororder, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
-				"     joinType:'inner',",
+				"     joinType:'left',",
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonororderbankdetails",
