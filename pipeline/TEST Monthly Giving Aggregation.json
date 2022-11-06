@@ -1,9 +1,9 @@
 {
-	"name": "test aggregate only",
+	"name": "TEST Monthly Giving Aggregation",
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "Monthly Giving Aggregation",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
