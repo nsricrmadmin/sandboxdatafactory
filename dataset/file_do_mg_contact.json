@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "donororders_mg_contact_notpaid.csv",
+				"fileName": "mgcontactaggregation.csv",
 				"folderPath": "Monthly Giving",
 				"fileSystem": "datafiles"
 			},
