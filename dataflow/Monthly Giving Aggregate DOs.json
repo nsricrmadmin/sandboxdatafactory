@@ -149,7 +149,7 @@
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
-				"          cog_competition,",
+				"          cog_division = cog_competition,",
 				"          cog_contact,",
 				"          cog_paymentmethod,",
 				"          cog_bankdetails,",
