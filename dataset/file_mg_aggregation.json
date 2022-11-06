@@ -1,5 +1,5 @@
 {
-	"name": "file_do_mg_contact",
+	"name": "file_mg_aggregation",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",
