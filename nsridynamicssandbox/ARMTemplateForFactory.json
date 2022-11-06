@@ -61,6 +61,231 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Create File MG Contact Not Paid')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Update Donor Order",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MG Contact Not Paid Create File",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"transaction": {},
+									"dotransmgcontactnotpaidc": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/MG Contact Not Paid Create File')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Monthly Giving Aggregation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Aggregate Donor Orders",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Monthly Giving Aggregate DOs",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"bankdetails": {},
+									"ceatetransactions": {},
+									"ContactTransactions": {},
+									"CreateCSVMGAggregation": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Create CSV File with Transactionid",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "Aggregate Donor Orders",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MG Contact Not Paid Create File",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"transaction": {},
+									"dotransmgcontactnotpaidc": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 16,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "Update DO with Transactionid",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Create CSV File with Transactionid",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFileName": "*",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "CommonDataServiceForAppsSink",
+								"writeBatchSize": 10,
+								"writeBehavior": "upsert"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "cog_donororderid",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cog_donororderid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "cog_transactionid",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cog_donortransaction",
+											"type": "Guid"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "file_do_mg_contact",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SandboxDonorOrder",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]",
+				"[concat(variables('factoryId'), '/dataflows/MG Contact Not Paid Create File')]",
+				"[concat(variables('factoryId'), '/datasets/file_do_mg_contact')]",
+				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Tutorial Copy Data Only Contact')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -179,229 +404,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Create File MG Contact Not Paid')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Update Donor Order",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "MG Contact Not Paid Create File",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"donororder": {},
-									"transaction": {},
-									"dotransmgcontactnotpaid": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 16,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/MG Contact Not Paid Create File')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MG Contact Not Paid Complete')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Aggregate Donor Orders",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "MG Contact Not Paid Aggregate DOs",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"donororder": {},
-									"bankdetails": {},
-									"ceatetransactions": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 16,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "Create CSV File with Transactionid",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "Aggregate Donor Orders",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "MG Contact Not Paid Create File",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"donororder": {},
-									"transaction": {},
-									"dotransmgcontactnotpaid": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 16,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "Update DO with Transactionid",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Create CSV File with Transactionid",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFileName": "*",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "CommonDataServiceForAppsSink",
-								"writeBatchSize": 10,
-								"writeBehavior": "upsert"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "cog_donororderid",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "cog_donororderid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "cog_transactionid",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "cog_donortransaction",
-											"type": "Guid"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "file_do_mg_contact",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SandboxDonorOrder",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/MG Contact Not Paid Aggregate DOs')]",
-				"[concat(variables('factoryId'), '/dataflows/MG Contact Not Paid Create File')]",
-				"[concat(variables('factoryId'), '/datasets/file_do_mg_contact')]",
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Update Donor Order from CSV File')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -499,6 +501,56 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/test aggregate only')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Monthly Giving Aggregate DOs",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"bankdetails": {},
+									"ceatetransactions": {},
+									"ContactTransactions": {},
+									"CreateCSVMGAggregation": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/DataverseEntityContactSandbox')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -536,6 +588,44 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/training')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MonthlyGivingAggregation')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "monthlygivingaggregation.csv",
+						"folderPath": "Monthly Giving",
+						"fileSystem": "datafiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "cog_donororderid",
+						"type": "String"
+					},
+					{
+						"name": "cog_transactionid",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
 			]
 		},
 		{
@@ -1368,134 +1458,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG Contact Not Paid Aggregate DOs')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Contact, MG, Bankdetails",
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "SandboxDonorOrder",
-								"type": "DatasetReference"
-							},
-							"name": "donororder"
-						},
-						{
-							"dataset": {
-								"referenceName": "Sandbox_BankDetail",
-								"type": "DatasetReference"
-							},
-							"name": "bankdetails"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "Sandbox_Transaction",
-								"type": "DatasetReference"
-							},
-							"name": "ceatetransactions"
-						}
-					],
-					"transformations": [
-						{
-							"name": "joindonororderbankdetails"
-						},
-						{
-							"name": "derivedtransactionamount"
-						},
-						{
-							"name": "agregatedonororders"
-						},
-						{
-							"name": "derivedtransactiondate"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          {@odata.etag} as string,",
-						"          cog_bankdetails as string,",
-						"          cog_contact as string,",
-						"          transactioncurrencyid as string,",
-						"          cog_competition as string,",
-						"          cog_donationamount as string,",
-						"          cog_donororderfrom as string,",
-						"          cog_donororderid as string,",
-						"          cog_name as string,",
-						"          cog_paymentmethod as string,",
-						"          cog_totalticketamount as string,",
-						"          statecode as string,",
-						"          statuscode as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_donororderfrom\" operator=\"eq\" value=\"181310000\"/>\\n               <condition attribute=\"cog_bankdetails\" operator=\"not-null\"/>\\n               <condition attribute=\"cog_datepaid\" operator=\"null\"/>\\n<condition attribute=\"cog_contact\" operator=\"eq\" value=\"{a2b3949f-a660-eb11-a812-0022489c7bb4}\" uiname=\"Hilton Allison\" uitype=\"contact\"/>\\n               <filter type=\"or\">\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               </filter>\\n          </filter>\\n     </entity>\\n</fetch>',",
-						"     manifestType: 'model') ~> donororder",
-						"source(output(",
-						"          {@odata.etag} as string,",
-						"          cog_bank as string,",
-						"          cog_contactid as string,",
-						"          cog_accountholder as string,",
-						"          cog_accountnumber as string,",
-						"          cog_accounttype as string,",
-						"          cog_bankdetailsid as string,",
-						"          cog_branchcode as string,",
-						"          cog_cvc as string,",
-						"          cog_expireydate as string,",
-						"          statecode as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_bankdetails\">\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_cvc\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <attribute name=\"cog_bank\"/>\\n          <attribute name=\"cog_accounttype\"/>\\n          <attribute name=\"cog_contactid\"/>\\n          <attribute name=\"cog_bankdetailsid\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"cog_contactid\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
-						"     manifestType: 'model') ~> bankdetails",
-						"donororder, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
-						"     joinType:'inner',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> joindonororderbankdetails",
-						"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_donationamount),cog_totalticketamount,cog_donationamount)) ~> derivedtransactionamount",
-						"derivedtransactionamount aggregate(groupBy(cog_competition,",
-						"          cog_contact,",
-						"          cog_paymentmethod,",
-						"          cog_bankdetails),",
-						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
-						"          each(match(name=='cog_donororderfrom'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'), $$ = first($$))) ~> agregatedonororders",
-						"agregatedonororders derive(cog_transactiondate = currentUTC()) ~> derivedtransactiondate",
-						"derivedtransactiondate sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     mapColumn(",
-						"          cog_division = cog_competition,",
-						"          cog_contact,",
-						"          cog_paymentmethod,",
-						"          cog_bankdetails,",
-						"          cog_transactionamount,",
-						"          cog_transactionfrom = cog_donororderfrom,",
-						"          cog_transactiondate,",
-						"          cog_bank,",
-						"          cog_accounttype,",
-						"          cog_branchcode,",
-						"          cog_cvc,",
-						"          cog_expireydate,",
-						"          cog_accountholder,",
-						"          cog_accountnumber",
-						"     )) ~> ceatetransactions"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
-				"[concat(variables('factoryId'), '/datasets/Sandbox_BankDetail')]",
-				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/MG Contact Not Paid Create File')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1525,7 +1487,7 @@
 								"referenceName": "file_do_mg_contact",
 								"type": "DatasetReference"
 							},
-							"name": "dotransmgcontactnotpaid"
+							"name": "dotransmgcontactnotpaidc"
 						}
 					],
 					"transformations": [
@@ -1537,6 +1499,9 @@
 						},
 						{
 							"name": "DerivedTransactionKey"
+						},
+						{
+							"name": "submittecdolumns"
 						}
 					],
 					"scriptLines": [
@@ -1584,7 +1549,9 @@
 						"donororder derive(DonorOrderKey = cog_bankdetails+toString(cog_competition)+cog_contact+toString(cog_paymentmethod),",
 						"          Target = 'cog_transaction') ~> DerivedDonorOrderKey",
 						"transaction derive(TransactionKey = cog_bankdetails+toString(cog_division)+cog_contact+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
-						"joindonorordertransaction sink(allowSchemaDrift: true,",
+						"joindonorordertransaction derive(statuscodeconsub = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001'),",
+						"          statuscodepmsub = iif(equals(donororder@statuscode,'2'),'181310019', '2')) ~> submittecdolumns",
+						"submittecdolumns sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     partitionFileNames:['donororders_mg_contact_notpaid.csv'],",
 						"     truncate: true,",
@@ -1595,9 +1562,12 @@
 						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
 						"          cog_donororderid,",
-						"          cog_transactionid",
+						"          cog_transactionid,",
+						"          statecode,",
+						"          statuscodeconsub,",
+						"          statuscodepmsub",
 						"     ),",
-						"     partitionBy('hash', 1)) ~> dotransmgcontactnotpaid"
+						"     partitionBy('hash', 1)) ~> dotransmgcontactnotpaidc"
 					]
 				}
 			},
@@ -1605,6 +1575,204 @@
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
 				"[concat(variables('factoryId'), '/datasets/file_do_mg_contact')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Monthly Giving Aggregate DOs')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Contact, MG, Bankdetails",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SandboxDonorOrder",
+								"type": "DatasetReference"
+							},
+							"name": "donororder"
+						},
+						{
+							"dataset": {
+								"referenceName": "Sandbox_BankDetail",
+								"type": "DatasetReference"
+							},
+							"name": "bankdetails"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Sandbox_Transaction",
+								"type": "DatasetReference"
+							},
+							"name": "ceatetransactions"
+						},
+						{
+							"dataset": {
+								"referenceName": "Sandbox_Transaction",
+								"type": "DatasetReference"
+							},
+							"name": "ContactTransactions"
+						},
+						{
+							"dataset": {
+								"referenceName": "MonthlyGivingAggregation",
+								"type": "DatasetReference"
+							},
+							"name": "CreateCSVMGAggregation"
+						}
+					],
+					"transformations": [
+						{
+							"name": "joindonororderbankdetails"
+						},
+						{
+							"name": "derivedtransactionamount"
+						},
+						{
+							"name": "derivedtransactiondate"
+						},
+						{
+							"name": "From"
+						},
+						{
+							"name": "aggregatefromaccount"
+						},
+						{
+							"name": "aggregatefromcontact"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          cog_account as string,",
+						"          cog_bankdetails as string,",
+						"          cog_contact as string,",
+						"          transactioncurrencyid as string,",
+						"          cog_competition as string,",
+						"          cog_donationamount as string,",
+						"          cog_donororderfrom as string,",
+						"          cog_donororderid as string,",
+						"          cog_name as string,",
+						"          cog_paymentmethod as string,",
+						"          cog_paymenttype as string,",
+						"          cog_totalticketamount as string,",
+						"          statecode as string,",
+						"          statuscode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     manifestType: 'model') ~> donororder",
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          cog_bank as string,",
+						"          cog_contactid as string,",
+						"          cog_accountholder as string,",
+						"          cog_accountnumber as string,",
+						"          cog_accounttype as string,",
+						"          cog_bankdetailsid as string,",
+						"          cog_branchcode as string,",
+						"          cog_cvc as string,",
+						"          cog_expireydate as string,",
+						"          statecode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_bankdetails\">\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_cvc\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <attribute name=\"cog_bank\"/>\\n          <attribute name=\"cog_accounttype\"/>\\n          <attribute name=\"cog_contactid\"/>\\n          <attribute name=\"cog_bankdetailsid\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"cog_contactid\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     manifestType: 'model') ~> bankdetails",
+						"donororder, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindonororderbankdetails",
+						"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_donationamount),cog_totalticketamount,cog_donationamount)) ~> derivedtransactionamount",
+						"derivedtransactionamount derive(cog_transactiondate = currentUTC()) ~> derivedtransactiondate",
+						"derivedtransactiondate split(cog_donororderfrom=='181310001',",
+						"     cog_donororderfrom=='181310000',",
+						"     disjoint: false) ~> From@(FromAccount, FromContact)",
+						"From@FromAccount aggregate(groupBy(cog_competition,",
+						"          cog_account,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_donororderfrom),",
+						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
+						"          each(match(name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_contact'||name=='cog_transactiondate'), $$ = first($$))) ~> aggregatefromaccount",
+						"From@FromContact aggregate(groupBy(cog_competition,",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_donororderfrom),",
+						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
+						"          each(match(name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_transactiondate'), $$ = first($$))) ~> aggregatefromcontact",
+						"aggregatefromaccount sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     mapColumn(",
+						"          cog_division = cog_competition,",
+						"          cog_account,",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_transactionamount,",
+						"          cog_transactionfrom = cog_donororderfrom,",
+						"          cog_transactiondate,",
+						"          cog_bank,",
+						"          cog_accounttype,",
+						"          cog_branchcode,",
+						"          cog_cvc,",
+						"          cog_expireydate,",
+						"          cog_accountholder,",
+						"          cog_accountnumber",
+						"     )) ~> ceatetransactions",
+						"aggregatefromcontact sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          cog_division = cog_competition,",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_transactionamount,",
+						"          cog_transactionfrom = cog_donororderfrom,",
+						"          cog_bank,",
+						"          cog_accountholder,",
+						"          cog_accountnumber,",
+						"          cog_accounttype,",
+						"          cog_branchcode,",
+						"          cog_cvc,",
+						"          cog_expireydate,",
+						"          cog_transactiondate",
+						"     )) ~> ContactTransactions",
+						"derivedtransactiondate sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          cog_donororderid as string,",
+						"          cog_transactionid as string",
+						"     ),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> CreateCSVMGAggregation"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
+				"[concat(variables('factoryId'), '/datasets/Sandbox_BankDetail')]",
+				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
+				"[concat(variables('factoryId'), '/datasets/MonthlyGivingAggregation')]"
 			]
 		},
 		{

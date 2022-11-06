@@ -13,6 +13,199 @@
 	},
 	"resources": [
 		{
+			"name": "[concat(parameters('factoryName'), '/Monthly Giving Aggregate DOs')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Contact, MG, Bankdetails",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SandboxDonorOrder",
+								"type": "DatasetReference"
+							},
+							"name": "donororder"
+						},
+						{
+							"dataset": {
+								"referenceName": "Sandbox_BankDetail",
+								"type": "DatasetReference"
+							},
+							"name": "bankdetails"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Sandbox_Transaction",
+								"type": "DatasetReference"
+							},
+							"name": "ceatetransactions"
+						},
+						{
+							"dataset": {
+								"referenceName": "Sandbox_Transaction",
+								"type": "DatasetReference"
+							},
+							"name": "ContactTransactions"
+						},
+						{
+							"dataset": {
+								"referenceName": "MonthlyGivingAggregation",
+								"type": "DatasetReference"
+							},
+							"name": "CreateCSVMGAggregation"
+						}
+					],
+					"transformations": [
+						{
+							"name": "joindonororderbankdetails"
+						},
+						{
+							"name": "derivedtransactionamount"
+						},
+						{
+							"name": "derivedtransactiondate"
+						},
+						{
+							"name": "From"
+						},
+						{
+							"name": "aggregatefromaccount"
+						},
+						{
+							"name": "aggregatefromcontact"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          cog_account as string,",
+						"          cog_bankdetails as string,",
+						"          cog_contact as string,",
+						"          transactioncurrencyid as string,",
+						"          cog_competition as string,",
+						"          cog_donationamount as string,",
+						"          cog_donororderfrom as string,",
+						"          cog_donororderid as string,",
+						"          cog_name as string,",
+						"          cog_paymentmethod as string,",
+						"          cog_paymenttype as string,",
+						"          cog_totalticketamount as string,",
+						"          statecode as string,",
+						"          statuscode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     manifestType: 'model') ~> donororder",
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          cog_bank as string,",
+						"          cog_contactid as string,",
+						"          cog_accountholder as string,",
+						"          cog_accountnumber as string,",
+						"          cog_accounttype as string,",
+						"          cog_bankdetailsid as string,",
+						"          cog_branchcode as string,",
+						"          cog_cvc as string,",
+						"          cog_expireydate as string,",
+						"          statecode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_bankdetails\">\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_cvc\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <attribute name=\"cog_bank\"/>\\n          <attribute name=\"cog_accounttype\"/>\\n          <attribute name=\"cog_contactid\"/>\\n          <attribute name=\"cog_bankdetailsid\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"cog_contactid\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     manifestType: 'model') ~> bankdetails",
+						"donororder, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindonororderbankdetails",
+						"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_donationamount),cog_totalticketamount,cog_donationamount)) ~> derivedtransactionamount",
+						"derivedtransactionamount derive(cog_transactiondate = currentUTC()) ~> derivedtransactiondate",
+						"derivedtransactiondate split(cog_donororderfrom=='181310001',",
+						"     cog_donororderfrom=='181310000',",
+						"     disjoint: false) ~> From@(FromAccount, FromContact)",
+						"From@FromAccount aggregate(groupBy(cog_competition,",
+						"          cog_account,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_donororderfrom),",
+						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
+						"          each(match(name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_contact'||name=='cog_transactiondate'), $$ = first($$))) ~> aggregatefromaccount",
+						"From@FromContact aggregate(groupBy(cog_competition,",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_donororderfrom),",
+						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
+						"          each(match(name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_transactiondate'), $$ = first($$))) ~> aggregatefromcontact",
+						"aggregatefromaccount sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     mapColumn(",
+						"          cog_division = cog_competition,",
+						"          cog_account,",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_transactionamount,",
+						"          cog_transactionfrom = cog_donororderfrom,",
+						"          cog_transactiondate,",
+						"          cog_bank,",
+						"          cog_accounttype,",
+						"          cog_branchcode,",
+						"          cog_cvc,",
+						"          cog_expireydate,",
+						"          cog_accountholder,",
+						"          cog_accountnumber",
+						"     )) ~> ceatetransactions",
+						"aggregatefromcontact sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          cog_division = cog_competition,",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_transactionamount,",
+						"          cog_transactionfrom = cog_donororderfrom,",
+						"          cog_bank,",
+						"          cog_accountholder,",
+						"          cog_accountnumber,",
+						"          cog_accounttype,",
+						"          cog_branchcode,",
+						"          cog_cvc,",
+						"          cog_expireydate,",
+						"          cog_transactiondate",
+						"     )) ~> ContactTransactions",
+						"derivedtransactiondate sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     input(",
+						"          cog_donororderid as string,",
+						"          cog_transactionid as string",
+						"     ),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true) ~> CreateCSVMGAggregation"
+					]
+				}
+			},
+			"dependsOn": []
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/Create File MG Contact Not Paid')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -38,7 +231,7 @@
 								"datasetParameters": {
 									"donororder": {},
 									"transaction": {},
-									"dotransmgcontactnotpaid": {}
+									"dotransmgcontactnotpaidc": {}
 								}
 							},
 							"staging": {},
@@ -59,7 +252,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG Contact Not Paid Complete')]",
+			"name": "[concat(parameters('factoryName'), '/Monthly Giving Aggregation')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -78,13 +271,15 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG Contact Not Paid Aggregate DOs",
+								"referenceName": "Monthly Giving Aggregate DOs",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
 									"donororder": {},
 									"bankdetails": {},
-									"ceatetransactions": {}
+									"ceatetransactions": {},
+									"ContactTransactions": {},
+									"CreateCSVMGAggregation": {}
 								}
 							},
 							"staging": {},
@@ -122,7 +317,7 @@
 								"datasetParameters": {
 									"donororder": {},
 									"transaction": {},
-									"dotransmgcontactnotpaid": {}
+									"dotransmgcontactnotpaidc": {}
 								}
 							},
 							"staging": {},
@@ -226,7 +421,59 @@
 				},
 				"annotations": []
 			},
-			"dependsOn": []
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/test aggregate only')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Data flow1",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Monthly Giving Aggregate DOs",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"bankdetails": {},
+									"ceatetransactions": {},
+									"ContactTransactions": {},
+									"CreateCSVMGAggregation": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]"
+			]
 		}
 	]
 }
