@@ -1,5 +1,5 @@
 {
-	"name": "MonthlyGivingAggregation",
+	"name": "file_mg_aggregation_source",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",
