@@ -82,7 +82,6 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFileName": "*",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -130,7 +129,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "file_do_mg_contact",
+						"referenceName": "file_mg_aggregation",
 						"type": "DatasetReference"
 					}
 				],
