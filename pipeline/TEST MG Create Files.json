@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "MG Create Files",
+				"name": "Data flow1",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -16,11 +16,11 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG Aggregation Create File",
+						"referenceName": "MG Aggregation Create Files",
 						"type": "DataFlowReference"
 					},
 					"compute": {
-						"coreCount": 16,
+						"coreCount": 8,
 						"computeType": "General"
 					},
 					"traceLevel": "Fine"
