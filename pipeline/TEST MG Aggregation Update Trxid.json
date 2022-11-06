@@ -53,7 +53,8 @@
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "cog_transaction"
+									"name": "cog_donortransactionname",
+									"type": "String"
 								}
 							}
 						],
