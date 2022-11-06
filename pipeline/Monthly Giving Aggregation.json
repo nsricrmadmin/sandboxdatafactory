@@ -47,7 +47,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG Aggregation Create File",
+						"referenceName": "MG Aggregation Create Files",
 						"type": "DataFlowReference"
 					},
 					"compute": {
