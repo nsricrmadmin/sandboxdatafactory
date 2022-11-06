@@ -26,7 +26,7 @@
 						"referenceName": "Sandbox_Transaction",
 						"type": "DatasetReference"
 					},
-					"name": "ceatetransactions"
+					"name": "accounttransactions"
 				},
 				{
 					"dataset": {
@@ -41,6 +41,20 @@
 						"type": "DatasetReference"
 					},
 					"name": "CreateCSVMGAggregation"
+				},
+				{
+					"dataset": {
+						"referenceName": "file_do_mg_account",
+						"type": "DatasetReference"
+					},
+					"name": "accountfile"
+				},
+				{
+					"dataset": {
+						"referenceName": "file_do_mg_contact",
+						"type": "DatasetReference"
+					},
+					"name": "contactfile"
 				}
 			],
 			"transformations": [
@@ -49,9 +63,6 @@
 				},
 				{
 					"name": "derivedtransactionamount"
-				},
-				{
-					"name": "derivedtransactiondate"
 				},
 				{
 					"name": "From"
@@ -108,8 +119,7 @@
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonororderbankdetails",
 				"joindonororderbankdetails derive(cog_transactionamount = iif(isNull(cog_donationamount),cog_totalticketamount,cog_donationamount)) ~> derivedtransactionamount",
-				"derivedtransactionamount derive(cog_transactiondate = currentUTC()) ~> derivedtransactiondate",
-				"derivedtransactiondate split(cog_donororderfrom=='181310001',",
+				"derivedtransactionamount split(cog_donororderfrom=='181310001',",
 				"     cog_donororderfrom=='181310000',",
 				"     disjoint: false) ~> From@(FromAccount, FromContact)",
 				"From@FromAccount aggregate(groupBy(cog_competition,",
@@ -148,7 +158,7 @@
 				"          cog_expireydate,",
 				"          cog_accountholder,",
 				"          cog_accountnumber",
-				"     )) ~> ceatetransactions",
+				"     )) ~> accounttransactions",
 				"aggregatefromcontact sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -173,7 +183,7 @@
 				"          cog_expireydate,",
 				"          cog_transactiondate",
 				"     )) ~> ContactTransactions",
-				"derivedtransactiondate sink(allowSchemaDrift: true,",
+				"derivedtransactionamount sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          cog_donororderid as string,",
@@ -183,7 +193,51 @@
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> CreateCSVMGAggregation"
+				"     skipDuplicateMapOutputs: true) ~> CreateCSVMGAggregation",
+				"aggregatefromaccount sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     input(",
+				"          {@odata.etag} as string,",
+				"          cog_bankdetails as string,",
+				"          cog_contact as string,",
+				"          ownerid as string,",
+				"          transactioncurrencyid as string,",
+				"          cog_competition as string,",
+				"          cog_donationamount as string,",
+				"          cog_donationtype as string,",
+				"          cog_donororderfrom as string,",
+				"          cog_donororderid as string,",
+				"          cog_name as string,",
+				"          cog_paymentmethod as string,",
+				"          cog_paymenttype as string,",
+				"          cog_totalticketamount as string,",
+				"          statuscode as string,",
+				"          DonorOrderKey as string,",
+				"          Target as string,",
+				"          cog_division as string,",
+				"          cog_transactionamount as string,",
+				"          cog_transactiondate as string,",
+				"          cog_transactionfrom as string,",
+				"          cog_transactionid as string,",
+				"          cog_transactionno as string,",
+				"          TransactionKey as string",
+				"     ),",
+				"     partitionFileNames:[''],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> accountfile",
+				"aggregatefromcontact sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     partitionFileNames:[''],",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> contactfile"
 			]
 		}
 	}
