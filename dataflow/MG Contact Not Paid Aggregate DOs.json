@@ -27,6 +27,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "ceatetransactions"
+				},
+				{
+					"dataset": {
+						"referenceName": "Sandbox_Transaction",
+						"type": "DatasetReference"
+					},
+					"name": "ContactTransactions"
 				}
 			],
 			"transformations": [
@@ -44,6 +51,9 @@
 				},
 				{
 					"name": "aggregatefromaccount"
+				},
+				{
+					"name": "aggregatefromcontact"
 				}
 			],
 			"scriptLines": [
@@ -101,6 +111,12 @@
 				"          cog_bankdetails),",
 				"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
 				"          each(match(name=='cog_donororderfrom'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_contact'||name=='cog_transactiondate'), $$ = first($$))) ~> aggregatefromaccount",
+				"From@FromContact aggregate(groupBy(cog_competition,",
+				"          cog_contact,",
+				"          cog_paymentmethod,",
+				"          cog_bankdetails),",
+				"     cog_tranactionamount = sum(toInteger(cog_transactionamount)),",
+				"          each(match(name=='cog_donororderfrom'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_transactiondate'), $$ = first($$))) ~> aggregatefromcontact",
 				"aggregatefromaccount sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -123,7 +139,31 @@
 				"          cog_expireydate,",
 				"          cog_accountholder,",
 				"          cog_accountnumber",
-				"     )) ~> ceatetransactions"
+				"     )) ~> ceatetransactions",
+				"aggregatefromcontact sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:true,",
+				"     updateable:false,",
+				"     upsertable:false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          cog_competition,",
+				"          cog_contact,",
+				"          cog_paymentmethod,",
+				"          cog_bankdetails,",
+				"          cog_tranactionamount,",
+				"          cog_donororderfrom,",
+				"          cog_bank,",
+				"          cog_accountholder,",
+				"          cog_accountnumber,",
+				"          cog_accounttype,",
+				"          cog_branchcode,",
+				"          cog_cvc,",
+				"          cog_expireydate,",
+				"          cog_transactiondate",
+				"     )) ~> ContactTransactions"
 			]
 		}
 	}
