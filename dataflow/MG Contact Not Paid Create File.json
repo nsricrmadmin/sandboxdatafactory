@@ -38,6 +38,9 @@
 				},
 				{
 					"name": "DerivedTransactionKey"
+				},
+				{
+					"name": "derivedColumn1"
 				}
 			],
 			"scriptLines": [
@@ -85,7 +88,9 @@
 				"donororder derive(DonorOrderKey = cog_bankdetails+toString(cog_competition)+cog_contact+toString(cog_paymentmethod),",
 				"          Target = 'cog_transaction') ~> DerivedDonorOrderKey",
 				"transaction derive(TransactionKey = cog_bankdetails+toString(cog_division)+cog_contact+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
-				"joindonorordertransaction sink(allowSchemaDrift: true,",
+				"joindonorordertransaction derive(new_statecode = statecode,",
+				"          new_statuscode = ERROR_FUNCTION('iif((iif(donororder@statuscode==\"181310001\"), \"181310013\", donororder@statuscode), (iif(donororder@statuscode==\"2\"), \"181310019\", donororder@statuscode), donororder@statuscode)')) ~> derivedColumn1",
+				"derivedColumn1 sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['donororders_mg_contact_notpaid.csv'],",
 				"     truncate: true,",
