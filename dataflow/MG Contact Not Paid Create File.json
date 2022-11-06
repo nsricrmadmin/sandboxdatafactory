@@ -26,7 +26,7 @@
 						"referenceName": "file_do_mg_contact",
 						"type": "DatasetReference"
 					},
-					"name": "dotransmgcontactnotpaid"
+					"name": "dotransmgcontactnotpaidc"
 				}
 			],
 			"transformations": [
@@ -41,6 +41,12 @@
 				},
 				{
 					"name": "split1"
+				},
+				{
+					"name": "convertedsubmitted"
+				},
+				{
+					"name": "paidmonthlysubmitted"
 				}
 			],
 			"scriptLines": [
@@ -91,7 +97,9 @@
 				"joindonorordertransaction split(equals(donororder@statuscode,'181310001'),",
 				"     equals(donororder@statuscode,'2'),",
 				"     disjoint: true) ~> split1@(converted, paidmonthly)",
-				"split1@converted sink(allowSchemaDrift: true,",
+				"split1@converted derive(convertedsubmittedstatus = '181310013') ~> convertedsubmitted",
+				"split1@paidmonthly derive(paidmonthlysubmittedstatus = '181310019') ~> paidmonthlysubmitted",
+				"convertedsubmitted sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     partitionFileNames:['donororders_mg_contact_notpaid.csv'],",
 				"     truncate: true,",
@@ -102,9 +110,11 @@
 				"     skipDuplicateMapOutputs: true,",
 				"     mapColumn(",
 				"          cog_donororderid,",
-				"          cog_transactionid",
+				"          cog_transactionid,",
+				"          statuscode = split1@converted@{@odata.etag},",
+				"          statecode",
 				"     ),",
-				"     partitionBy('hash', 1)) ~> dotransmgcontactnotpaid"
+				"     partitionBy('hash', 1)) ~> dotransmgcontactnotpaidc"
 			]
 		}
 	}
