@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Test DO Update",
+				"name": "MG DO Update",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
