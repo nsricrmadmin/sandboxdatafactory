@@ -106,7 +106,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG Credit Card Upload File')]",
+			"name": "[concat(parameters('factoryName'), '/Monthly Giving CC Upload File')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
