@@ -91,6 +91,8 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
+									"wildcardFolderPath": "donor_order_aggregates",
+									"wildcardFileName": "*.csv",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -187,7 +189,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "Monthly Giving Aggregate DOs",
+								"referenceName": "MG Aggregate DOs",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -233,7 +235,8 @@
 									"donororder": {},
 									"transaction": {},
 									"mgaggregationfile": {}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
@@ -253,7 +256,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
-				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]",
+				"[concat(variables('factoryId'), '/dataflows/MG Aggregate DOs')]",
 				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create Files')]"
 			]
 		},
@@ -284,7 +287,8 @@
 									"donororder": {},
 									"transaction": {},
 									"mgaggregationfile": {}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
@@ -306,7 +310,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TEST Monthly Giving Create Trx')]",
+			"name": "[concat(parameters('factoryName'), '/TEST MG Create Transactions')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -325,7 +329,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "Monthly Giving Aggregate DOs",
+								"referenceName": "MG Aggregate DOs",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -351,11 +355,11 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]"
+				"[concat(variables('factoryId'), '/dataflows/MG Aggregate DOs')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TEST Update DO MG Aggregation')]",
+			"name": "[concat(parameters('factoryName'), '/TEST MG Update Donor Orders')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -377,7 +381,9 @@
 								"type": "DelimitedTextSource",
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
+									"recursive": false,
+									"wildcardFolderPath": "donor_order_aggregates",
+									"wildcardFileName": "*.csv",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -473,164 +479,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Tutorial Copy Data Only Contact')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "CopyDataContact",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "CommonDataServiceForAppsSource",
-								"additionalColumns": [
-									{
-										"name": "Target",
-										"value": "account"
-									}
-								],
-								"query": "<fetch mapping=\"logical\" output-format=\"xml-platform\" version=\"1.0\" no-lock=\"false\" distinct=\"true\"><entity name=\"contact\"><attribute name=\"fullname\"/><attribute name=\"entityimage_url\"/><attribute name=\"parent_contactid\"/><order descending=\"false\" attribute=\"cog_contactnumber\"/><attribute name=\"parentcustomerid\"/><attribute name=\"telephone1\"/><attribute name=\"fullname\"/><attribute name=\"emailaddress1\"/><attribute name=\"mobilephone\"/><attribute name=\"jobtitle\"/><attribute name=\"nsri_extensionnumber\"/><attribute name=\"salutation\"/><attribute name=\"cog_contactnumber\"/><attribute name=\"lastname\"/><attribute name=\"firstname\"/><attribute name=\"contactid\"/><filter type=\"and\"><condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/><condition attribute=\"fullname\" operator=\"eq\" value=\"Peter Jones\"/></filter></entity></fetch>"
-							},
-							"sink": {
-								"type": "CommonDataServiceForAppsSink",
-								"writeBatchSize": 10,
-								"writeBehavior": "upsert",
-								"ignoreNullValues": true
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "contactid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "contactid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "parentcustomerid",
-											"type": "Guid"
-										},
-										"sink": {
-											"name": "parentcustomerid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "firstname",
-											"type": "String"
-										},
-										"sink": {
-											"name": "firstname",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "lastname",
-											"type": "String"
-										},
-										"sink": {
-											"name": "lastname",
-											"type": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Target",
-											"type": "String"
-										},
-										"sink": {
-											"name": "parentcustomerid@EntityReference"
-										}
-									}
-								]
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "DataverseEntityContactSandbox",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "DataverseEntityContactTraining",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/DataverseEntityContactSandbox')]",
-				"[concat(variables('factoryId'), '/datasets/DataverseEntityContactTraining')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DataverseEntityContactSandbox')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sandbox",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "CommonDataServiceForAppsEntity",
-				"schema": [],
-				"typeProperties": {
-					"entityName": "contact"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sandbox')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/DataverseEntityContactTraining')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "training",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "CommonDataServiceForAppsEntity",
-				"schema": [],
-				"typeProperties": {
-					"entityName": "contact"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/training')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/SandboxDonorOrder')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -704,9 +552,8 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"fileName": "monthlygivingaggregation.csv",
-						"folderPath": "Monthly Giving",
-						"fileSystem": "datafiles"
+						"folderPath": "donor_order_aggregates",
+						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
@@ -949,7 +796,8 @@
 						"          cog_donororderid as string,",
 						"          cog_transactionid as string",
 						"     ),",
-						"     partitionFileNames:['monthlygivingaggregation.csv'],",
+						"     filePattern:('MG-Aggregation-'+toString(currentUTC())+'.csv'),",
+						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -966,7 +814,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Monthly Giving Aggregate DOs')]",
+			"name": "[concat(parameters('factoryName'), '/MG Aggregate DOs')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
