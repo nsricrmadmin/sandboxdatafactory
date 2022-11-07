@@ -62,6 +62,7 @@
 				"     format: 'delimited',",
 				"     fileSystem: 'monthly-giving',",
 				"     folderPath: 'bank_file_uploads/credit_card',",
+				"     truncate: true,",
 				"     columnDelimiter: ',',",
 				"     escapeChar: '\\\\',",
 				"     quoteChar: '\\\"',",
