@@ -17,7 +17,13 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "MG Aggregation Create Files",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"rundate": {
+								"value": "'@{pipeline().parameters.rundate}'",
+								"type": "Expression"
+							}
+						}
 					},
 					"compute": {
 						"coreCount": 8,
@@ -27,6 +33,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"rundate": {
+				"type": "string",
+				"defaultValue": "@utcnow()"
+			}
+		},
 		"annotations": []
 	}
 }
