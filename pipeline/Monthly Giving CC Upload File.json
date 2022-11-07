@@ -66,10 +66,7 @@
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
 							"wildcardFolderPath": "bank_file_uploads/credit_card/",
-							"wildcardFileName": {
-								"value": "@'pipeline().parameters.division'+'pipeline().parameters.paymentmethod'+'pipeline().parameters.submissiondate'+'.csv'",
-								"type": "Expression"
-							},
+							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -92,17 +89,6 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
-						"mappings": [
-							{
-								"source": {
-									"name": "accountholder",
-									"type": "String"
-								},
-								"sink": {
-									"name": "accountholder"
-								}
-							}
-						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
