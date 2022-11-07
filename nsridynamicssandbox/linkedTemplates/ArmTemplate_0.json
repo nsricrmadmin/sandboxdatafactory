@@ -1596,6 +1596,121 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/MG_CC_Batch_Files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "bank_file_uploads/credit_card/credit_card_batch",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "accountholder",
+						"type": "String"
+					},
+					{
+						"name": "accountnumber",
+						"type": "String"
+					},
+					{
+						"name": "expireydate",
+						"type": "String"
+					},
+					{
+						"name": "amount",
+						"type": "String"
+					},
+					{
+						"name": "reference",
+						"type": "String"
+					},
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "budgetperiod",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG_CC_File')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "MG-CC-2022-11-01-00001.csv",
+						"folderPath": "bank_file_uploads/credit_card",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "accountholder",
+						"type": "String"
+					},
+					{
+						"name": "accountnumber",
+						"type": "String"
+					},
+					{
+						"name": "expireydate",
+						"type": "String"
+					},
+					{
+						"name": "amount",
+						"type": "String"
+					},
+					{
+						"name": "reference",
+						"type": "String"
+					},
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "budgetperiod",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/TEST MG Update Donor Orders')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -2054,7 +2169,7 @@
 								"referenceName": "sandboxdatalake",
 								"type": "LinkedServiceReference"
 							},
-							"name": "CreateFle"
+							"name": "CreateFile"
 						}
 					],
 					"transformations": [
@@ -2097,7 +2212,7 @@
 						"     validateSchema: false,",
 						"     format: 'delimited',",
 						"     fileSystem: 'monthly-giving',",
-						"     folderPath: 'bank_file_uploads',",
+						"     folderPath: 'bank_file_uploads/credit_card',",
 						"     columnDelimiter: ',',",
 						"     escapeChar: '\\\\',",
 						"     quoteChar: '\\\"',",
@@ -2114,7 +2229,7 @@
 						"          reference = cog_transactionno,",
 						"          type,",
 						"          budgetperiod",
-						"     )) ~> CreateFle"
+						"     )) ~> CreateFile"
 					]
 				}
 			},
@@ -2370,130 +2485,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create Files')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TEST MG Create Transactions')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Monthly Giving Aggregation",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "MG Aggregate DOs",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"donororder": {},
-									"bankdetails": {},
-									"accounttransactions": {},
-									"ContactTransactions": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/MG Aggregate DOs')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Monthly Giving CC Upload File')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Monthly Giving CC Upload Create File",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "MG Credit Card Create File",
-								"type": "DataFlowReference",
-								"parameters": {
-									"submissiondate": {
-										"value": "'@{pipeline().parameters.submissiondate}'",
-										"type": "Expression"
-									},
-									"division": {
-										"value": "'@{pipeline().parameters.division}'",
-										"type": "Expression"
-									},
-									"paymentmethod": {
-										"value": "'@{pipeline().parameters.paymentmethod}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"transaction": {},
-									"CreateFle": {}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"submissiondate": {
-						"type": "string",
-						"defaultValue": "YYYYmmdd"
-					},
-					"division": {
-						"type": "string",
-						"defaultValue": "MG"
-					},
-					"paymentmethod": {
-						"type": "string",
-						"defaultValue": "CC"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/MG Credit Card Create File')]"
 			]
 		}
 	]

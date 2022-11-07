@@ -2368,7 +2368,7 @@
 								},
 								"datasetParameters": {
 									"transaction": {},
-									"CreateFle": {}
+									"CreateFile": {}
 								},
 								"linkedServiceParameters": {}
 							},
@@ -2379,6 +2379,163 @@
 							},
 							"traceLevel": "Fine"
 						}
+					},
+					{
+						"name": "MG Split Into Batches",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Monthly Giving CC Upload Create File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "bank_file_uploads/credit_card/",
+									"wildcardFileName": "*.csv",
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"maxRowsPerFile": 1,
+									"fileNamePrefix": "",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "accountholder",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "accountholder",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "accountnumber",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "accountnumber",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "expireydate",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "expireydate",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "reference",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "reference",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "type",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "type",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "budgetperiod",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "budgetperiod",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "MG_CC_File",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "MG_CC_Batch_Files",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
 					}
 				],
 				"policy": {
@@ -2402,7 +2559,9 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/MG Credit Card Create File')]"
+				"[concat(variables('factoryId'), '/dataflows/MG Credit Card Create File')]",
+				"[concat(variables('factoryId'), '/datasets/MG_CC_File')]",
+				"[concat(variables('factoryId'), '/datasets/MG_CC_Batch_Files')]"
 			]
 		},
 		{
@@ -2427,7 +2586,7 @@
 								"referenceName": "sandboxdatalake",
 								"type": "LinkedServiceReference"
 							},
-							"name": "CreateFle"
+							"name": "CreateFile"
 						}
 					],
 					"transformations": [
@@ -2470,7 +2629,7 @@
 						"     validateSchema: false,",
 						"     format: 'delimited',",
 						"     fileSystem: 'monthly-giving',",
-						"     folderPath: 'bank_file_uploads',",
+						"     folderPath: 'bank_file_uploads/credit_card',",
 						"     columnDelimiter: ',',",
 						"     escapeChar: '\\\\',",
 						"     quoteChar: '\\\"',",
@@ -2487,12 +2646,127 @@
 						"          reference = cog_transactionno,",
 						"          type,",
 						"          budgetperiod",
-						"     )) ~> CreateFle"
+						"     )) ~> CreateFile"
 					]
 				}
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG_CC_Batch_Files')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "bank_file_uploads/credit_card/credit_card_batch",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "accountholder",
+						"type": "String"
+					},
+					{
+						"name": "accountnumber",
+						"type": "String"
+					},
+					{
+						"name": "expireydate",
+						"type": "String"
+					},
+					{
+						"name": "amount",
+						"type": "String"
+					},
+					{
+						"name": "reference",
+						"type": "String"
+					},
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "budgetperiod",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG_CC_File')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "MG-CC-2022-11-01-00001.csv",
+						"folderPath": "bank_file_uploads/credit_card",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "accountholder",
+						"type": "String"
+					},
+					{
+						"name": "accountnumber",
+						"type": "String"
+					},
+					{
+						"name": "expireydate",
+						"type": "String"
+					},
+					{
+						"name": "amount",
+						"type": "String"
+					},
+					{
+						"name": "reference",
+						"type": "String"
+					},
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "budgetperiod",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
 			]
 		}
