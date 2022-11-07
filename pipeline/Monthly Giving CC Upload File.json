@@ -65,6 +65,11 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": false,
+							"wildcardFolderPath": "bank_file_uploads/credit_card/",
+							"wildcardFileName": {
+								"value": "@'pipeline().parameters.division'+'pipeline().parameters.paymentmethod'+'pipeline().parameters.submissiondate'+'.csv'",
+								"type": "Expression"
+							},
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
