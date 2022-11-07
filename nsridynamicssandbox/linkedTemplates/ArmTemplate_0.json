@@ -2178,81 +2178,11 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Aggregate Donor Orders",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Monthly Giving Aggregate DOs",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"donororder": {},
-									"bankdetails": {},
-									"accounttransactions": {},
-									"ContactTransactions": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 16,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "Create CSV File with Transactionid",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [
-							{
-								"activity": "Aggregate Donor Orders",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "MG Aggregation Create Files",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"donororder": {},
-									"transaction": {},
-									"mgaggregationfile": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 16,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
 						"name": "MG Donor Order Update",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Create CSV File with Transactionid",
+								"activity": "MG Create Files",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2353,6 +2283,76 @@
 								"parameters": {}
 							}
 						]
+					},
+					{
+						"name": "MG Aggregate Donor Orders",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Monthly Giving Aggregate DOs",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"bankdetails": {},
+									"accounttransactions": {},
+									"ContactTransactions": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "MG Create Files",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "MG Aggregate Donor Orders",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MG Aggregation Create Files",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"transaction": {},
+									"mgaggregationfile": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
 					}
 				],
 				"policy": {
@@ -2362,10 +2362,10 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]",
-				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create Files')]",
 				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]"
+				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
+				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]",
+				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create Files')]"
 			]
 		},
 		{
