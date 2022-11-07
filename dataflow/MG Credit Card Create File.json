@@ -18,7 +18,7 @@
 						"referenceName": "sandboxdatalake",
 						"type": "LinkedServiceReference"
 					},
-					"name": "sink1"
+					"name": "CreateFle"
 				}
 			],
 			"transformations": [
@@ -32,8 +32,8 @@
 			"scriptLines": [
 				"parameters{",
 				"     submissiondate as string ('SubmissionDate'),",
-				"     division as string,",
-				"     paymentmethod as string",
+				"     division as string ('Division'),",
+				"     paymentmethod as string ('PaymentMethod')",
 				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
@@ -65,7 +65,7 @@
 				"     escapeChar: '\\\\',",
 				"     quoteChar: '\\\"',",
 				"     columnNamesAsHeader: true,",
-				"     filePattern:('MGCreditCard'+$submissiondate),",
+				"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
@@ -77,7 +77,7 @@
 				"          reference = cog_transactionno,",
 				"          type,",
 				"          budgetperiod",
-				"     )) ~> sink1"
+				"     )) ~> CreateFle"
 			]
 		}
 	}
