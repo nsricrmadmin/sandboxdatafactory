@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Data flow1",
+				"name": "MG Create File",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
