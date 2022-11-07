@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "MG Credit Card Create File",
+				"name": "Monthly Giving CC Upload Create File",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
