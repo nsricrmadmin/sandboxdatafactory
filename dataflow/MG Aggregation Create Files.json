@@ -44,9 +44,6 @@
 				}
 			],
 			"scriptLines": [
-				"parameters{",
-				"     rundate as string",
-				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
 				"          cog_account as string,",
