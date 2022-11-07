@@ -10,10 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": {
-					"value": "@'dataset().division'+'dataset().paymentmethod'+'dataset().submissiondate'+'.csv'",
-					"type": "Expression"
-				},
+				"fileName": "MG-CC-2022-11-01-00001.csv",
 				"folderPath": "bank_file_uploads/credit_card",
 				"fileSystem": "monthly-giving"
 			},
