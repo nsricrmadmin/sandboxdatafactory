@@ -58,7 +58,7 @@
 				}
 			},
 			{
-				"name": "Update DO with Transactionid",
+				"name": "MG DO Update",
 				"type": "Copy",
 				"dependsOn": [
 					{
@@ -117,6 +117,28 @@
 								"sink": {
 									"name": "cog_donortransaction",
 									"type": "Guid"
+								}
+							},
+							{
+								"source": {
+									"name": "statecode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "statecode",
+									"type": "Int32"
+								}
+							},
+							{
+								"source": {
+									"name": "new_statuscode",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "statuscode",
+									"type": "Int32"
 								}
 							}
 						],
