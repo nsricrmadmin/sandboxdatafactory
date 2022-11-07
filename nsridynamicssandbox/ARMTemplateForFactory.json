@@ -61,55 +61,6 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/TEST MG Create Files')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Data flow1",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "MG Aggregation Create Files",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"donororder": {},
-									"transaction": {},
-									"mgaggregationfile": {}
-								},
-								"linkedServiceParameters": {}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create Files')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/Monthly Giving Aggregation')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -175,8 +126,7 @@
 									"donororder": {},
 									"transaction": {},
 									"mgaggregationfile": {}
-								},
-								"linkedServiceParameters": {}
+								}
 							},
 							"staging": {},
 							"compute": {
@@ -187,7 +137,7 @@
 						}
 					},
 					{
-						"name": "Update DO with Transactionid",
+						"name": "MG DO Update",
 						"type": "Copy",
 						"dependsOn": [
 							{
@@ -247,6 +197,28 @@
 											"name": "cog_donortransaction",
 											"type": "Guid"
 										}
+									},
+									{
+										"source": {
+											"name": "statecode",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "statecode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "new_statuscode",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "statuscode",
+											"type": "Int32"
+										}
 									}
 								],
 								"typeConversion": true,
@@ -281,6 +253,221 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]",
 				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create Files')]",
+				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
+				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TEST MG Create Files')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MG Create File",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MG Aggregation Create Files",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"transaction": {},
+									"mgaggregationfile": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create Files')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TEST Monthly Giving Aggregation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Monthly Giving Aggregation",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "Monthly Giving Aggregate DOs",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"bankdetails": {},
+									"accounttransactions": {},
+									"ContactTransactions": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/TEST Update DO MG Aggregation')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MG DO Update",
+						"type": "Copy",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "CommonDataServiceForAppsSink",
+								"writeBatchSize": 10,
+								"writeBehavior": "upsert"
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "cog_donororderid",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cog_donororderid",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "cog_transactionid",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "cog_donortransaction",
+											"type": "Guid"
+										}
+									},
+									{
+										"source": {
+											"name": "statecode",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "statecode",
+											"type": "Int32"
+										}
+									},
+									{
+										"source": {
+											"name": "new_statuscode",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "statuscode",
+											"type": "Int32"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "file_mg_aggregation",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "SandboxDonorOrder",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]"
 			]
@@ -404,55 +591,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TEST Monthly Giving Aggregation')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Monthly Giving Aggregation",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "Monthly Giving Aggregate DOs",
-								"type": "DataFlowReference",
-								"parameters": {},
-								"datasetParameters": {
-									"donororder": {},
-									"bankdetails": {},
-									"accounttransactions": {},
-									"ContactTransactions": {}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/Monthly Giving Aggregate DOs')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/DataverseEntityContactSandbox')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -490,44 +628,6 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/training')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/file_mg_aggregation')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sandboxdatalake",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"fileName": "monthlygivingaggregation.csv",
-						"folderPath": "Monthly Giving",
-						"fileSystem": "datafiles"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "cog_donororderid",
-						"type": "String"
-					},
-					{
-						"name": "cog_transactionid",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
 			]
 		},
 		{
@@ -588,6 +688,44 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/sandbox')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/file_mg_aggregation')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"fileName": "monthlygivingaggregation.csv",
+						"folderPath": "Monthly Giving",
+						"fileSystem": "datafiles"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "cog_donororderid",
+						"type": "String"
+					},
+					{
+						"name": "cog_transactionid",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
 			]
 		},
 		{
@@ -2325,124 +2463,6 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/sandbox')]",
 				"[concat(variables('factoryId'), '/linkedServices/training')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/TEST Update DO MG Aggregation')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Test DO Update",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "CommonDataServiceForAppsSink",
-								"writeBatchSize": 10,
-								"writeBehavior": "upsert"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "cog_donororderid",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "cog_donororderid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "cog_transactionid",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "cog_donortransaction",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "statecode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "statecode",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "new_statuscode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "statuscode",
-											"type": "Int32"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "file_mg_aggregation",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SandboxDonorOrder",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]"
 			]
 		}
 	]
