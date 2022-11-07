@@ -19,7 +19,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": true,
+							"fileListPath": "monthly-giving/donor_order_aggregates",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
