@@ -64,7 +64,7 @@
 						"type": "DelimitedTextSource",
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
-							"recursive": false,
+							"recursive": true,
 							"wildcardFolderPath": "bank_file_uploads/credit_card/",
 							"wildcardFileName": {
 								"value": "@'pipeline().parameters.division'+'pipeline().parameters.paymentmethod'+'pipeline().parameters.submissiondate'+'.csv'",
@@ -84,10 +84,7 @@
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
 							"maxRowsPerFile": 1,
-							"fileNamePrefix": {
-								"value": "@'pipeline().parameters.division'+'pipeline().parameters.paymentmethod'+pipeline().parameters.submissiondate",
-								"type": "Expression"
-							},
+							"fileNamePrefix": "",
 							"quoteAllText": true,
 							"fileExtension": ".csv"
 						}
