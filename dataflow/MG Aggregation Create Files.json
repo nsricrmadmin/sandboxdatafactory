@@ -23,7 +23,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "file_mg_aggregation_source",
+						"referenceName": "file_mg_aggregation",
 						"type": "DatasetReference"
 					},
 					"name": "mgaggregationfile"
@@ -88,9 +88,9 @@
 				"     matchType:'exact',",
 				"     ignoreSpaces: false,",
 				"     broadcast: 'auto')~> joindonorordertransaction",
-				"donororder derive(DonorOrderKey = toString(cog_donororderfrom)+cog_bankdetails+toString(cog_competition)+iif(cog_donororderfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod),",
+				"donororder derive(DonorOrderKey = toString(cog_donororderfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_competition)+iif(cog_donororderfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod),",
 				"          Target = 'cog_transaction') ~> DerivedDonorOrderKey",
-				"transaction derive(TransactionKey = toString(cog_transactionfrom)+cog_bankdetails+toString(cog_division)+iif(cog_transactionfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
+				"transaction derive(TransactionKey = toString(cog_transactionfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_division)+iif(cog_transactionfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
 				"joindonorordertransaction derive(new_statuscodeconsubmitted = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001'),",
 				"          new_statuscodepmsubmitted = iif(equals(donororder@statuscode,'2'),'181310019', '2'),",
 				"          new_statuscodeconsuccessonceoff = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001'),",
