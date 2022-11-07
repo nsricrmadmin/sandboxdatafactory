@@ -1846,9 +1846,9 @@
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
 						"     broadcast: 'auto')~> joindonorordertransaction",
-						"donororder derive(DonorOrderKey = toString(cog_donororderfrom)+cog_bankdetails+toString(cog_competition)+iif(cog_donororderfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod),",
+						"donororder derive(DonorOrderKey = toString(cog_donororderfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_competition)+iif(cog_donororderfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod),",
 						"          Target = 'cog_transaction') ~> DerivedDonorOrderKey",
-						"transaction derive(TransactionKey = toString(cog_transactionfrom)+cog_bankdetails+toString(cog_division)+iif(cog_transactionfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
+						"transaction derive(TransactionKey = toString(cog_transactionfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_division)+iif(cog_transactionfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
 						"joindonorordertransaction derive(new_statuscodeconsubmitted = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001'),",
 						"          new_statuscodepmsubmitted = iif(equals(donororder@statuscode,'2'),'181310019', '2'),",
 						"          new_statuscodeconsuccessonceoff = iif(equals(donororder@statuscode,'181310001'),'181310013', '181310001'),",
@@ -2052,13 +2052,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TEST MG Aggregation Update Trxid')]",
+			"name": "[concat(parameters('factoryName'), '/TEST Update DO MG Aggregation')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "MG Aggregation Update Trxid",
+						"name": "Test DO Update",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -2084,8 +2084,7 @@
 							"sink": {
 								"type": "CommonDataServiceForAppsSink",
 								"writeBatchSize": 10,
-								"writeBehavior": "upsert",
-								"ignoreNullValues": false
+								"writeBehavior": "upsert"
 							},
 							"enableStaging": false,
 							"translator": {
@@ -2109,8 +2108,8 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "cog_donortransactionname",
-											"type": "String"
+											"name": "cog_donortransaction",
+											"type": "Guid"
 										}
 									}
 								],
