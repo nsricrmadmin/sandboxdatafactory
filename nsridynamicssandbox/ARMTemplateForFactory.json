@@ -2406,7 +2406,10 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"wildcardFolderPath": "bank_file_uploads/credit_card/",
-									"wildcardFileName": "*.csv",
+									"wildcardFileName": {
+										"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
+										"type": "Expression"
+									},
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -2526,7 +2529,20 @@
 							{
 								"referenceName": "MG_CC_File",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"submissiondate": {
+										"value": "@pipeline().parameters.submissiondate",
+										"type": "Expression"
+									},
+									"division": {
+										"value": "@pipeline().parameters.division",
+										"type": "Expression"
+									},
+									"paymentmethod": {
+										"value": "@pipeline().parameters.paymentmethod",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
@@ -2630,11 +2646,12 @@
 						"     format: 'delimited',",
 						"     fileSystem: 'monthly-giving',",
 						"     folderPath: 'bank_file_uploads/credit_card',",
+						"     truncate: true,",
 						"     columnDelimiter: ',',",
 						"     escapeChar: '\\\\',",
 						"     quoteChar: '\\\"',",
 						"     columnNamesAsHeader: true,",
-						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate),",
+						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -2669,7 +2686,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/credit_card/credit_card_batch",
+						"folderPath": "bank_file_uploads/credit_card_batch",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -2720,6 +2737,20 @@
 				"linkedServiceName": {
 					"referenceName": "sandboxdatalake",
 					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"submissiondate": {
+						"type": "string",
+						"defaultValue": "'SubmissionDate'"
+					},
+					"division": {
+						"type": "string",
+						"defaultValue": "'Division'"
+					},
+					"paymentmethod": {
+						"type": "string",
+						"defaultValue": "'PaymentMethod'"
+					}
 				},
 				"annotations": [],
 				"type": "DelimitedText",

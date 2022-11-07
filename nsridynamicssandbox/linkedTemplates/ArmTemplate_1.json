@@ -135,7 +135,10 @@
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
 									"wildcardFolderPath": "bank_file_uploads/credit_card/",
-									"wildcardFileName": "*.csv",
+									"wildcardFileName": {
+										"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
+										"type": "Expression"
+									},
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -255,7 +258,20 @@
 							{
 								"referenceName": "MG_CC_File",
 								"type": "DatasetReference",
-								"parameters": {}
+								"parameters": {
+									"submissiondate": {
+										"value": "@pipeline().parameters.submissiondate",
+										"type": "Expression"
+									},
+									"division": {
+										"value": "@pipeline().parameters.division",
+										"type": "Expression"
+									},
+									"paymentmethod": {
+										"value": "@pipeline().parameters.paymentmethod",
+										"type": "Expression"
+									}
+								}
 							}
 						],
 						"outputs": [
