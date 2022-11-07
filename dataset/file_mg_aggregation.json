@@ -10,6 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
+				"fileName": "MG-Aggregation*",
 				"folderPath": "donor_order_aggregates",
 				"fileSystem": "monthly-giving"
 			},
