@@ -106,7 +106,7 @@
 				"          cog_donororderid as string,",
 				"          cog_transactionid as string",
 				"     ),",
-				"     filePattern:'',",
+				"     filePattern:('MG-Aggregation-'+$rundate),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
