@@ -124,7 +124,7 @@
 				"  ),",
 				"          new_statecode = case (\r",
 				"  isNull(cog_datepaid)==true()&&statuscode=='181310001','0',  \r",
-				"  isNull(cog_datepaid)==false()&&statuscode=='181310001','0', \r",
+				"  isNull(cog_datepaid)==false()&&statuscode=='181310001','1', \r",
 				"  isNull(cog_datepaid)==false()&&statuscode=='2','1'\r",
 				"  )) ~> TransactionFields",
 				"aggregatefromaccount sink(allowSchemaDrift: true,",
