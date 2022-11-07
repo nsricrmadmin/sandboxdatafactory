@@ -104,6 +104,7 @@
 				"          cog_transactionid as string",
 				"     ),",
 				"     filePattern:('MG-Aggregation-'+toString(currentUTC())),",
+				"     truncate: true,",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
