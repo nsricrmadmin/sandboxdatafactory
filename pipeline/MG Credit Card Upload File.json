@@ -44,7 +44,7 @@
 		"parameters": {
 			"submissiondate": {
 				"type": "string",
-				"defaultValue": "SubmissionDate"
+				"defaultValue": "20221103"
 			},
 			"division": {
 				"type": "string",
@@ -52,7 +52,7 @@
 			},
 			"paymentmethod": {
 				"type": "string",
-				"defaultValue": "CreditCard"
+				"defaultValue": "CC"
 			}
 		},
 		"annotations": []
