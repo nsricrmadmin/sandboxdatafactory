@@ -22,6 +22,14 @@
 							"submissiondate": {
 								"value": "'@{pipeline().parameters.submissiondate}'",
 								"type": "Expression"
+							},
+							"division": {
+								"value": "'@{pipeline().parameters.division}'",
+								"type": "Expression"
+							},
+							"paymentmethod": {
+								"value": "'@{pipeline().parameters.paymentmethod}'",
+								"type": "Expression"
 							}
 						}
 					},
@@ -36,11 +44,15 @@
 		"parameters": {
 			"submissiondate": {
 				"type": "string",
-				"defaultValue": "2022/11/07"
+				"defaultValue": "SubmissionDate"
 			},
 			"division": {
 				"type": "string",
-				"defaultValue": "Monthly Giving"
+				"defaultValue": "MG"
+			},
+			"paymentmethod": {
+				"type": "string",
+				"defaultValue": "CreditCard"
 			}
 		},
 		"annotations": []
