@@ -65,8 +65,6 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "bank_file_uploads/credit_card/",
-							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
 						"formatSettings": {
@@ -89,6 +87,92 @@
 					"enableStaging": false,
 					"translator": {
 						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "accountholder",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "accountholder",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "accountnumber",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "accountnumber",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "expireydate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "expireydate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "amount",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "amount",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "reference",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "reference",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "type",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "type",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "budgetperiod",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "budgetperiod",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
 						"typeConversion": true,
 						"typeConversionSettings": {
 							"allowDataTruncation": true,
@@ -99,21 +183,7 @@
 				"inputs": [
 					{
 						"referenceName": "MG_CC_File",
-						"type": "DatasetReference",
-						"parameters": {
-							"submissiondate": {
-								"value": "@pipeline().parameters.submissiondate",
-								"type": "Expression"
-							},
-							"division": {
-								"value": "@pipeline().parameters.division",
-								"type": "Expression"
-							},
-							"paymentmethod": {
-								"value": "@pipeline().parameters.paymentmethod",
-								"type": "Expression"
-							}
-						}
+						"type": "DatasetReference"
 					}
 				],
 				"outputs": [
