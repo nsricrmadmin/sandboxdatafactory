@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "Monthly Giving Aggregate DOs",
+						"referenceName": "MG Aggregate DOs",
 						"type": "DataFlowReference"
 					},
 					"compute": {
