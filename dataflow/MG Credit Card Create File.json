@@ -12,7 +12,15 @@
 					"name": "transaction"
 				}
 			],
-			"sinks": [],
+			"sinks": [
+				{
+					"linkedService": {
+						"referenceName": "sandboxdatalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "sink1"
+				}
+			],
 			"transformations": [
 				{
 					"name": "derivedColumns"
@@ -43,7 +51,17 @@
 				"transaction derive(type = 'A',",
 				"          budgetperiod = '00') ~> derivedColumns",
 				"derivedColumns window(asc({@odata.etag}, true),",
-				"     index = rowNumber()) ~> windowIndex"
+				"     index = rowNumber()) ~> windowIndex",
+				"windowIndex sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'parquet',",
+				"     fileSystem: 'datafiles',",
+				"     folderPath: 'Monthly Giving',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> sink1"
 			]
 		}
 	}
