@@ -67,8 +67,15 @@
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
-				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> sink1"
+				"     mapColumn(",
+				"          accountholder = cog_accountholder,",
+				"          accountnumber = cog_accountnumber,",
+				"          expireydate = cog_expireydate,",
+				"          amount = cog_transactionamount,",
+				"          reference = cog_transactionno,",
+				"          type,",
+				"          budgetperiod",
+				"     )) ~> sink1"
 			]
 		}
 	}
