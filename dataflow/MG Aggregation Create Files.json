@@ -103,7 +103,7 @@
 				"          cog_donororderid as string,",
 				"          cog_transactionid as string",
 				"     ),",
-				"     filePattern:('MG-Aggregation-'+toString(currentUTC())'.csv'),",
+				"     filePattern:('MG-Aggregation-'+toString(currentUTC())+'.csv'),",
 				"     truncate: true,",
 				"     umask: 0022,",
 				"     preCommands: [],",
