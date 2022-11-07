@@ -165,12 +165,6 @@
 				}
 			}
 		],
-		"parameters": {
-			"rundate": {
-				"type": "string",
-				"defaultValue": "@utcnow()"
-			}
-		},
 		"annotations": []
 	}
 }
