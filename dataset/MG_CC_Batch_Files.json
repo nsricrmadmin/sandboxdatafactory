@@ -1,0 +1,32 @@
+{
+	"name": "MG_CC_Batch_Files",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sandboxdatalake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "bank_file_uploads/credit_card",
+				"fileSystem": "monthly-giving"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "cog_donororderid",
+				"type": "String"
+			},
+			{
+				"name": "cog_transactionid",
+				"type": "String"
+			}
+		]
+	}
+}
