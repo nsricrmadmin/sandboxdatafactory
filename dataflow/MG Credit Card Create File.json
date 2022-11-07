@@ -30,6 +30,9 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     submissiondate as string",
+				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
 				"          cog_account as string,",
@@ -60,6 +63,7 @@
 				"     escapeChar: '\\\\',",
 				"     quoteChar: '\\\"',",
 				"     columnNamesAsHeader: true,",
+				"     filePattern:('MGCreditCard'+$submissiondate),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
