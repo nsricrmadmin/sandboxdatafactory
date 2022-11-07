@@ -2481,6 +2481,172 @@
 				"[concat(variables('factoryId'), '/linkedServices/sandbox')]",
 				"[concat(variables('factoryId'), '/linkedServices/training')]"
 			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG Credit Card Upload File')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MG Credit Card Create File",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MG Credit Card Create File",
+								"type": "DataFlowReference",
+								"parameters": {
+									"submissiondate": {
+										"value": "'@{pipeline().parameters.submissiondate}'",
+										"type": "Expression"
+									},
+									"division": {
+										"value": "'@{pipeline().parameters.division}'",
+										"type": "Expression"
+									},
+									"paymentmethod": {
+										"value": "'@{pipeline().parameters.paymentmethod}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"transaction": {},
+									"CreateFle": {}
+								},
+								"linkedServiceParameters": {}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"submissiondate": {
+						"type": "string",
+						"defaultValue": "20221103"
+					},
+					"division": {
+						"type": "string",
+						"defaultValue": "MG"
+					},
+					"paymentmethod": {
+						"type": "string",
+						"defaultValue": "CC"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/MG Credit Card Create File')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG Credit Card Create File')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Sandbox_Transaction",
+								"type": "DatasetReference"
+							},
+							"name": "transaction"
+						}
+					],
+					"sinks": [
+						{
+							"linkedService": {
+								"referenceName": "sandboxdatalake",
+								"type": "LinkedServiceReference"
+							},
+							"name": "CreateFle"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumns"
+						},
+						{
+							"name": "windowIndex"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     submissiondate as string ('SubmissionDate'),",
+						"     division as string ('Division'),",
+						"     paymentmethod as string ('PaymentMethod')",
+						"}",
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          cog_account as string,",
+						"          cog_contact as string,",
+						"          transactioncurrencyid as string,",
+						"          cog_accountholder as string,",
+						"          cog_accountnumber as string,",
+						"          cog_expireydate as string,",
+						"          cog_transactionamount as string,",
+						"          cog_transactiondate as string,",
+						"          cog_transactionid as string,",
+						"          cog_transactionno as string,",
+						"          statecode as string,",
+						"          statuscode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
+						"transaction derive(type = 'A',",
+						"          budgetperiod = '00') ~> derivedColumns",
+						"derivedColumns window(asc({@odata.etag}, true),",
+						"     index = rowNumber()) ~> windowIndex",
+						"windowIndex sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     format: 'delimited',",
+						"     fileSystem: 'datafiles',",
+						"     folderPath: 'Monthly Giving/Bank Upload Files',",
+						"     columnDelimiter: ',',",
+						"     escapeChar: '\\\\',",
+						"     quoteChar: '\\\"',",
+						"     columnNamesAsHeader: true,",
+						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     mapColumn(",
+						"          accountholder = cog_accountholder,",
+						"          accountnumber = cog_accountnumber,",
+						"          expireydate = cog_expireydate,",
+						"          amount = cog_transactionamount,",
+						"          reference = cog_transactionno,",
+						"          type,",
+						"          budgetperiod",
+						"     )) ~> CreateFle"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
 		}
 	]
 }
