@@ -19,6 +19,9 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     batchsize as integer",
+				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
 				"          cog_account as string,",
