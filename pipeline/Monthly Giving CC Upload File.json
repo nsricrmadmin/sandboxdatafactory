@@ -81,6 +81,10 @@
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
 							"maxRowsPerFile": 2,
+							"fileNamePrefix": {
+								"value": "@'pipeline().parameters.division'+'CC'+pipeline().parameters.submissiondate",
+								"type": "Expression"
+							},
 							"quoteAllText": true,
 							"fileExtension": ".csv"
 						}
