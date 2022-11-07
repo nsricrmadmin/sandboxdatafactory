@@ -10,9 +10,8 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "monthlygivingaggregation.csv",
-				"folderPath": "Monthly Giving",
-				"fileSystem": "datafiles"
+				"folderPath": "donor_order_aggregates",
+				"fileSystem": "monthly-giving"
 			},
 			"columnDelimiter": ",",
 			"escapeChar": "\\",
