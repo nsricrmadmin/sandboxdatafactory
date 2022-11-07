@@ -5,20 +5,6 @@
 			"referenceName": "sandboxdatalake",
 			"type": "LinkedServiceReference"
 		},
-		"parameters": {
-			"submissiondate": {
-				"type": "string",
-				"defaultValue": "'SubmissionDate'"
-			},
-			"division": {
-				"type": "string",
-				"defaultValue": "'Division'"
-			},
-			"paymentmethod": {
-				"type": "string",
-				"defaultValue": "'PaymentMethod'"
-			}
-		},
 		"annotations": [],
 		"type": "DelimitedText",
 		"typeProperties": {
