@@ -44,7 +44,7 @@
 		"parameters": {
 			"submissiondate": {
 				"type": "string",
-				"defaultValue": "20221103"
+				"defaultValue": "YYYYmmdd"
 			},
 			"division": {
 				"type": "string",
