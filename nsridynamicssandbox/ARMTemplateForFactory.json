@@ -137,7 +137,7 @@
 						}
 					},
 					{
-						"name": "MG DO Update",
+						"name": "MG Donor Order Update",
 						"type": "Copy",
 						"dependsOn": [
 							{
