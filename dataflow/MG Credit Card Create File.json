@@ -18,7 +18,7 @@
 						"referenceName": "sandboxdatalake",
 						"type": "LinkedServiceReference"
 					},
-					"name": "CreateFle"
+					"name": "CreateFile"
 				}
 			],
 			"transformations": [
@@ -61,7 +61,7 @@
 				"     validateSchema: false,",
 				"     format: 'delimited',",
 				"     fileSystem: 'monthly-giving',",
-				"     folderPath: 'bank_file_uploads',",
+				"     folderPath: 'bank_file_uploads/credit_card',",
 				"     columnDelimiter: ',',",
 				"     escapeChar: '\\\\',",
 				"     quoteChar: '\\\"',",
@@ -78,7 +78,7 @@
 				"          reference = cog_transactionno,",
 				"          type,",
 				"          budgetperiod",
-				"     )) ~> CreateFle"
+				"     )) ~> CreateFile"
 			]
 		}
 	}
