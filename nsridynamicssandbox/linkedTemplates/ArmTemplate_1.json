@@ -112,7 +112,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "MG Credit Card Create File",
+						"name": "Monthly Giving CC Upload Create File",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -163,7 +163,7 @@
 				"parameters": {
 					"submissiondate": {
 						"type": "string",
-						"defaultValue": "20221103"
+						"defaultValue": "YYYYmmdd"
 					},
 					"division": {
 						"type": "string",
