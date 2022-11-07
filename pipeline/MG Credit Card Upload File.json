@@ -1,0 +1,48 @@
+{
+	"name": "MG Credit Card Upload File",
+	"properties": {
+		"activities": [
+			{
+				"name": "MG Credit Card Create File",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "MG Credit Card Create File",
+						"type": "DataFlowReference",
+						"parameters": {
+							"submissiondate": {
+								"value": "'@{pipeline().parameters.submissiondate}'",
+								"type": "Expression"
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			}
+		],
+		"parameters": {
+			"submissiondate": {
+				"type": "string",
+				"defaultValue": "2022/11/07"
+			},
+			"division": {
+				"type": "string",
+				"defaultValue": "Monthly Giving"
+			}
+		},
+		"annotations": []
+	}
+}
