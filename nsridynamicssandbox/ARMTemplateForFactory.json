@@ -1019,7 +1019,7 @@
 							"name": "aggregatefromcontact"
 						},
 						{
-							"name": "TransactionAmount"
+							"name": "TransactionFields"
 						}
 					],
 					"scriptLines": [
@@ -1030,6 +1030,7 @@
 						"          cog_contact as string,",
 						"          transactioncurrencyid as string,",
 						"          cog_competition as string,",
+						"          cog_datepaid as string,",
 						"          cog_donationamount as string,",
 						"          cog_donororderfrom as string,",
 						"          cog_donororderid as string,",
@@ -1042,7 +1043,7 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <attribute name=\"cog_datepaid\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
 						"     manifestType: 'model') ~> donororder",
 						"source(output(",
 						"          {@odata.etag} as string,",
@@ -1066,7 +1067,7 @@
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
 						"     broadcast: 'auto')~> joindonororderbankdetails",
-						"TransactionAmount split(cog_donororderfrom=='181310001',",
+						"TransactionFields split(cog_donororderfrom=='181310001',",
 						"     cog_donororderfrom=='181310000',",
 						"     disjoint: false) ~> From@(FromAccount, FromContact)",
 						"From@FromAccount aggregate(groupBy(cog_competition,",
@@ -1084,7 +1085,12 @@
 						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
 						"          each(match(name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_transactiondate'), $$ = first($$))) ~> aggregatefromcontact",
 						"joindonororderbankdetails derive(cog_transactionamount = iif(equals(isNull(cog_donationamount),true()),cog_totalticketamount,cog_donationamount),",
-						"          cog_transactiondate = currentUTC()) ~> TransactionAmount",
+						"          cog_transactiondate = currentUTC(),",
+						"          new_statuscode = case (\r",
+						"  isNull(cog_datepaid)==true()&&statuscode=='181310001','1',  \r",
+						"  isNull(cog_datepaid)==false()&&statuscode=='181310001','2', \r",
+						"  isNull(cog_datepaid)==false()&&statuscode=='2','1'\r",
+						"  )) ~> TransactionFields",
 						"aggregatefromaccount sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
