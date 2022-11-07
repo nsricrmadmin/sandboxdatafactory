@@ -30,7 +30,7 @@
 						"type": "CommonDataServiceForAppsSink",
 						"writeBatchSize": 10,
 						"writeBehavior": "upsert",
-						"ignoreNullValues": false
+						"ignoreNullValues": true
 					},
 					"enableStaging": false,
 					"translator": {
