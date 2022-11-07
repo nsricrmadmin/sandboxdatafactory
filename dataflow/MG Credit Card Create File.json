@@ -31,7 +31,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     submissiondate as string",
+				"     submissiondate as string ($submissiondate)",
 				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
