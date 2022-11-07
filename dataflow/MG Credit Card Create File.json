@@ -16,6 +16,9 @@
 			"transformations": [
 				{
 					"name": "derivedColumns"
+				},
+				{
+					"name": "windowIndex"
 				}
 			],
 			"scriptLines": [
@@ -38,7 +41,9 @@
 				"     validateSchema: false,",
 				"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
 				"transaction derive(type = 'A',",
-				"          budgetperiod = '00') ~> derivedColumns"
+				"          budgetperiod = '00') ~> derivedColumns",
+				"derivedColumns window(asc({@odata.etag}, true),",
+				"     index = rowNumber()) ~> windowIndex"
 			]
 		}
 	}
