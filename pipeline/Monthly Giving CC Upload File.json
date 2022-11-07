@@ -109,6 +109,10 @@
 							"division": {
 								"value": "@pipeline().parameters.division",
 								"type": "Expression"
+							},
+							"paymentmethod": {
+								"value": "@pipeline().parameters.paymentmethod",
+								"type": "Expression"
 							}
 						}
 					}
