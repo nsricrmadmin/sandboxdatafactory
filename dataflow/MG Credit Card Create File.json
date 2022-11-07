@@ -67,7 +67,7 @@
 				"     escapeChar: '\\\\',",
 				"     quoteChar: '\\\"',",
 				"     columnNamesAsHeader: true,",
-				"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate),",
+				"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
