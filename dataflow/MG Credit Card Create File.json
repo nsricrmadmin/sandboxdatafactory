@@ -31,7 +31,9 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     submissiondate as string ('SubmissionDate')",
+				"     submissiondate as string ('SubmissionDate'),",
+				"     division as string,",
+				"     paymentmethod as string",
 				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
