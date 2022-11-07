@@ -3,66 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Aggregate Donor Orders",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "Monthly Giving Aggregate DOs",
-						"type": "DataFlowReference"
-					},
-					"compute": {
-						"coreCount": 16,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
-				"name": "Create CSV File with Transactionid",
-				"type": "ExecuteDataFlow",
-				"dependsOn": [
-					{
-						"activity": "Aggregate Donor Orders",
-						"dependencyConditions": [
-							"Succeeded"
-						]
-					}
-				],
-				"policy": {
-					"timeout": "0.12:00:00",
-					"retry": 0,
-					"retryIntervalInSeconds": 30,
-					"secureOutput": false,
-					"secureInput": false
-				},
-				"userProperties": [],
-				"typeProperties": {
-					"dataflow": {
-						"referenceName": "MG Aggregation Create Files",
-						"type": "DataFlowReference"
-					},
-					"compute": {
-						"coreCount": 16,
-						"computeType": "General"
-					},
-					"traceLevel": "Fine"
-				}
-			},
-			{
 				"name": "MG Donor Order Update",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Create CSV File with Transactionid",
+						"activity": "MG Create Files",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -161,6 +106,61 @@
 						"type": "DatasetReference"
 					}
 				]
+			},
+			{
+				"name": "MG Aggregate Donor Orders",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "Monthly Giving Aggregate DOs",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "MG Create Files",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [
+					{
+						"activity": "MG Aggregate Donor Orders",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "MG Aggregation Create Files",
+						"type": "DataFlowReference"
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
 			}
 		],
 		"annotations": []
