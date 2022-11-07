@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "MG Aggregation Update Trxid",
+				"name": "Test DO Update",
 				"type": "Copy",
 				"dependsOn": [],
 				"policy": {
@@ -29,8 +29,7 @@
 					"sink": {
 						"type": "CommonDataServiceForAppsSink",
 						"writeBatchSize": 10,
-						"writeBehavior": "upsert",
-						"ignoreNullValues": true
+						"writeBehavior": "upsert"
 					},
 					"enableStaging": false,
 					"translator": {
@@ -54,8 +53,8 @@
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "cog_donortransactionname",
-									"type": "String"
+									"name": "cog_donortransaction",
+									"type": "Guid"
 								}
 							}
 						],
