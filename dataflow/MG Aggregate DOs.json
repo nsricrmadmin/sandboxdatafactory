@@ -34,6 +34,13 @@
 						"type": "DatasetReference"
 					},
 					"name": "ContactTransactions"
+				},
+				{
+					"dataset": {
+						"referenceName": "SandboxDonorOrder",
+						"type": "DatasetReference"
+					},
+					"name": "DonorOrderTrxDate"
 				}
 			],
 			"transformations": [
@@ -51,6 +58,9 @@
 				},
 				{
 					"name": "TransactionFields"
+				},
+				{
+					"name": "alterRow1"
 				}
 			],
 			"scriptLines": [
@@ -129,6 +139,7 @@
 				"  isNull(cog_datepaid)==false()&&statuscode=='181310001',1, \r",
 				"  isNull(cog_datepaid)==false()&&statuscode=='2',1\r",
 				"  )) ~> TransactionFields",
+				"TransactionFields alterRow(updateIf(isNull(cog_transactiondate)==false())) ~> alterRow1",
 				"aggregatefromaccount sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
@@ -179,7 +190,15 @@
 				"          cog_transactiondate,",
 				"          statuscode = new_statuscode,",
 				"          statecode = new_statecode",
-				"     )) ~> ContactTransactions"
+				"     )) ~> ContactTransactions",
+				"alterRow1 sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     deletable:false,",
+				"     insertable:false,",
+				"     updateable:true,",
+				"     upsertable:false,",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true) ~> DonorOrderTrxDate"
 			]
 		}
 	}
