@@ -362,7 +362,7 @@
 								},
 								"formatSettings": {
 									"type": "DelimitedTextWriteSettings",
-									"maxRowsPerFile": 1,
+									"maxRowsPerFile": 3,
 									"fileNamePrefix": "",
 									"quoteAllText": true,
 									"fileExtension": ".csv"
@@ -1973,10 +1973,10 @@
 								},
 								"formatSettings": {
 									"type": "DelimitedTextWriteSettings",
-									"maxRowsPerFile": 1,
+									"maxRowsPerFile": 3,
 									"fileNamePrefix": "",
 									"quoteAllText": true,
-									"fileExtension": ".csv"
+									"fileExtension": ".asc"
 								}
 							},
 							"enableStaging": false,
