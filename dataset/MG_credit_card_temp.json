@@ -1,5 +1,5 @@
 {
-	"name": "MG_CC_File",
+	"name": "MG_credit_card_temp",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",
@@ -24,8 +24,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"fileName": "MG-CC-2022-11-01-00001.csv",
-				"folderPath": "bank_file_uploads/credit_card",
+				"folderPath": "bank_file_uploads/credit_card_temp",
 				"fileSystem": "monthly-giving"
 			},
 			"columnDelimiter": ",",
