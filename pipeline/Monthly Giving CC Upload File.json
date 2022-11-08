@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG Credit Card Create File",
+						"referenceName": "MG CC Create File",
 						"type": "DataFlowReference",
 						"parameters": {
 							"submissiondate": {
@@ -89,7 +89,7 @@
 				}
 			},
 			{
-				"name": "MG Split Into Batches",
+				"name": "MG DO Split Into Batches",
 				"type": "Copy",
 				"dependsOn": [
 					{
