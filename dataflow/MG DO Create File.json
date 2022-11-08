@@ -1,0 +1,119 @@
+{
+	"name": "MG DO Create File",
+	"properties": {
+		"type": "MappingDataFlow",
+		"typeProperties": {
+			"sources": [
+				{
+					"dataset": {
+						"referenceName": "Sandbox_Transaction",
+						"type": "DatasetReference"
+					},
+					"name": "transaction"
+				}
+			],
+			"sinks": [
+				{
+					"dataset": {
+						"referenceName": "MG_credit_card_temp",
+						"type": "DatasetReference"
+					},
+					"name": "CreateFileTemp"
+				},
+				{
+					"dataset": {
+						"referenceName": "MG_credit_card_history",
+						"type": "DatasetReference"
+					},
+					"name": "CreateFileHistory"
+				}
+			],
+			"transformations": [
+				{
+					"name": "derivedColumns"
+				},
+				{
+					"name": "windowIndex"
+				}
+			],
+			"scriptLines": [
+				"parameters{",
+				"     submissiondate as string ('SubmissionDate'),",
+				"     division as string ('Division'),",
+				"     paymentmethod as string ('PaymentMethod')",
+				"}",
+				"source(output(",
+				"          {@odata.etag} as string,",
+				"          cog_account as string,",
+				"          cog_contact as string,",
+				"          transactioncurrencyid as string,",
+				"          cog_accountholder as string,",
+				"          cog_accountnumber as string,",
+				"          cog_expireydate as string,",
+				"          cog_transactionamount as string,",
+				"          cog_transactiondate as string,",
+				"          cog_transactionid as string,",
+				"          cog_transactionno as string,",
+				"          statecode as string,",
+				"          statuscode as string",
+				"     ),",
+				"     allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
+				"transaction derive(type = 'A',",
+				"          budgetperiod = '00') ~> derivedColumns",
+				"derivedColumns window(asc({@odata.etag}, true),",
+				"     index = rowNumber()) ~> windowIndex",
+				"windowIndex sink(allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     input(",
+				"          accountholder as string,",
+				"          accountnumber as string,",
+				"          expireydate as string,",
+				"          amount as string,",
+				"          reference as string,",
+				"          type as string,",
+				"          budgetperiod as string",
+				"     ),",
+				"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
+				"     truncate: true,",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     mapColumn(",
+				"          accountholder = cog_accountholder,",
+				"          accountnumber = cog_accountnumber,",
+				"          expireydate = cog_expireydate,",
+				"          amount = cog_transactionamount,",
+				"          reference = cog_transactionid,",
+				"          type,",
+				"          budgetperiod",
+				"     )) ~> CreateFileTemp",
+				"windowIndex sink(allowSchemaDrift: false,",
+				"     validateSchema: false,",
+				"     input(",
+				"          accountholder as string,",
+				"          accountnumber as string,",
+				"          expireydate as string,",
+				"          amount as string,",
+				"          reference as string,",
+				"          type as string,",
+				"          budgetperiod as string",
+				"     ),",
+				"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     mapColumn(",
+				"          accountholder = cog_accountholder,",
+				"          accountnumber = cog_accountnumber,",
+				"          expireydate = cog_expireydate,",
+				"          amount = cog_transactionamount,",
+				"          reference = cog_transactionid,",
+				"          type,",
+				"          budgetperiod",
+				"     )) ~> CreateFileHistory"
+			]
+		}
+	}
+}
