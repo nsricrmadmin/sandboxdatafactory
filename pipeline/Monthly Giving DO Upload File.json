@@ -16,21 +16,12 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG CC Create File",
+						"referenceName": "MG DO Create File",
 						"type": "DataFlowReference",
 						"parameters": {
-							"submissiondate": {
-								"value": "'@{pipeline().parameters.submissiondate}'",
-								"type": "Expression"
-							},
-							"division": {
-								"value": "'@{pipeline().parameters.division}'",
-								"type": "Expression"
-							},
-							"paymentmethod": {
-								"value": "'@{pipeline().parameters.paymentmethod}'",
-								"type": "Expression"
-							}
+							"submissiondate": "'SubmissionDate'",
+							"division": "'Division'",
+							"paymentmethod": "'PaymentMethod'"
 						},
 						"datasetParameters": {
 							"CreateFileTemp": {
