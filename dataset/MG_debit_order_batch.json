@@ -1,0 +1,52 @@
+{
+	"name": "MG_debit_order_batch",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sandboxdatalake",
+			"type": "LinkedServiceReference"
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "bank_file_uploads/debit_order_batch",
+				"fileSystem": "monthly-giving"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "accountholder",
+				"type": "String"
+			},
+			{
+				"name": "accountnumber",
+				"type": "String"
+			},
+			{
+				"name": "expireydate",
+				"type": "String"
+			},
+			{
+				"name": "amount",
+				"type": "String"
+			},
+			{
+				"name": "reference",
+				"type": "String"
+			},
+			{
+				"name": "type",
+				"type": "String"
+			},
+			{
+				"name": "budgetperiod",
+				"type": "String"
+			}
+		]
+	}
+}
