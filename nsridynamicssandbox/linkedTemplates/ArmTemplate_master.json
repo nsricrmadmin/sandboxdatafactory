@@ -7,17 +7,9 @@
 			"metadata": "Data Factory name",
 			"defaultValue": "nsridynamicssandbox"
 		},
-		"Dynamics1_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'Dynamics1'"
-		},
 		"Error Output_accountKey": {
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'Error Output'"
-		},
-		"nsridynamicssandox_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'nsridynamicssandox'"
 		},
 		"sandbox_password": {
 			"type": "secureString",
@@ -27,21 +19,9 @@
 			"type": "secureString",
 			"metadata": "Secure string for 'accountKey' of 'sandboxdatalake'"
 		},
-		"training_password": {
-			"type": "secureString",
-			"metadata": "Secure string for 'password' of 'training'"
-		},
-		"Dynamics1_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "crmadmin@searescue.org.za"
-		},
 		"Error Output_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
-		},
-		"nsridynamicssandox_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "crmadmin@searescue.org.za"
 		},
 		"sandbox_properties_typeProperties_username": {
 			"type": "string",
@@ -50,10 +30,6 @@
 		"sandboxdatalake_properties_typeProperties_url": {
 			"type": "string",
 			"defaultValue": "https://nsridynamicssandbox.dfs.core.windows.net/"
-		},
-		"training_properties_typeProperties_username": {
-			"type": "string",
-			"defaultValue": "crmadmin@searescue.org.za"
 		},
 		"containerUri": {
 			"type": "string",
@@ -82,14 +58,8 @@
 					"factoryName": {
 						"value": "[parameters('factoryName')]"
 					},
-					"Dynamics1_password": {
-						"value": "[parameters('Dynamics1_password')]"
-					},
 					"Error Output_accountKey": {
 						"value": "[parameters('Error Output_accountKey')]"
-					},
-					"nsridynamicssandox_password": {
-						"value": "[parameters('nsridynamicssandox_password')]"
 					},
 					"sandbox_password": {
 						"value": "[parameters('sandbox_password')]"
@@ -97,50 +67,18 @@
 					"sandboxdatalake_accountKey": {
 						"value": "[parameters('sandboxdatalake_accountKey')]"
 					},
-					"training_password": {
-						"value": "[parameters('training_password')]"
-					},
-					"Dynamics1_properties_typeProperties_username": {
-						"value": "[parameters('Dynamics1_properties_typeProperties_username')]"
-					},
 					"Error Output_properties_typeProperties_url": {
 						"value": "[parameters('Error Output_properties_typeProperties_url')]"
-					},
-					"nsridynamicssandox_properties_typeProperties_username": {
-						"value": "[parameters('nsridynamicssandox_properties_typeProperties_username')]"
 					},
 					"sandbox_properties_typeProperties_username": {
 						"value": "[parameters('sandbox_properties_typeProperties_username')]"
 					},
 					"sandboxdatalake_properties_typeProperties_url": {
 						"value": "[parameters('sandboxdatalake_properties_typeProperties_url')]"
-					},
-					"training_properties_typeProperties_username": {
-						"value": "[parameters('training_properties_typeProperties_username')]"
 					}
 				}
 			},
 			"dependsOn": []
-		},
-		{
-			"name": "nsridynamicssandbox_ArmTemplate_1",
-			"type": "Microsoft.Resources/deployments",
-			"apiVersion": "2018-02-01",
-			"properties": {
-				"mode": "incremental",
-				"templateLink": {
-					"uri": "[concat(parameters('containerUri'), '/ArmTemplate_1.json', parameters('containerSasToken'))]",
-					"contentVersion": "1.0.0.0"
-				},
-				"parameters": {
-					"factoryName": {
-						"value": "[parameters('factoryName')]"
-					}
-				}
-			},
-			"dependsOn": [
-				"[resourceId('Microsoft.Resources/deployments', 'nsridynamicssandbox_ArmTemplate_0')]"
-			]
 		}
 	]
 }
