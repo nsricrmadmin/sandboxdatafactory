@@ -198,7 +198,11 @@
 				"     updateable:true,",
 				"     upsertable:false,",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> DonorOrderTrxDate"
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          cog_donororderid,",
+				"          cog_transactiondate",
+				"     )) ~> DonorOrderTrxDate"
 			]
 		}
 	}
