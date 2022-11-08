@@ -124,7 +124,7 @@
 							"maxRowsPerFile": 1,
 							"fileNamePrefix": "",
 							"quoteAllText": true,
-							"fileExtension": ".csv"
+							"fileExtension": ".asc"
 						}
 					},
 					"enableStaging": false,
@@ -225,7 +225,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "MG_credit_card_temp",
+						"referenceName": "MG_debit_order_temp",
 						"type": "DatasetReference",
 						"parameters": {
 							"submissiondate": {
@@ -245,7 +245,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "MG_credit_card_batch",
+						"referenceName": "MG_debit_order_batch",
 						"type": "DatasetReference"
 					}
 				]
