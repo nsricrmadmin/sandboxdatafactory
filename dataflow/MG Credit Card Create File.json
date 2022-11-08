@@ -100,7 +100,7 @@
 				"          type as string,",
 				"          budgetperiod as string",
 				"     ),",
-				"     filePattern:'$division+\\'-\\'+$paymentmethod+\\'-\\'+$submissiondate+\\'.csv\\'',",
+				"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
