@@ -1,5 +1,5 @@
 {
-	"name": "MG Credit Card Create File",
+	"name": "MG CC Create File",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
