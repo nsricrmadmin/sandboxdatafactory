@@ -706,124 +706,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TEST Update Donor Orders')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "MG DO Update",
-						"type": "Copy",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"fileListPath": "monthly-giving/donor_order_aggregates",
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "CommonDataServiceForAppsSink",
-								"writeBatchSize": 10,
-								"writeBehavior": "upsert"
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "cog_donororderid",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "cog_donororderid",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "cog_transactionid",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "cog_donortransaction",
-											"type": "Guid"
-										}
-									},
-									{
-										"source": {
-											"name": "statecode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "statecode",
-											"type": "Int32"
-										}
-									},
-									{
-										"source": {
-											"name": "new_statuscode",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "statuscode",
-											"type": "Int32"
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "file_mg_aggregation",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "SandboxDonorOrder",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/MG Aggregate DOs')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -861,6 +743,13 @@
 								"type": "DatasetReference"
 							},
 							"name": "ContactTransactions"
+						},
+						{
+							"dataset": {
+								"referenceName": "SandboxDonorOrder",
+								"type": "DatasetReference"
+							},
+							"name": "DonorOrderTrxDate"
 						}
 					],
 					"transformations": [
@@ -878,6 +767,9 @@
 						},
 						{
 							"name": "TransactionFields"
+						},
+						{
+							"name": "alterRow1"
 						}
 					],
 					"scriptLines": [
@@ -956,6 +848,7 @@
 						"  isNull(cog_datepaid)==false()&&statuscode=='181310001',1, \r",
 						"  isNull(cog_datepaid)==false()&&statuscode=='2',1\r",
 						"  )) ~> TransactionFields",
+						"TransactionFields alterRow(updateIf(isNull(cog_transactiondate)==false())) ~> alterRow1",
 						"aggregatefromaccount sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
@@ -1006,7 +899,19 @@
 						"          cog_transactiondate,",
 						"          statuscode = new_statuscode,",
 						"          statecode = new_statecode",
-						"     )) ~> ContactTransactions"
+						"     )) ~> ContactTransactions",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          cog_donororderid,",
+						"          cog_transactiondate",
+						"     )) ~> DonorOrderTrxDate"
 					]
 				}
 			},
@@ -1017,7 +922,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG Aggregation Create Files')]",
+			"name": "[concat(parameters('factoryName'), '/MG Aggregation Create DO Trans File')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1078,12 +983,13 @@
 						"          cog_paymentmethod as string,",
 						"          cog_paymenttype as string,",
 						"          cog_totalticketamount as string,",
+						"          cog_transactiondate as string,",
 						"          statecode as string,",
 						"          statuscode as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>181310013</value>\\n                    <value>181310019</value>\\n                    <value>181310005</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>181310013</value>\\n                    <value>181310019</value>\\n                    <value>181310005</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
 						"     manifestType: 'model') ~> donororder",
 						"source(output(",
 						"          {@odata.etag} as string,",
@@ -1094,6 +1000,7 @@
 						"          cog_division as string,",
 						"          cog_paymentmethod as string,",
 						"          cog_transactionamount as string,",
+						"          cog_transactiondate as string,",
 						"          cog_transactionfrom as string,",
 						"          cog_transactionid as string,",
 						"          cog_transactionno as string,",
@@ -1101,16 +1008,16 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <attribute name=\"cog_division\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_transactionfrom\"/>          \\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <attribute name=\"cog_division\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_transactionfrom\"/>\\n          <attribute name=\"cog_transactiondate\"/>         \\n     </entity>\\n</fetch>',",
 						"     manifestType: 'model') ~> transaction",
 						"DerivedDonorOrderKey, DerivedTransactionKey join(DonorOrderKey == TransactionKey,",
 						"     joinType:'inner',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
 						"     broadcast: 'auto')~> joindonorordertransaction",
-						"donororder derive(DonorOrderKey = toString(cog_donororderfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_competition)+iif(cog_donororderfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod),",
+						"donororder derive(DonorOrderKey = cog_transactiondate+toString(cog_donororderfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_competition)+iif(cog_donororderfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod),",
 						"          Target = 'cog_transaction') ~> DerivedDonorOrderKey",
-						"transaction derive(TransactionKey = toString(cog_transactionfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_division)+iif(cog_transactionfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
+						"transaction derive(TransactionKey = cog_transactiondate+toString(cog_transactionfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_division)+iif(cog_transactionfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
 						"joindonorordertransaction derive(new_statuscode = case(\r",
 						"donororder@statuscode=='181310001','181310013',\r",
 						"donororder@statuscode=='2','181310019',\r",
@@ -1528,7 +1435,8 @@
 									"donororder": {},
 									"bankdetails": {},
 									"accounttransactions": {},
-									"ContactTransactions": {}
+									"ContactTransactions": {},
+									"DonorOrderTrxDate": {}
 								}
 							},
 							"staging": {},
@@ -1560,7 +1468,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG Aggregation Create Files",
+								"referenceName": "MG Aggregation Create DO Trans File",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -1588,7 +1496,291 @@
 				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
 				"[concat(variables('factoryId'), '/dataflows/MG Aggregate DOs')]",
-				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create Files')]"
+				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create DO Trans File')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Monthly Giving CC Upload File')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "Monthly Giving CC Upload Create File",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MG CC Create File",
+								"type": "DataFlowReference",
+								"parameters": {
+									"submissiondate": {
+										"value": "'@{pipeline().parameters.submissiondate}'",
+										"type": "Expression"
+									},
+									"division": {
+										"value": "'@{pipeline().parameters.division}'",
+										"type": "Expression"
+									},
+									"paymentmethod": {
+										"value": "'@{pipeline().parameters.paymentmethod}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"transaction": {},
+									"CreateFileTemp": {
+										"submissiondate": "'SubmissionDate'",
+										"division": "'Division'",
+										"paymentmethod": "'PaymentMethod'"
+									},
+									"CreateFileHistory": {
+										"submissiondate": "'SubmissionDate'",
+										"division": "'Division'",
+										"paymentmethod": "'PaymentMethod'"
+									}
+								},
+								"linkedServiceParameters": {
+									"CreateFileTemp": {
+										"linkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"rejectedDataLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										}
+									},
+									"CreateFileHistory": {
+										"linkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"rejectedDataLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "MG DO Split Into Batches",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "Monthly Giving CC Upload Create File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "bank_file_uploads/temp_files/credit_card",
+									"wildcardFileName": {
+										"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
+										"type": "Expression"
+									},
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"maxRowsPerFile": 3,
+									"fileNamePrefix": "",
+									"quoteAllText": true,
+									"fileExtension": ".csv"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "accountholder",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "accountholder",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "accountnumber",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "accountnumber",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "expireydate",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "expireydate",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "reference",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "reference",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "type",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "type",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "budgetperiod",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "budgetperiod",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "MG_credit_card_temp",
+								"type": "DatasetReference",
+								"parameters": {
+									"submissiondate": {
+										"value": "@pipeline().parameters.submissiondate",
+										"type": "Expression"
+									},
+									"division": {
+										"value": "@pipeline().parameters.division",
+										"type": "Expression"
+									},
+									"paymentmethod": {
+										"value": "@pipeline().parameters.paymentmethod",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "MG_credit_card_batch",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"submissiondate": {
+						"type": "string",
+						"defaultValue": "YYYYmmdd"
+					},
+					"division": {
+						"type": "string",
+						"defaultValue": "MG"
+					},
+					"paymentmethod": {
+						"type": "string",
+						"defaultValue": "CC"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/MG CC Create File')]",
+				"[concat(variables('factoryId'), '/datasets/MG_credit_card_temp')]",
+				"[concat(variables('factoryId'), '/datasets/MG_credit_card_batch')]"
 			]
 		}
 	]
