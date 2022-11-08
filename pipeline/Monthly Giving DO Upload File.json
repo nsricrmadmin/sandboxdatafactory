@@ -19,9 +19,18 @@
 						"referenceName": "MG DO Create File",
 						"type": "DataFlowReference",
 						"parameters": {
-							"submissiondate": "'SubmissionDate'",
-							"division": "'Division'",
-							"paymentmethod": "'PaymentMethod'"
+							"submissiondate": {
+								"value": "'@{pipeline().parameters.submissiondate}'",
+								"type": "Expression"
+							},
+							"division": {
+								"value": "'@{pipeline().parameters.division}'",
+								"type": "Expression"
+							},
+							"paymentmethod": {
+								"value": "'@{pipeline().parameters.paymentmethod}'",
+								"type": "Expression"
+							}
 						},
 						"datasetParameters": {
 							"CreateFileTemp": {
