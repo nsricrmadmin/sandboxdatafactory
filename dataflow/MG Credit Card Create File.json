@@ -96,7 +96,16 @@
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> CreateFileHistory"
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          accountholder = cog_accountholder,",
+				"          accountnumber = cog_accountnumber,",
+				"          expireydate = cog_expireydate,",
+				"          amount = cog_transactionamount,",
+				"          reference = cog_transactionid,",
+				"          type,",
+				"          budgetperiod",
+				"     )) ~> CreateFileHistory"
 			]
 		}
 	}
