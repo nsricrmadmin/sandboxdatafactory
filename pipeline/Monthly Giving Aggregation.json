@@ -154,7 +154,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG Aggregation Create Files",
+						"referenceName": "MG Aggregation Create DO Trans File",
 						"type": "DataFlowReference"
 					},
 					"compute": {
