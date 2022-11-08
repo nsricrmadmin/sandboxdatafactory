@@ -1,0 +1,270 @@
+{
+	"name": "Monthly Giving DO Upload File",
+	"properties": {
+		"activities": [
+			{
+				"name": "Monthly Giving DO Upload Create File",
+				"type": "ExecuteDataFlow",
+				"dependsOn": [],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"dataflow": {
+						"referenceName": "MG CC Create File",
+						"type": "DataFlowReference",
+						"parameters": {
+							"submissiondate": {
+								"value": "'@{pipeline().parameters.submissiondate}'",
+								"type": "Expression"
+							},
+							"division": {
+								"value": "'@{pipeline().parameters.division}'",
+								"type": "Expression"
+							},
+							"paymentmethod": {
+								"value": "'@{pipeline().parameters.paymentmethod}'",
+								"type": "Expression"
+							}
+						},
+						"datasetParameters": {
+							"CreateFileTemp": {
+								"submissiondate": "'SubmissionDate'",
+								"division": "'Division'",
+								"paymentmethod": "'PaymentMethod'"
+							},
+							"CreateFileHistory": {
+								"submissiondate": "'SubmissionDate'",
+								"division": "'Division'",
+								"paymentmethod": "'PaymentMethod'"
+							}
+						},
+						"linkedServiceParameters": {
+							"CreateFileTemp": {
+								"linkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								},
+								"rejectedDataLinkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								}
+							},
+							"CreateFileHistory": {
+								"linkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								},
+								"rejectedDataLinkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								}
+							}
+						}
+					},
+					"compute": {
+						"coreCount": 8,
+						"computeType": "General"
+					},
+					"traceLevel": "Fine"
+				}
+			},
+			{
+				"name": "MG DO Split Into Batches",
+				"type": "Copy",
+				"dependsOn": [
+					{
+						"activity": "Monthly Giving DO Upload Create File",
+						"dependencyConditions": [
+							"Succeeded"
+						]
+					}
+				],
+				"policy": {
+					"timeout": "0.12:00:00",
+					"retry": 0,
+					"retryIntervalInSeconds": 30,
+					"secureOutput": false,
+					"secureInput": false
+				},
+				"userProperties": [],
+				"typeProperties": {
+					"source": {
+						"type": "DelimitedTextSource",
+						"storeSettings": {
+							"type": "AzureBlobFSReadSettings",
+							"recursive": true,
+							"wildcardFolderPath": "bank_file_uploads/temp_files/credit_card",
+							"wildcardFileName": {
+								"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
+								"type": "Expression"
+							},
+							"enablePartitionDiscovery": false
+						},
+						"formatSettings": {
+							"type": "DelimitedTextReadSettings"
+						}
+					},
+					"sink": {
+						"type": "DelimitedTextSink",
+						"storeSettings": {
+							"type": "AzureBlobFSWriteSettings"
+						},
+						"formatSettings": {
+							"type": "DelimitedTextWriteSettings",
+							"maxRowsPerFile": 1,
+							"fileNamePrefix": "",
+							"quoteAllText": true,
+							"fileExtension": ".csv"
+						}
+					},
+					"enableStaging": false,
+					"translator": {
+						"type": "TabularTranslator",
+						"mappings": [
+							{
+								"source": {
+									"name": "accountholder",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "accountholder",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "accountnumber",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "accountnumber",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "expireydate",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "expireydate",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "amount",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "amount",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "reference",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "reference",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "type",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "type",
+									"type": "String",
+									"physicalType": "String"
+								}
+							},
+							{
+								"source": {
+									"name": "budgetperiod",
+									"type": "String",
+									"physicalType": "String"
+								},
+								"sink": {
+									"name": "budgetperiod",
+									"type": "String",
+									"physicalType": "String"
+								}
+							}
+						],
+						"typeConversion": true,
+						"typeConversionSettings": {
+							"allowDataTruncation": true,
+							"treatBooleanAsNumber": false
+						}
+					}
+				},
+				"inputs": [
+					{
+						"referenceName": "MG_credit_card_temp",
+						"type": "DatasetReference",
+						"parameters": {
+							"submissiondate": {
+								"value": "@pipeline().parameters.submissiondate",
+								"type": "Expression"
+							},
+							"division": {
+								"value": "@pipeline().parameters.division",
+								"type": "Expression"
+							},
+							"paymentmethod": {
+								"value": "@pipeline().parameters.paymentmethod",
+								"type": "Expression"
+							}
+						}
+					}
+				],
+				"outputs": [
+					{
+						"referenceName": "MG_credit_card_batch",
+						"type": "DatasetReference"
+					}
+				]
+			}
+		],
+		"parameters": {
+			"submissiondate": {
+				"type": "string",
+				"defaultValue": "YYYYmmdd"
+			},
+			"division": {
+				"type": "string",
+				"defaultValue": "MG"
+			},
+			"paymentmethod": {
+				"type": "string",
+				"defaultValue": "CC"
+			}
+		},
+		"annotations": []
+	}
+}
