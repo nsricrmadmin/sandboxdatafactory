@@ -31,6 +31,32 @@
 								"value": "'@{pipeline().parameters.paymentmethod}'",
 								"type": "Expression"
 							}
+						},
+						"datasetParameters": {
+							"CreateFileTemp": {
+								"submissiondate": "'SubmissionDate'",
+								"division": "'Division'",
+								"paymentmethod": "'PaymentMethod'"
+							}
+						},
+						"linkedServiceParameters": {
+							"CreateFileTemp": {
+								"linkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								},
+								"schemaLinkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								},
+								"rejectedDataLinkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								}
+							}
 						}
 					},
 					"compute": {
