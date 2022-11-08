@@ -15,14 +15,14 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "MG_credit_card_temp",
+						"referenceName": "MG_debit_order_temp",
 						"type": "DatasetReference"
 					},
 					"name": "CreateFileTemp"
 				},
 				{
 					"dataset": {
-						"referenceName": "MG_credit_card_history",
+						"referenceName": "MG_debit_order_history",
 						"type": "DatasetReference"
 					},
 					"name": "CreateFileHistory"
