@@ -273,8 +273,52 @@
 								},
 								"datasetParameters": {
 									"transaction": {},
-									"CreateFileTemp": {},
-									"CreateFileHistory": {}
+									"CreateFileTemp": {
+										"submissiondate": "'SubmissionDate'",
+										"division": "'Division'",
+										"paymentmethod": "'PaymentMethod'"
+									},
+									"CreateFileHistory": {
+										"submissiondate": "'SubmissionDate'",
+										"division": "'Division'",
+										"paymentmethod": "'PaymentMethod'"
+									}
+								},
+								"linkedServiceParameters": {
+									"CreateFileTemp": {
+										"linkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"schemaLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"rejectedDataLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										}
+									},
+									"CreateFileHistory": {
+										"linkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"schemaLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"rejectedDataLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										}
+									}
 								}
 							},
 							"staging": {},
@@ -310,7 +354,7 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "bank_file_uploads/credit_card/",
+									"wildcardFolderPath": "bank_file_uploads/temp_files/credit_card",
 									"wildcardFileName": {
 										"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
 										"type": "Expression"
@@ -905,7 +949,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/credit_card_temp",
+						"folderPath": "bank_file_uploads/temp_files/credit_card",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -1434,16 +1478,16 @@
 					],
 					"sinks": [
 						{
-							"linkedService": {
-								"referenceName": "sandboxdatalake",
-								"type": "LinkedServiceReference"
+							"dataset": {
+								"referenceName": "MG_credit_card_temp",
+								"type": "DatasetReference"
 							},
 							"name": "CreateFileTemp"
 						},
 						{
-							"linkedService": {
-								"referenceName": "sandboxdatalake",
-								"type": "LinkedServiceReference"
+							"dataset": {
+								"referenceName": "MG_credit_card_history",
+								"type": "DatasetReference"
 							},
 							"name": "CreateFileHistory"
 						}
@@ -1486,48 +1530,50 @@
 						"     index = rowNumber()) ~> windowIndex",
 						"windowIndex sink(allowSchemaDrift: false,",
 						"     validateSchema: false,",
-						"     format: 'delimited',",
-						"     fileSystem: 'monthly-giving',",
-						"     folderPath: 'bank_file_uploads/credit_card_temp',",
-						"     truncate: true,",
-						"     columnDelimiter: ',',",
-						"     escapeChar: '\\\\',",
-						"     quoteChar: '\\\"',",
-						"     columnNamesAsHeader: true,",
+						"     input(",
+						"          accountholder as string,",
+						"          accountnumber as string,",
+						"          expireydate as string,",
+						"          amount as string,",
+						"          reference as string,",
+						"          type as string,",
+						"          budgetperiod as string",
+						"     ),",
 						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
+						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
-						"     mapColumn(",
-						"          type,",
-						"          reference = cog_transactionno,",
-						"          accountholder = cog_accountholder,",
-						"          accountnumber = cog_accountnumber,",
-						"          expireydate = cog_expireydate,",
-						"          budgetperiod,",
-						"          amount = cog_transactionamount",
-						"     )) ~> CreateFileTemp",
-						"windowIndex sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     format: 'delimited',",
-						"     fileSystem: 'monthly-giving',",
-						"     folderPath: 'bank_file_uploads/credit_card_history',",
-						"     columnDelimiter: ',',",
-						"     escapeChar: '\\\\',",
-						"     quoteChar: '\\\"',",
-						"     columnNamesAsHeader: true,",
-						"     filePattern:'$division+\\'-\\'+$paymentmethod+\\'-\\'+$submissiondate+\\'.csv\\'',",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
 						"     mapColumn(",
 						"          accountholder = cog_accountholder,",
 						"          accountnumber = cog_accountnumber,",
 						"          expireydate = cog_expireydate,",
 						"          amount = cog_transactionamount,",
-						"          reference = cog_transactionno,",
+						"          reference = cog_transactionid,",
+						"          type,",
+						"          budgetperiod",
+						"     )) ~> CreateFileTemp",
+						"windowIndex sink(allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     input(",
+						"          accountholder as string,",
+						"          accountnumber as string,",
+						"          expireydate as string,",
+						"          amount as string,",
+						"          reference as string,",
+						"          type as string,",
+						"          budgetperiod as string",
+						"     ),",
+						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     mapColumn(",
+						"          accountholder = cog_accountholder,",
+						"          accountnumber = cog_accountnumber,",
+						"          expireydate = cog_expireydate,",
+						"          amount = cog_transactionamount,",
+						"          reference = cog_transactionid,",
 						"          type,",
 						"          budgetperiod",
 						"     )) ~> CreateFileHistory"
@@ -1536,6 +1582,277 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
+				"[concat(variables('factoryId'), '/datasets/MG_credit_card_temp')]",
+				"[concat(variables('factoryId'), '/datasets/MG_credit_card_history')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG_credit_card_history')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"submissiondate": {
+						"type": "string",
+						"defaultValue": "'SubmissionDate'"
+					},
+					"division": {
+						"type": "string",
+						"defaultValue": "'Division'"
+					},
+					"paymentmethod": {
+						"type": "string",
+						"defaultValue": "'PaymentMethod'"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "bank_file_uploads/debit_order_history",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "accountholder",
+						"type": "String"
+					},
+					{
+						"name": "accountnumber",
+						"type": "String"
+					},
+					{
+						"name": "expireydate",
+						"type": "String"
+					},
+					{
+						"name": "amount",
+						"type": "String"
+					},
+					{
+						"name": "reference",
+						"type": "String"
+					},
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "budgetperiod",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG_debit_order_history')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"submissiondate": {
+						"type": "string",
+						"defaultValue": "'SubmissionDate'"
+					},
+					"division": {
+						"type": "string",
+						"defaultValue": "'Division'"
+					},
+					"paymentmethod": {
+						"type": "string",
+						"defaultValue": "'PaymentMethod'"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "bank_file_uploads/credit_card_history",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "accountholder",
+						"type": "String"
+					},
+					{
+						"name": "accountnumber",
+						"type": "String"
+					},
+					{
+						"name": "expireydate",
+						"type": "String"
+					},
+					{
+						"name": "amount",
+						"type": "String"
+					},
+					{
+						"name": "reference",
+						"type": "String"
+					},
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "budgetperiod",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG_debit_order_temp')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"submissiondate": {
+						"type": "string",
+						"defaultValue": "'SubmissionDate'"
+					},
+					"division": {
+						"type": "string",
+						"defaultValue": "'Division'"
+					},
+					"paymentmethod": {
+						"type": "string",
+						"defaultValue": "'PaymentMethod'"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "bank_file_uploads/temp_files/debit_order",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "accountholder",
+						"type": "String"
+					},
+					{
+						"name": "accountnumber",
+						"type": "String"
+					},
+					{
+						"name": "expireydate",
+						"type": "String"
+					},
+					{
+						"name": "amount",
+						"type": "String"
+					},
+					{
+						"name": "reference",
+						"type": "String"
+					},
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "budgetperiod",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG_debit_order_batch')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "bank_file_uploads/debit_order_batch",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "accountholder",
+						"type": "String"
+					},
+					{
+						"name": "accountnumber",
+						"type": "String"
+					},
+					{
+						"name": "expireydate",
+						"type": "String"
+					},
+					{
+						"name": "amount",
+						"type": "String"
+					},
+					{
+						"name": "reference",
+						"type": "String"
+					},
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "budgetperiod",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
 				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
 			]
 		}
