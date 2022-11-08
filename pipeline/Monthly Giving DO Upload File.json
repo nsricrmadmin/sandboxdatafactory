@@ -253,7 +253,7 @@
 			},
 			"paymentmethod": {
 				"type": "string",
-				"defaultValue": "CC"
+				"defaultValue": "DO"
 			}
 		},
 		"annotations": []
