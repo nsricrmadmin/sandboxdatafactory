@@ -19,6 +19,13 @@
 						"type": "LinkedServiceReference"
 					},
 					"name": "CreateFileTemp"
+				},
+				{
+					"linkedService": {
+						"referenceName": "sandboxdatalake",
+						"type": "LinkedServiceReference"
+					},
+					"name": "CreateFileHistory"
 				}
 			],
 			"transformations": [
@@ -66,7 +73,7 @@
 				"     columnDelimiter: ',',",
 				"     escapeChar: '\\\\',",
 				"     quoteChar: '\\\"',",
-				"     columnNamesAsHeader: false,",
+				"     columnNamesAsHeader: true,",
 				"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 				"     umask: 0022,",
 				"     preCommands: [],",
@@ -79,7 +86,31 @@
 				"          expireydate = cog_expireydate,",
 				"          budgetperiod,",
 				"          amount = cog_transactionamount",
-				"     )) ~> CreateFileTemp"
+				"     )) ~> CreateFileTemp",
+				"windowIndex sink(allowSchemaDrift: true,",
+				"     validateSchema: false,",
+				"     format: 'delimited',",
+				"     fileSystem: 'monthly-giving',",
+				"     folderPath: 'bank_file_uploads/credit_card_history',",
+				"     columnDelimiter: ',',",
+				"     escapeChar: '\\\\',",
+				"     quoteChar: '\\\"',",
+				"     columnNamesAsHeader: true,",
+				"     filePattern:'$division+\\'-\\'+$paymentmethod+\\'-\\'+$submissiondate+\\'.csv\\'',",
+				"     umask: 0022,",
+				"     preCommands: [],",
+				"     postCommands: [],",
+				"     skipDuplicateMapInputs: true,",
+				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          accountholder = cog_accountholder,",
+				"          accountnumber = cog_accountnumber,",
+				"          expireydate = cog_expireydate,",
+				"          amount = cog_transactionamount,",
+				"          reference = cog_transactionno,",
+				"          type,",
+				"          budgetperiod",
+				"     )) ~> CreateFileHistory"
 			]
 		}
 	}
