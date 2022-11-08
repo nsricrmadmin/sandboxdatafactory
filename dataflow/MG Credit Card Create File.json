@@ -18,7 +18,7 @@
 						"referenceName": "sandboxdatalake",
 						"type": "LinkedServiceReference"
 					},
-					"name": "CreateFile"
+					"name": "CreateFileTemp"
 				}
 			],
 			"transformations": [
@@ -57,29 +57,29 @@
 				"          budgetperiod = '00') ~> derivedColumns",
 				"derivedColumns window(asc({@odata.etag}, true),",
 				"     index = rowNumber()) ~> windowIndex",
-				"windowIndex sink(allowSchemaDrift: true,",
+				"windowIndex sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     format: 'delimited',",
 				"     fileSystem: 'monthly-giving',",
-				"     folderPath: 'bank_file_uploads/credit_card',",
+				"     folderPath: 'bank_file_uploads/credit_card_temp',",
 				"     truncate: true,",
 				"     columnDelimiter: ',',",
 				"     escapeChar: '\\\\',",
 				"     quoteChar: '\\\"',",
-				"     columnNamesAsHeader: true,",
+				"     columnNamesAsHeader: false,",
 				"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     mapColumn(",
+				"          type,",
+				"          reference = cog_transactionno,",
 				"          accountholder = cog_accountholder,",
 				"          accountnumber = cog_accountnumber,",
 				"          expireydate = cog_expireydate,",
-				"          amount = cog_transactionamount,",
-				"          reference = cog_transactionno,",
-				"          type,",
-				"          budgetperiod",
-				"     )) ~> CreateFile"
+				"          budgetperiod,",
+				"          amount = cog_transactionamount",
+				"     )) ~> CreateFileTemp"
 			]
 		}
 	}
