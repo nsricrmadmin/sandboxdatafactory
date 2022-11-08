@@ -21,9 +21,9 @@
 					"name": "CreateFileTemp"
 				},
 				{
-					"linkedService": {
-						"referenceName": "sandboxdatalake",
-						"type": "LinkedServiceReference"
+					"dataset": {
+						"referenceName": "MG_credit_card_history",
+						"type": "DatasetReference"
 					},
 					"name": "CreateFileHistory"
 				}
@@ -80,30 +80,23 @@
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: []) ~> CreateFileTemp",
-				"windowIndex sink(allowSchemaDrift: true,",
+				"windowIndex sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
-				"     format: 'delimited',",
-				"     fileSystem: 'monthly-giving',",
-				"     folderPath: 'bank_file_uploads/credit_card_history',",
-				"     columnDelimiter: ',',",
-				"     escapeChar: '\\\\',",
-				"     quoteChar: '\\\"',",
-				"     columnNamesAsHeader: true,",
+				"     input(",
+				"          accountholder as string,",
+				"          accountnumber as string,",
+				"          expireydate as string,",
+				"          amount as string,",
+				"          reference as string,",
+				"          type as string,",
+				"          budgetperiod as string",
+				"     ),",
 				"     filePattern:'$division+\\'-\\'+$paymentmethod+\\'-\\'+$submissiondate+\\'.csv\\'',",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true,",
-				"     mapColumn(",
-				"          accountholder = cog_accountholder,",
-				"          accountnumber = cog_accountnumber,",
-				"          expireydate = cog_expireydate,",
-				"          amount = cog_transactionamount,",
-				"          reference = cog_transactionno,",
-				"          type,",
-				"          budgetperiod",
-				"     )) ~> CreateFileHistory"
+				"     skipDuplicateMapOutputs: true) ~> CreateFileHistory"
 			]
 		}
 	}
