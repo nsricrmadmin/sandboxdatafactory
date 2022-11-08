@@ -1,0 +1,66 @@
+{
+	"name": "MG_debit_order_history",
+	"properties": {
+		"linkedServiceName": {
+			"referenceName": "sandboxdatalake",
+			"type": "LinkedServiceReference"
+		},
+		"parameters": {
+			"submissiondate": {
+				"type": "string",
+				"defaultValue": "'SubmissionDate'"
+			},
+			"division": {
+				"type": "string",
+				"defaultValue": "'Division'"
+			},
+			"paymentmethod": {
+				"type": "string",
+				"defaultValue": "'PaymentMethod'"
+			}
+		},
+		"annotations": [],
+		"type": "DelimitedText",
+		"typeProperties": {
+			"location": {
+				"type": "AzureBlobFSLocation",
+				"folderPath": "bank_file_uploads/credit_card_history",
+				"fileSystem": "monthly-giving"
+			},
+			"columnDelimiter": ",",
+			"escapeChar": "\\",
+			"firstRowAsHeader": true,
+			"quoteChar": "\""
+		},
+		"schema": [
+			{
+				"name": "accountholder",
+				"type": "String"
+			},
+			{
+				"name": "accountnumber",
+				"type": "String"
+			},
+			{
+				"name": "expireydate",
+				"type": "String"
+			},
+			{
+				"name": "amount",
+				"type": "String"
+			},
+			{
+				"name": "reference",
+				"type": "String"
+			},
+			{
+				"name": "type",
+				"type": "String"
+			},
+			{
+				"name": "budgetperiod",
+				"type": "String"
+			}
+		]
+	}
+}
