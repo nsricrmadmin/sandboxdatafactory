@@ -37,10 +37,32 @@
 								"submissiondate": "'SubmissionDate'",
 								"division": "'Division'",
 								"paymentmethod": "'PaymentMethod'"
+							},
+							"CreateFileHistory": {
+								"submissiondate": "'SubmissionDate'",
+								"division": "'Division'",
+								"paymentmethod": "'PaymentMethod'"
 							}
 						},
 						"linkedServiceParameters": {
 							"CreateFileTemp": {
+								"linkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								},
+								"schemaLinkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								},
+								"rejectedDataLinkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								}
+							},
+							"CreateFileHistory": {
 								"linkedService": {
 									"submissiondate": "'SubmissionDate'",
 									"division": "'Division'",
@@ -91,7 +113,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "bank_file_uploads/credit_card/",
+							"wildcardFolderPath": "bank_file_uploads/credit_card_temp/",
 							"wildcardFileName": {
 								"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
 								"type": "Expression"
