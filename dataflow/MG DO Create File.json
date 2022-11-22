@@ -74,7 +74,7 @@
 				"          Description = '                    ',",
 				"          {Nominated Account} = '02',",
 				"          Filler3 = '00000',",
-				"          Amount = cog_transactionamount,",
+				"          Amount = split(cog_transactionamount,'.'),",
 				"          {Amount Arrear} = '00000000000',",
 				"          {Max Amount} = '99999999999',",
 				"          {Capital Amount} = '00000000000',",
