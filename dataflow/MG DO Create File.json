@@ -78,7 +78,7 @@
 				"          {Max Amount} = '99999999999',",
 				"          {Capital Amount} = '00000000000',",
 				"          {Special Amount} = '00000000000',",
-				"          {Action Date} = ERROR_FUNCTION('@formatDateTime($submissiondate,__SINGLE_QUOTE__yyyy-mm-dd__SINGLE_QUOTE__)'),",
+				"          {Action Date} = toString($submissiondate,'yyyy-mm-dd'),",
 				"          {Cancellation Date} = '00000000000',",
 				"          Frequency = '01',",
 				"          Filler4 = '  ',",
