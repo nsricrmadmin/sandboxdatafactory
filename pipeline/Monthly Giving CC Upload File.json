@@ -51,6 +51,11 @@
 									"division": "'Division'",
 									"paymentmethod": "'PaymentMethod'"
 								},
+								"schemaLinkedService": {
+									"submissiondate": "'SubmissionDate'",
+									"division": "'Division'",
+									"paymentmethod": "'PaymentMethod'"
+								},
 								"rejectedDataLinkedService": {
 									"submissiondate": "'SubmissionDate'",
 									"division": "'Division'",
