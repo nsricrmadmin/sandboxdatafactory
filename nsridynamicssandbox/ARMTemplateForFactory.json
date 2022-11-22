@@ -292,6 +292,11 @@
 											"division": "'Division'",
 											"paymentmethod": "'PaymentMethod'"
 										},
+										"schemaLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
 										"rejectedDataLinkedService": {
 											"submissiondate": "'SubmissionDate'",
 											"division": "'Division'",
@@ -300,6 +305,11 @@
 									},
 									"CreateFileHistory": {
 										"linkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"schemaLinkedService": {
 											"submissiondate": "'SubmissionDate'",
 											"division": "'Division'",
 											"paymentmethod": "'PaymentMethod'"
@@ -380,9 +390,9 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Type",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 1
 										}
 									},
 									{
@@ -392,9 +402,9 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": " Transaction Reference",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 2
 										}
 									},
 									{
@@ -404,9 +414,9 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Card Holder Name",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 3
 										}
 									},
 									{
@@ -416,9 +426,9 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": " Card Number",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 4
 										}
 									},
 									{
@@ -428,9 +438,9 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": " Expiry Date",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 5
 										}
 									},
 									{
@@ -440,9 +450,9 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": " Budget Period",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 6
 										}
 									},
 									{
@@ -452,9 +462,9 @@
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": " Amount",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 7
 										}
 									}
 								],
@@ -1233,7 +1243,7 @@
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
-					"firstRowAsHeader": true,
+					"firstRowAsHeader": false,
 					"quoteChar": "\""
 				},
 				"schema": [
@@ -1304,100 +1314,36 @@
 					},
 					"columnDelimiter": ",",
 					"escapeChar": "\\",
-					"firstRowAsHeader": true,
+					"firstRowAsHeader": false,
 					"quoteChar": "\""
 				},
 				"schema": [
 					{
-						"name": "Field1",
+						"name": "Type",
 						"type": "String"
 					},
 					{
-						"name": "Customer Number",
+						"name": " Transaction Reference",
 						"type": "String"
 					},
 					{
-						"name": "Type of Service",
+						"name": "Card Holder Name",
 						"type": "String"
 					},
 					{
-						"name": "Name of member",
+						"name": " Card Number",
 						"type": "String"
 					},
 					{
-						"name": "Account Name",
+						"name": " Expiry Date",
 						"type": "String"
 					},
 					{
-						"name": "Account Number",
+						"name": " Budget Period",
 						"type": "String"
 					},
 					{
-						"name": "Filler2",
-						"type": "String"
-					},
-					{
-						"name": "Branch Code",
-						"type": "String"
-					},
-					{
-						"name": "Type of Account",
-						"type": "String"
-					},
-					{
-						"name": "Description",
-						"type": "String"
-					},
-					{
-						"name": "Nominated Account",
-						"type": "String"
-					},
-					{
-						"name": "Filler3",
-						"type": "String"
-					},
-					{
-						"name": "Amount",
-						"type": "String"
-					},
-					{
-						"name": "Amount Arrear",
-						"type": "String"
-					},
-					{
-						"name": "Max Amount",
-						"type": "String"
-					},
-					{
-						"name": "Capital Amount",
-						"type": "String"
-					},
-					{
-						"name": "Special Amount",
-						"type": "String"
-					},
-					{
-						"name": "Action Date",
-						"type": "String"
-					},
-					{
-						"name": "Cancellation Date",
-						"type": "String"
-					},
-					{
-						"name": "Frequency",
-						"type": "String"
-					},
-					{
-						"name": "Filler4",
-						"type": "String"
-					},
-					{
-						"name": "Record Type Code",
-						"type": "String"
-					},
-					{
-						"name": "Entry Class Code",
+						"name": " Amount",
 						"type": "String"
 					}
 				]
@@ -2452,47 +2398,37 @@
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     mapColumn(",
-						"          accountholder = cog_accountholder,",
-						"          accountnumber = cog_accountnumber,",
-						"          expireydate = cog_expireydate,",
-						"          amount = cog_transactionamount,",
-						"          reference = cog_transactionid,",
-						"          type = {Type (A)},",
-						"          budgetperiod = {Budget Period}",
+						"          Type = {Type (A)},",
+						"          { Transaction Reference} = {Transaction Reference},",
+						"          {Card Holder Name},",
+						"          { Card Number} = {Card Number},",
+						"          { Expiry Date} = {Expiry Date},",
+						"          { Budget Period} = {Budget Period},",
+						"          { Amount} = Amount",
 						"     )) ~> CreateFileTemp",
 						"windowIndex sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
-						"          Field1 as string,",
-						"          {Customer Number} as string,",
-						"          {Type of Service} as string,",
-						"          {Name of member} as string,",
-						"          {Account Name} as string,",
-						"          {Account Number} as string,",
-						"          Filler2 as string,",
-						"          {Branch Code} as string,",
-						"          {Type of Account} as string,",
-						"          Description as string,",
-						"          {Nominated Account} as string,",
-						"          Filler3 as string,",
-						"          Amount as string,",
-						"          {Amount Arrear} as string,",
-						"          {Max Amount} as string,",
-						"          {Capital Amount} as string,",
-						"          {Special Amount} as string,",
-						"          {Action Date} as string,",
-						"          {Cancellation Date} as string,",
-						"          Frequency as string,",
-						"          Filler4 as string,",
-						"          {Record Type Code} as string,",
-						"          {Entry Class Code} as string",
+						"          Type as string,",
+						"          { Transaction Reference} as string,",
+						"          {Card Holder Name} as string,",
+						"          { Card Number} as string,",
+						"          { Expiry Date} as string,",
+						"          { Budget Period} as string,",
+						"          { Amount} as string",
 						"     ),",
 						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     mapColumn(",
-						"          Amount",
+						"          Type = {Type (A)},",
+						"          { Transaction Reference} = {Transaction Reference},",
+						"          {Card Holder Name},",
+						"          { Card Number} = {Card Number},",
+						"          { Expiry Date} = {Expiry Date},",
+						"          { Budget Period} = {Budget Period},",
+						"          { Amount} = Amount",
 						"     )) ~> CreateFileHistory"
 					]
 				}
