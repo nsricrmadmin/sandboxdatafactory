@@ -20,31 +20,95 @@
 		},
 		"schema": [
 			{
-				"name": "accountholder",
+				"name": "Field1",
 				"type": "String"
 			},
 			{
-				"name": "accountnumber",
+				"name": "Customer Number",
 				"type": "String"
 			},
 			{
-				"name": "expireydate",
+				"name": "Type of Service",
 				"type": "String"
 			},
 			{
-				"name": "amount",
+				"name": "Name of member",
 				"type": "String"
 			},
 			{
-				"name": "reference",
+				"name": "Account Name",
 				"type": "String"
 			},
 			{
-				"name": "type",
+				"name": "Account Number",
 				"type": "String"
 			},
 			{
-				"name": "budgetperiod",
+				"name": "Filler2",
+				"type": "String"
+			},
+			{
+				"name": "Branch Code",
+				"type": "String"
+			},
+			{
+				"name": "Type of Account",
+				"type": "String"
+			},
+			{
+				"name": "Description",
+				"type": "String"
+			},
+			{
+				"name": "Nominated Account",
+				"type": "String"
+			},
+			{
+				"name": "Filler3",
+				"type": "String"
+			},
+			{
+				"name": "Amount",
+				"type": "String"
+			},
+			{
+				"name": "Amount Arrear",
+				"type": "String"
+			},
+			{
+				"name": "Max Amount",
+				"type": "String"
+			},
+			{
+				"name": "Capital Amount",
+				"type": "String"
+			},
+			{
+				"name": "Special Amount",
+				"type": "String"
+			},
+			{
+				"name": "Action Date",
+				"type": "String"
+			},
+			{
+				"name": "Cancellation Date",
+				"type": "String"
+			},
+			{
+				"name": "Frequency",
+				"type": "String"
+			},
+			{
+				"name": "Filler4",
+				"type": "String"
+			},
+			{
+				"name": "Record Type Code",
+				"type": "String"
+			},
+			{
+				"name": "Entry Class Code",
 				"type": "String"
 			}
 		]
