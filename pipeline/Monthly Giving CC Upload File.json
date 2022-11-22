@@ -51,11 +51,6 @@
 									"division": "'Division'",
 									"paymentmethod": "'PaymentMethod'"
 								},
-								"schemaLinkedService": {
-									"submissiondate": "'SubmissionDate'",
-									"division": "'Division'",
-									"paymentmethod": "'PaymentMethod'"
-								},
 								"rejectedDataLinkedService": {
 									"submissiondate": "'SubmissionDate'",
 									"division": "'Division'",
@@ -138,84 +133,84 @@
 						"mappings": [
 							{
 								"source": {
-									"name": "accountholder",
+									"name": "Type",
 									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "accountholder",
+									"name": "Type",
 									"type": "String",
 									"physicalType": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "accountnumber",
+									"name": " Transaction Reference",
 									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "accountnumber",
+									"name": " Transaction Reference",
 									"type": "String",
 									"physicalType": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "expireydate",
+									"name": "Card Holder Name",
 									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "expireydate",
+									"name": "Card Holder Name",
 									"type": "String",
 									"physicalType": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "amount",
+									"name": " Card Number",
 									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "amount",
+									"name": " Card Number",
 									"type": "String",
 									"physicalType": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "reference",
+									"name": " Expiry Date",
 									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "reference",
+									"name": " Expiry Date",
 									"type": "String",
 									"physicalType": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "type",
+									"name": " Budget Period",
 									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "type",
+									"name": " Budget Period",
 									"type": "String",
 									"physicalType": "String"
 								}
 							},
 							{
 								"source": {
-									"name": "budgetperiod",
+									"name": " Amount",
 									"type": "String",
 									"physicalType": "String"
 								},
 								"sink": {
-									"name": "budgetperiod",
+									"name": " Amount",
 									"type": "String",
 									"physicalType": "String"
 								}

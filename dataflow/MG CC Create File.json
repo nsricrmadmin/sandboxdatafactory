@@ -94,7 +94,7 @@
 				"          type = {Type (A)},",
 				"          budgetperiod = {Budget Period}",
 				"     )) ~> CreateFileTemp",
-				"windowIndex sink(allowSchemaDrift: false,",
+				"windowIndex sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     input(",
 				"          Field1 as string,",
