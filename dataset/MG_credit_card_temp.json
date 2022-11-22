@@ -34,31 +34,31 @@
 		},
 		"schema": [
 			{
-				"name": "accountholder",
+				"name": "Type",
 				"type": "String"
 			},
 			{
-				"name": "accountnumber",
+				"name": " Transaction Reference",
 				"type": "String"
 			},
 			{
-				"name": "expireydate",
+				"name": "Card Holder Name",
 				"type": "String"
 			},
 			{
-				"name": "amount",
+				"name": " Card Number",
 				"type": "String"
 			},
 			{
-				"name": "reference",
+				"name": " Expiry Date",
 				"type": "String"
 			},
 			{
-				"name": "type",
+				"name": " Budget Period",
 				"type": "String"
 			},
 			{
-				"name": "budgetperiod",
+				"name": " Amount",
 				"type": "String"
 			}
 		]
