@@ -151,84 +151,276 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "accountholder",
+											"name": "Field1",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "accountholder",
+											"name": "Field1",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "accountnumber",
+											"name": "Customer Number",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "accountnumber",
+											"name": "Customer Number",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "expireydate",
+											"name": "Type of Service",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "expireydate",
+											"name": "Type of Service",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "amount",
+											"name": "Name of member",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "amount",
+											"name": "Name of member",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "reference",
+											"name": "Account Name",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "reference",
+											"name": "Account Name",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "type",
+											"name": "Account Number",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "type",
+											"name": "Account Number",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "budgetperiod",
+											"name": "Filler2",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "budgetperiod",
+											"name": "Filler2",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Branch Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Branch Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Type of Account",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Type of Account",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Description",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Description",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Nominated Account",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Nominated Account",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Filler3",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Filler3",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount Arrear",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Amount Arrear",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Max Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Max Amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Capital Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Capital Amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Special Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Special Amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Action Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Action Date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Cancellation Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Cancellation Date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Frequency",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Frequency",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Filler4",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Filler4",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Record Type Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Record Type Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Entry Class Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Entry Class Code",
 											"type": "String",
 											"physicalType": "String"
 										}

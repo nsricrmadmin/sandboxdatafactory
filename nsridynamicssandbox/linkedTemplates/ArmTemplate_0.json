@@ -313,31 +313,95 @@
 				},
 				"schema": [
 					{
-						"name": "accountholder",
+						"name": "Field1",
 						"type": "String"
 					},
 					{
-						"name": "accountnumber",
+						"name": "Customer Number",
 						"type": "String"
 					},
 					{
-						"name": "expireydate",
+						"name": "Type of Service",
 						"type": "String"
 					},
 					{
-						"name": "amount",
+						"name": "Name of member",
 						"type": "String"
 					},
 					{
-						"name": "reference",
+						"name": "Account Name",
 						"type": "String"
 					},
 					{
-						"name": "type",
+						"name": "Account Number",
 						"type": "String"
 					},
 					{
-						"name": "budgetperiod",
+						"name": "Filler2",
+						"type": "String"
+					},
+					{
+						"name": "Branch Code",
+						"type": "String"
+					},
+					{
+						"name": "Type of Account",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					},
+					{
+						"name": "Nominated Account",
+						"type": "String"
+					},
+					{
+						"name": "Filler3",
+						"type": "String"
+					},
+					{
+						"name": "Amount",
+						"type": "String"
+					},
+					{
+						"name": "Amount Arrear",
+						"type": "String"
+					},
+					{
+						"name": "Max Amount",
+						"type": "String"
+					},
+					{
+						"name": "Capital Amount",
+						"type": "String"
+					},
+					{
+						"name": "Special Amount",
+						"type": "String"
+					},
+					{
+						"name": "Action Date",
+						"type": "String"
+					},
+					{
+						"name": "Cancellation Date",
+						"type": "String"
+					},
+					{
+						"name": "Frequency",
+						"type": "String"
+					},
+					{
+						"name": "Filler4",
+						"type": "String"
+					},
+					{
+						"name": "Record Type Code",
+						"type": "String"
+					},
+					{
+						"name": "Entry Class Code",
 						"type": "String"
 					}
 				]
@@ -384,31 +448,95 @@
 				},
 				"schema": [
 					{
-						"name": "accountholder",
+						"name": "Field1",
 						"type": "String"
 					},
 					{
-						"name": "accountnumber",
+						"name": "Customer Number",
 						"type": "String"
 					},
 					{
-						"name": "expireydate",
+						"name": "Type of Service",
 						"type": "String"
 					},
 					{
-						"name": "amount",
+						"name": "Name of member",
 						"type": "String"
 					},
 					{
-						"name": "reference",
+						"name": "Account Name",
 						"type": "String"
 					},
 					{
-						"name": "type",
+						"name": "Account Number",
 						"type": "String"
 					},
 					{
-						"name": "budgetperiod",
+						"name": "Filler2",
+						"type": "String"
+					},
+					{
+						"name": "Branch Code",
+						"type": "String"
+					},
+					{
+						"name": "Type of Account",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					},
+					{
+						"name": "Nominated Account",
+						"type": "String"
+					},
+					{
+						"name": "Filler3",
+						"type": "String"
+					},
+					{
+						"name": "Amount",
+						"type": "String"
+					},
+					{
+						"name": "Amount Arrear",
+						"type": "String"
+					},
+					{
+						"name": "Max Amount",
+						"type": "String"
+					},
+					{
+						"name": "Capital Amount",
+						"type": "String"
+					},
+					{
+						"name": "Special Amount",
+						"type": "String"
+					},
+					{
+						"name": "Action Date",
+						"type": "String"
+					},
+					{
+						"name": "Cancellation Date",
+						"type": "String"
+					},
+					{
+						"name": "Frequency",
+						"type": "String"
+					},
+					{
+						"name": "Filler4",
+						"type": "String"
+					},
+					{
+						"name": "Record Type Code",
+						"type": "String"
+					},
+					{
+						"name": "Entry Class Code",
 						"type": "String"
 					}
 				]
@@ -455,31 +583,95 @@
 				},
 				"schema": [
 					{
-						"name": "accountholder",
+						"name": "Field1",
 						"type": "String"
 					},
 					{
-						"name": "accountnumber",
+						"name": "Customer Number",
 						"type": "String"
 					},
 					{
-						"name": "expireydate",
+						"name": "Type of Service",
 						"type": "String"
 					},
 					{
-						"name": "amount",
+						"name": "Name of member",
 						"type": "String"
 					},
 					{
-						"name": "reference",
+						"name": "Account Name",
 						"type": "String"
 					},
 					{
-						"name": "type",
+						"name": "Account Number",
 						"type": "String"
 					},
 					{
-						"name": "budgetperiod",
+						"name": "Filler2",
+						"type": "String"
+					},
+					{
+						"name": "Branch Code",
+						"type": "String"
+					},
+					{
+						"name": "Type of Account",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					},
+					{
+						"name": "Nominated Account",
+						"type": "String"
+					},
+					{
+						"name": "Filler3",
+						"type": "String"
+					},
+					{
+						"name": "Amount",
+						"type": "String"
+					},
+					{
+						"name": "Amount Arrear",
+						"type": "String"
+					},
+					{
+						"name": "Max Amount",
+						"type": "String"
+					},
+					{
+						"name": "Capital Amount",
+						"type": "String"
+					},
+					{
+						"name": "Special Amount",
+						"type": "String"
+					},
+					{
+						"name": "Action Date",
+						"type": "String"
+					},
+					{
+						"name": "Cancellation Date",
+						"type": "String"
+					},
+					{
+						"name": "Frequency",
+						"type": "String"
+					},
+					{
+						"name": "Filler4",
+						"type": "String"
+					},
+					{
+						"name": "Record Type Code",
+						"type": "String"
+					},
+					{
+						"name": "Entry Class Code",
 						"type": "String"
 					}
 				]
@@ -1227,6 +1419,8 @@
 						"          transactioncurrencyid as string,",
 						"          cog_accountholder as string,",
 						"          cog_accountnumber as string,",
+						"          cog_branchcode as string,",
+						"          cog_donornumber as string,",
 						"          cog_expireydate as string,",
 						"          cog_transactionamount as string,",
 						"          cog_transactiondate as string,",
@@ -1237,16 +1431,15 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
-						"transaction derive(budgetperiod = '00',",
-						"          Field1 = '0000000000',",
-						"          {Customer Number} = 'Customer Number',",
+						"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <attribute name=\"cog_donornumber\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
+						"transaction derive(Field1 = '0000000000',",
+						"          {Customer Number} = 'cog_donornumber',",
 						"          {Type of Service} = 'A',",
 						"          {Name of Member} = upper(cog_accountholder),",
 						"          {Account Name} = replace(upper(cog_accountholder),' ',''),",
 						"          {Account Number} = 'cog_accountnumber',",
 						"          Filler2 = '          ',",
-						"          {Branch Code} = 'branchcode',",
+						"          {Branch Code} = 'cog_branchcode',",
 						"          {Type of Account} = '1',",
 						"          Description = '                    ',",
 						"          {Nominated Account} = '02',",
@@ -1267,13 +1460,29 @@
 						"windowIndex sink(allowSchemaDrift: false,",
 						"     validateSchema: false,",
 						"     input(",
-						"          accountholder as string,",
-						"          accountnumber as string,",
-						"          expireydate as string,",
-						"          amount as string,",
-						"          reference as string,",
-						"          type as string,",
-						"          budgetperiod as string",
+						"          Field1 as string,",
+						"          {Customer Number} as string,",
+						"          {Type of Service} as string,",
+						"          {Name of member} as string,",
+						"          {Account Name} as string,",
+						"          {Account Number} as string,",
+						"          Filler2 as string,",
+						"          {Branch Code} as string,",
+						"          {Type of Account} as string,",
+						"          Description as string,",
+						"          {Nominated Account} as string,",
+						"          Filler3 as string,",
+						"          Amount as string,",
+						"          {Amount Arrear} as string,",
+						"          {Max Amount} as string,",
+						"          {Capital Amount} as string,",
+						"          {Special Amount} as string,",
+						"          {Action Date} as string,",
+						"          {Cancellation Date} as string,",
+						"          Frequency as string,",
+						"          Filler4 as string,",
+						"          {Record Type Code} as string,",
+						"          {Entry Class Code} as string",
 						"     ),",
 						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 						"     truncate: true,",
@@ -1281,37 +1490,85 @@
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     mapColumn(",
-						"          accountholder = cog_accountholder,",
-						"          accountnumber = cog_accountnumber,",
-						"          expireydate = cog_expireydate,",
-						"          amount = cog_transactionamount,",
-						"          reference = cog_transactionid,",
-						"          type = {Type of Service},",
-						"          budgetperiod",
+						"          Field1,",
+						"          {Customer Number},",
+						"          {Type of Service},",
+						"          {Name of member} = {Name of Member},",
+						"          {Account Name},",
+						"          {Account Number},",
+						"          Filler2,",
+						"          {Branch Code},",
+						"          {Type of Account},",
+						"          Description,",
+						"          {Nominated Account},",
+						"          Filler3,",
+						"          Amount,",
+						"          {Amount Arrear},",
+						"          {Max Amount},",
+						"          {Capital Amount},",
+						"          {Special Amount},",
+						"          {Action Date},",
+						"          {Cancellation Date},",
+						"          Frequency,",
+						"          Filler4,",
+						"          {Record Type Code},",
+						"          {Entry Class Code}",
 						"     )) ~> CreateFileTemp",
 						"windowIndex sink(allowSchemaDrift: false,",
 						"     validateSchema: false,",
 						"     input(",
-						"          accountholder as string,",
-						"          accountnumber as string,",
-						"          expireydate as string,",
-						"          amount as string,",
-						"          reference as string,",
-						"          type as string,",
-						"          budgetperiod as string",
+						"          Field1 as string,",
+						"          {Customer Number} as string,",
+						"          {Type of Service} as string,",
+						"          {Name of member} as string,",
+						"          {Account Name} as string,",
+						"          {Account Number} as string,",
+						"          Filler2 as string,",
+						"          {Branch Code} as string,",
+						"          {Type of Account} as string,",
+						"          Description as string,",
+						"          {Nominated Account} as string,",
+						"          Filler3 as string,",
+						"          Amount as string,",
+						"          {Amount Arrear} as string,",
+						"          {Max Amount} as string,",
+						"          {Capital Amount} as string,",
+						"          {Special Amount} as string,",
+						"          {Action Date} as string,",
+						"          {Cancellation Date} as string,",
+						"          Frequency as string,",
+						"          Filler4 as string,",
+						"          {Record Type Code} as string,",
+						"          {Entry Class Code} as string",
 						"     ),",
 						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     mapColumn(",
-						"          accountholder = cog_accountholder,",
-						"          accountnumber = cog_accountnumber,",
-						"          expireydate = cog_expireydate,",
-						"          amount = cog_transactionamount,",
-						"          reference = cog_transactionid,",
-						"          type = {Type of Service},",
-						"          budgetperiod",
+						"          Field1,",
+						"          {Customer Number},",
+						"          {Type of Service},",
+						"          {Name of member} = {Name of Member},",
+						"          {Account Name},",
+						"          {Account Number},",
+						"          Filler2,",
+						"          {Branch Code},",
+						"          {Type of Account},",
+						"          Description,",
+						"          {Nominated Account},",
+						"          Filler3,",
+						"          Amount,",
+						"          {Amount Arrear},",
+						"          {Max Amount},",
+						"          {Capital Amount},",
+						"          {Special Amount},",
+						"          {Action Date},",
+						"          {Cancellation Date},",
+						"          Frequency,",
+						"          Filler4,",
+						"          {Record Type Code},",
+						"          {Entry Class Code}",
 						"     )) ~> CreateFileHistory"
 					]
 				}
