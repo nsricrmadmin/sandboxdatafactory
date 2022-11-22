@@ -375,84 +375,84 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "accountholder",
+											"name": "Type",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "accountholder",
+											"name": "Type",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "accountnumber",
+											"name": " Transaction Reference",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "accountnumber",
+											"name": " Transaction Reference",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "expireydate",
+											"name": "Card Holder Name",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "expireydate",
+											"name": "Card Holder Name",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "amount",
+											"name": " Card Number",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "amount",
+											"name": " Card Number",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "reference",
+											"name": " Expiry Date",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "reference",
+											"name": " Expiry Date",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "type",
+											"name": " Budget Period",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "type",
+											"name": " Budget Period",
 											"type": "String",
 											"physicalType": "String"
 										}
 									},
 									{
 										"source": {
-											"name": "budgetperiod",
+											"name": " Amount",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "budgetperiod",
+											"name": " Amount",
 											"type": "String",
 											"physicalType": "String"
 										}
@@ -1238,31 +1238,31 @@
 				},
 				"schema": [
 					{
-						"name": "accountholder",
+						"name": "Type",
 						"type": "String"
 					},
 					{
-						"name": "accountnumber",
+						"name": " Transaction Reference",
 						"type": "String"
 					},
 					{
-						"name": "expireydate",
+						"name": "Card Holder Name",
 						"type": "String"
 					},
 					{
-						"name": "amount",
+						"name": " Card Number",
 						"type": "String"
 					},
 					{
-						"name": "reference",
+						"name": " Expiry Date",
 						"type": "String"
 					},
 					{
-						"name": "type",
+						"name": " Budget Period",
 						"type": "String"
 					},
 					{
-						"name": "budgetperiod",
+						"name": " Amount",
 						"type": "String"
 					}
 				]
@@ -1299,7 +1299,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/debit_order_history",
+						"folderPath": "bank_file_uploads/credit_card_history",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -1309,31 +1309,95 @@
 				},
 				"schema": [
 					{
-						"name": "accountholder",
+						"name": "Field1",
 						"type": "String"
 					},
 					{
-						"name": "accountnumber",
+						"name": "Customer Number",
 						"type": "String"
 					},
 					{
-						"name": "expireydate",
+						"name": "Type of Service",
 						"type": "String"
 					},
 					{
-						"name": "amount",
+						"name": "Name of member",
 						"type": "String"
 					},
 					{
-						"name": "reference",
+						"name": "Account Name",
 						"type": "String"
 					},
 					{
-						"name": "type",
+						"name": "Account Number",
 						"type": "String"
 					},
 					{
-						"name": "budgetperiod",
+						"name": "Filler2",
+						"type": "String"
+					},
+					{
+						"name": "Branch Code",
+						"type": "String"
+					},
+					{
+						"name": "Type of Account",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					},
+					{
+						"name": "Nominated Account",
+						"type": "String"
+					},
+					{
+						"name": "Filler3",
+						"type": "String"
+					},
+					{
+						"name": "Amount",
+						"type": "String"
+					},
+					{
+						"name": "Amount Arrear",
+						"type": "String"
+					},
+					{
+						"name": "Max Amount",
+						"type": "String"
+					},
+					{
+						"name": "Capital Amount",
+						"type": "String"
+					},
+					{
+						"name": "Special Amount",
+						"type": "String"
+					},
+					{
+						"name": "Action Date",
+						"type": "String"
+					},
+					{
+						"name": "Cancellation Date",
+						"type": "String"
+					},
+					{
+						"name": "Frequency",
+						"type": "String"
+					},
+					{
+						"name": "Filler4",
+						"type": "String"
+					},
+					{
+						"name": "Record Type Code",
+						"type": "String"
+					},
+					{
+						"name": "Entry Class Code",
 						"type": "String"
 					}
 				]
@@ -1380,31 +1444,31 @@
 				},
 				"schema": [
 					{
-						"name": "accountholder",
+						"name": "Type",
 						"type": "String"
 					},
 					{
-						"name": "accountnumber",
+						"name": " Transaction Reference",
 						"type": "String"
 					},
 					{
-						"name": "expireydate",
+						"name": "Card Holder Name",
 						"type": "String"
 					},
 					{
-						"name": "amount",
+						"name": " Card Number",
 						"type": "String"
 					},
 					{
-						"name": "reference",
+						"name": " Expiry Date",
 						"type": "String"
 					},
 					{
-						"name": "type",
+						"name": " Budget Period",
 						"type": "String"
 					},
 					{
-						"name": "budgetperiod",
+						"name": " Amount",
 						"type": "String"
 					}
 				]
@@ -2362,20 +2426,25 @@
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
-						"transaction derive(type = 'A',",
-						"          budgetperiod = '00') ~> derivedColumns",
+						"transaction derive({Type (A)} = 'A',",
+						"          {Transaction Reference} = cog_transactionno,",
+						"          {Card Holder Name} = cog_accountholder,",
+						"          {Card Number} = cog_accountnumber,",
+						"          {Expiry Date} = concat(substringIndex(substringIndex(cog_expireydate,'-',2),'-',-1),substringIndex(substringIndex(cog_expireydate,'-',2),'-',1)),",
+						"          {Budget Period} = '00',",
+						"          Amount = concat(replace(cog_transactionamount,'.',''),'0')) ~> derivedColumns",
 						"derivedColumns window(asc({@odata.etag}, true),",
 						"     index = rowNumber()) ~> windowIndex",
 						"windowIndex sink(allowSchemaDrift: false,",
 						"     validateSchema: false,",
 						"     input(",
-						"          accountholder as string,",
-						"          accountnumber as string,",
-						"          expireydate as string,",
-						"          amount as string,",
-						"          reference as string,",
-						"          type as string,",
-						"          budgetperiod as string",
+						"          Type as string,",
+						"          { Transaction Reference} as string,",
+						"          {Card Holder Name} as string,",
+						"          { Card Number} as string,",
+						"          { Expiry Date} as string,",
+						"          { Budget Period} as string,",
+						"          { Amount} as string",
 						"     ),",
 						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 						"     truncate: true,",
@@ -2388,32 +2457,42 @@
 						"          expireydate = cog_expireydate,",
 						"          amount = cog_transactionamount,",
 						"          reference = cog_transactionid,",
-						"          type,",
-						"          budgetperiod",
+						"          type = {Type (A)},",
+						"          budgetperiod = {Budget Period}",
 						"     )) ~> CreateFileTemp",
-						"windowIndex sink(allowSchemaDrift: false,",
+						"windowIndex sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     input(",
-						"          accountholder as string,",
-						"          accountnumber as string,",
-						"          expireydate as string,",
-						"          amount as string,",
-						"          reference as string,",
-						"          type as string,",
-						"          budgetperiod as string",
+						"          Field1 as string,",
+						"          {Customer Number} as string,",
+						"          {Type of Service} as string,",
+						"          {Name of member} as string,",
+						"          {Account Name} as string,",
+						"          {Account Number} as string,",
+						"          Filler2 as string,",
+						"          {Branch Code} as string,",
+						"          {Type of Account} as string,",
+						"          Description as string,",
+						"          {Nominated Account} as string,",
+						"          Filler3 as string,",
+						"          Amount as string,",
+						"          {Amount Arrear} as string,",
+						"          {Max Amount} as string,",
+						"          {Capital Amount} as string,",
+						"          {Special Amount} as string,",
+						"          {Action Date} as string,",
+						"          {Cancellation Date} as string,",
+						"          Frequency as string,",
+						"          Filler4 as string,",
+						"          {Record Type Code} as string,",
+						"          {Entry Class Code} as string",
 						"     ),",
 						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
 						"     mapColumn(",
-						"          accountholder = cog_accountholder,",
-						"          accountnumber = cog_accountnumber,",
-						"          expireydate = cog_expireydate,",
-						"          amount = cog_transactionamount,",
-						"          reference = cog_transactionid,",
-						"          type,",
-						"          budgetperiod",
+						"          Amount",
 						"     )) ~> CreateFileHistory"
 					]
 				}
@@ -2502,7 +2581,7 @@
 						"          Description = '                    ',",
 						"          {Nominated Account} = '02',",
 						"          Filler3 = '00000',",
-						"          Amount = cog_transactionamount,",
+						"          Amount = substringIndex(cog_transactionamount,'.',1),",
 						"          {Amount Arrear} = '00000000000',",
 						"          {Max Amount} = '99999999999',",
 						"          {Capital Amount} = '00000000000',",
