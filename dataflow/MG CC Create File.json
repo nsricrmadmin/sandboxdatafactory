@@ -126,13 +126,7 @@
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     mapColumn(",
-				"          accountholder = cog_accountholder,",
-				"          accountnumber = cog_accountnumber,",
-				"          expireydate = cog_expireydate,",
-				"          amount = cog_transactionamount,",
-				"          reference = cog_transactionid,",
-				"          type = {Type (A)},",
-				"          budgetperiod = {Budget Period}",
+				"          Amount",
 				"     )) ~> CreateFileHistory"
 			]
 		}
