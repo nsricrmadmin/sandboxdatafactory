@@ -64,7 +64,7 @@
 				"          {Transaction Reference} = cog_transactionno,",
 				"          {Card Holder Name} = cog_accountholder,",
 				"          {Card Number} = cog_accountnumber,",
-				"          {Expiry Date} = toString(cog_expireydate,\"mm-YYYY\"),",
+				"          {Expiry Date} = concat(substringIndex(substringIndex(cog_expireydate,'-',2),'-',-1),substringIndex(substringIndex(cog_expireydate,'-',2),'-',1)),",
 				"          {Budget Period} = '00',",
 				"          Amount = concat(replace(cog_transactionamount,'.',''),'0')) ~> derivedColumns",
 				"derivedColumns window(asc({@odata.etag}, true),",
