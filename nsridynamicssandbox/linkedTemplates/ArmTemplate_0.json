@@ -148,6 +148,77 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/MG_credit_card_history')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"submissiondate": {
+						"type": "string",
+						"defaultValue": "'SubmissionDate'"
+					},
+					"division": {
+						"type": "string",
+						"defaultValue": "'Division'"
+					},
+					"paymentmethod": {
+						"type": "string",
+						"defaultValue": "'PaymentMethod'"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "bank_file_uploads/debit_order_history",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "accountholder",
+						"type": "String"
+					},
+					{
+						"name": "accountnumber",
+						"type": "String"
+					},
+					{
+						"name": "expireydate",
+						"type": "String"
+					},
+					{
+						"name": "amount",
+						"type": "String"
+					},
+					{
+						"name": "reference",
+						"type": "String"
+					},
+					{
+						"name": "type",
+						"type": "String"
+					},
+					{
+						"name": "budgetperiod",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/MG_credit_card_temp')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
@@ -219,67 +290,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SandboxDonorOrder')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sandbox",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "CommonDataServiceForAppsEntity",
-				"schema": [],
-				"typeProperties": {
-					"entityName": "cog_donororder"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sandbox')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Sandbox_BankDetail')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sandbox",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "CommonDataServiceForAppsEntity",
-				"schema": [],
-				"typeProperties": {
-					"entityName": "cog_bankdetails"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sandbox')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Sandbox_Transaction')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sandbox",
-					"type": "LinkedServiceReference"
-				},
-				"annotations": [],
-				"type": "CommonDataServiceForAppsEntity",
-				"schema": [],
-				"typeProperties": {
-					"entityName": "cog_transaction"
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sandbox')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/file_mg_aggregation')]",
+			"name": "[concat(parameters('factoryName'), '/MG_debit_order_batch')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -292,58 +303,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "donor_order_aggregates",
-						"fileSystem": "monthly-giving"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "cog_donororderid",
-						"type": "String"
-					},
-					{
-						"name": "cog_transactionid",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MG_credit_card_history')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sandboxdatalake",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"submissiondate": {
-						"type": "string",
-						"defaultValue": "'SubmissionDate'"
-					},
-					"division": {
-						"type": "string",
-						"defaultValue": "'Division'"
-					},
-					"paymentmethod": {
-						"type": "string",
-						"defaultValue": "'PaymentMethod'"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/debit_order_history",
+						"folderPath": "bank_file_uploads/debit_order_batch",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -529,7 +489,67 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG_debit_order_batch')]",
+			"name": "[concat(parameters('factoryName'), '/SandboxDonorOrder')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandbox",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CommonDataServiceForAppsEntity",
+				"schema": [],
+				"typeProperties": {
+					"entityName": "cog_donororder"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandbox')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sandbox_BankDetail')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandbox",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CommonDataServiceForAppsEntity",
+				"schema": [],
+				"typeProperties": {
+					"entityName": "cog_bankdetails"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandbox')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sandbox_Transaction')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandbox",
+					"type": "LinkedServiceReference"
+				},
+				"annotations": [],
+				"type": "CommonDataServiceForAppsEntity",
+				"schema": [],
+				"typeProperties": {
+					"entityName": "cog_transaction"
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandbox')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/file_mg_aggregation')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -542,7 +562,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/debit_order_batch",
+						"folderPath": "donor_order_aggregates",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -552,31 +572,11 @@
 				},
 				"schema": [
 					{
-						"name": "accountholder",
+						"name": "cog_donororderid",
 						"type": "String"
 					},
 					{
-						"name": "accountnumber",
-						"type": "String"
-					},
-					{
-						"name": "expireydate",
-						"type": "String"
-					},
-					{
-						"name": "amount",
-						"type": "String"
-					},
-					{
-						"name": "reference",
-						"type": "String"
-					},
-					{
-						"name": "type",
-						"type": "String"
-					},
-					{
-						"name": "budgetperiod",
+						"name": "cog_transactionid",
 						"type": "String"
 					}
 				]
@@ -793,7 +793,7 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <attribute name=\"cog_datepaid\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <attribute name=\"cog_datepaid\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>2</value>\\n                    <value>181310001</value>\\n                    <value>181310014</value>\\n                    <value>181310017</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <filter type=\"and\">\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               </filter>\\n          </filter>\\n     </entity>\\n</fetch>',",
 						"     manifestType: 'model') ~> donororder",
 						"source(output(",
 						"          {@odata.etag} as string,",
