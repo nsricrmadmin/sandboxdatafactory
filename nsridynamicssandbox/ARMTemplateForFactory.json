@@ -2517,7 +2517,7 @@
 						"          Description = '                    ',",
 						"          {Nominated Account} = '02',",
 						"          Filler3 = '00000',",
-						"          Amount = substringIndex(cog_transactionamount,'.',1),",
+						"          Amount = concat(replace(cog_transactionamount,'.',''),'0'),",
 						"          {Amount Arrear} = '00000000000',",
 						"          {Max Amount} = '99999999999',",
 						"          {Capital Amount} = '00000000000',",
