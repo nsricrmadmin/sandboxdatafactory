@@ -1,5 +1,5 @@
 {
-	"name": "Monthly Giving Aggregation",
+	"name": "MG Debit Order Month-end",
 	"properties": {
 		"activities": [
 			{
@@ -110,7 +110,7 @@
 				]
 			},
 			{
-				"name": "MG Aggregate Donor Orders",
+				"name": "MG Debit Order Month-end",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -138,7 +138,7 @@
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "MG Aggregate Donor Orders",
+						"activity": "MG Debit Order Month-end",
 						"dependencyConditions": [
 							"Succeeded"
 						]
