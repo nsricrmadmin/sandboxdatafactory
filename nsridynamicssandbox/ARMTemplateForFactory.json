@@ -37,7 +37,7 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Monthly Giving Aggregation')]",
+			"name": "[concat(parameters('factoryName'), '/MG Debit Order Month-end')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -152,7 +152,7 @@
 						]
 					},
 					{
-						"name": "MG Aggregate Donor Orders",
+						"name": "MG Debit Order Month-end",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -165,7 +165,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG Aggregate DOs",
+								"referenceName": "MG Debit Order Monthend Aggregate DO",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -189,7 +189,7 @@
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "MG Aggregate Donor Orders",
+								"activity": "MG Debit Order Month-end",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -232,7 +232,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
-				"[concat(variables('factoryId'), '/dataflows/MG Aggregate DOs')]",
+				"[concat(variables('factoryId'), '/dataflows/MG Debit Order Monthend Aggregate DO')]",
 				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create DO Trans File')]"
 			]
 		},
@@ -1074,7 +1074,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG Aggregate DOs",
+								"referenceName": "MG Debit Order Monthend Aggregate DO",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
@@ -1101,7 +1101,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/MG Aggregate DOs')]"
+				"[concat(variables('factoryId'), '/dataflows/MG Debit Order Monthend Aggregate DO')]"
 			]
 		},
 		{
@@ -1966,7 +1966,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG Aggregate DOs')]",
+			"name": "[concat(parameters('factoryName'), '/MG Debit Order Monthend Aggregate DO')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2049,13 +2049,15 @@
 						"          cog_name as string,",
 						"          cog_paymentmethod as string,",
 						"          cog_paymenttype as string,",
+						"          cog_preferreddebitorderdate as string,",
+						"          cog_preferredsubmissiondate as string,",
 						"          cog_totalticketamount as string,",
 						"          statecode as string,",
 						"          statuscode as string",
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <attribute name=\"cog_datepaid\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <filter type=\"or\">\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>181310001</value>\\n                              <value>181310013</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"null\"/>\\n                    </filter>\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>2</value>\\n                              <value>181310017</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"not-null\"/>\\n                    </filter>\\n               </filter>\\n               <filter type=\"or\">\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310001\"/>\\n                    <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               </filter>\\n          </filter>\\n                     <link-entity name=\"account\" from=\"accountid\" to=\"cog_account\" link-type=\"outer\" alias=\"AccountNumber\" visible=\"false\">\\n               <attribute name=\"accountnumber\"/>\\n          </link-entity>\\n          <link-entity name=\"contact\" from=\"contactid\" to=\"cog_contact\" link-type=\"outer\" alias=\"ContactNumber\" visible=\"false\">\\n               <attribute name=\"cog_contactnumber\"/>\\n          </link-entity>\\n     </entity>\\n</fetch>',",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <attribute name=\"cog_datepaid\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"cog_preferreddebitorderdate\"/>\\n        <attribute name=\"cog_preferredsubmissiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n          <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n               <filter type=\"or\">\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>181310001</value>\\n                              <value>181310013</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"null\"/>\\n                    </filter>\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>2</value>\\n                              <value>181310017</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"not-null\"/>\\n                    </filter>\\n               </filter>\\n          </filter>\\n                     <link-entity name=\"account\" from=\"accountid\" to=\"cog_account\" link-type=\"outer\" alias=\"AccountNumber\" visible=\"false\">\\n               <attribute name=\"accountnumber\"/>\\n          </link-entity>\\n          <link-entity name=\"contact\" from=\"contactid\" to=\"cog_contact\" link-type=\"outer\" alias=\"ContactNumber\" visible=\"false\">\\n               <attribute name=\"cog_contactnumber\"/>\\n          </link-entity>\\n     </entity>\\n</fetch>',",
 						"     manifestType: 'model') ~> donororder",
 						"source(output(",
 						"          {@odata.etag} as string,",

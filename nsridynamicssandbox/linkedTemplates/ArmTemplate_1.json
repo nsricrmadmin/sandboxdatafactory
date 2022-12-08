@@ -550,7 +550,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG Aggregate DOs",
+								"referenceName": "MG Debit Order Monthend Aggregate DO",
 								"type": "DataFlowReference",
 								"parameters": {},
 								"datasetParameters": {
