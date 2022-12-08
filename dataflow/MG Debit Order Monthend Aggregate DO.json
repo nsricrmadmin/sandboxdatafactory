@@ -80,6 +80,8 @@
 				"          cog_name as string,",
 				"          cog_paymentmethod as string,",
 				"          cog_paymenttype as string,",
+				"          cog_preferreddebitorderdate as string,",
+				"          cog_preferredsubmissiondate as string,",
 				"          cog_totalticketamount as string,",
 				"          statecode as string,",
 				"          statuscode as string",
