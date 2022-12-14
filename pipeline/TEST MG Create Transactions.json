@@ -20,7 +20,7 @@
 						"type": "DataFlowReference",
 						"parameters": {
 							"dateconverted": {
-								"value": "'@{pipeline().parameters.dateconverted}'",
+								"value": "@pipeline().parameters.dateconverted",
 								"type": "Expression"
 							}
 						}
@@ -36,7 +36,7 @@
 		"parameters": {
 			"dateconverted": {
 				"type": "string",
-				"defaultValue": "2022-12-31"
+				"defaultValue": "\"2022-12-31\""
 			}
 		},
 		"annotations": []
