@@ -65,7 +65,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     dateconverted as string (\"2022-12-31\")",
+				"     dateconverted as string ('Date Converted')",
 				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
