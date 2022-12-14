@@ -65,7 +65,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     dateconverted as date (currentDate())",
+				"     dateconverted as string (\"currentDate()\")",
 				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
