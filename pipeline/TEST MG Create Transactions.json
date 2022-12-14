@@ -19,7 +19,10 @@
 						"referenceName": "MG Debit Order Monthend Aggregate DO",
 						"type": "DataFlowReference",
 						"parameters": {
-							"dateconverted": "'Date Converted'"
+							"dateconverted": {
+								"value": "'@{pipeline().parameters.dateconverted}'",
+								"type": "Expression"
+							}
 						}
 					},
 					"compute": {
@@ -30,6 +33,12 @@
 				}
 			}
 		],
+		"parameters": {
+			"dateconverted": {
+				"type": "string",
+				"defaultValue": "'Date Converted'"
+			}
+		},
 		"annotations": []
 	}
 }
