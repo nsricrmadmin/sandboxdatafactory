@@ -898,227 +898,6 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG Debit Order Monthend Aggregate DO')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Contact, MG, Bankdetails",
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "SandboxDonorOrder",
-								"type": "DatasetReference"
-							},
-							"name": "donororder"
-						},
-						{
-							"dataset": {
-								"referenceName": "Sandbox_BankDetail",
-								"type": "DatasetReference"
-							},
-							"name": "bankdetails"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "Sandbox_Transaction",
-								"type": "DatasetReference"
-							},
-							"name": "accounttransactions"
-						},
-						{
-							"dataset": {
-								"referenceName": "Sandbox_Transaction",
-								"type": "DatasetReference"
-							},
-							"name": "ContactTransactions"
-						},
-						{
-							"dataset": {
-								"referenceName": "SandboxDonorOrder",
-								"type": "DatasetReference"
-							},
-							"name": "DonorOrderTrxDate"
-						}
-					],
-					"transformations": [
-						{
-							"name": "joindonororderbankdetails"
-						},
-						{
-							"name": "From"
-						},
-						{
-							"name": "aggregatefromaccount"
-						},
-						{
-							"name": "aggregatefromcontact"
-						},
-						{
-							"name": "TransactionFields"
-						},
-						{
-							"name": "alterRow1"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          {@odata.etag} as string,",
-						"          {AccountNumber.accountnumber} as string,",
-						"          {ContactNumber.cog_contactnumber} as string,",
-						"          cog_account as string,",
-						"          cog_bankdetails as string,",
-						"          cog_contact as string,",
-						"          transactioncurrencyid as string,",
-						"          cog_competition as string,",
-						"          cog_datepaid as string,",
-						"          cog_donationamount as string,",
-						"          cog_donororderfrom as string,",
-						"          cog_donororderid as string,",
-						"          cog_name as string,",
-						"          cog_paymentmethod as string,",
-						"          cog_paymenttype as string,",
-						"          cog_preferreddebitorderdate as string,",
-						"          cog_preferredsubmissiondate as string,",
-						"          cog_totalticketamount as string,",
-						"          statecode as string,",
-						"          statuscode as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <attribute name=\"cog_datepaid\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"cog_preferreddebitorderdate\"/>\\n        <attribute name=\"cog_preferredsubmissiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n          <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n               <filter type=\"or\">\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>181310001</value>\\n                              <value>181310013</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"null\"/>\\n                    </filter>\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>2</value>\\n                              <value>181310017</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"not-null\"/>\\n                    </filter>\\n               </filter>\\n          </filter>\\n                     <link-entity name=\"account\" from=\"accountid\" to=\"cog_account\" link-type=\"outer\" alias=\"AccountNumber\" visible=\"false\">\\n               <attribute name=\"accountnumber\"/>\\n          </link-entity>\\n          <link-entity name=\"contact\" from=\"contactid\" to=\"cog_contact\" link-type=\"outer\" alias=\"ContactNumber\" visible=\"false\">\\n               <attribute name=\"cog_contactnumber\"/>\\n          </link-entity>\\n     </entity>\\n</fetch>',",
-						"     manifestType: 'model') ~> donororder",
-						"source(output(",
-						"          {@odata.etag} as string,",
-						"          cog_bank as string,",
-						"          cog_contactid as string,",
-						"          cog_accountholder as string,",
-						"          cog_accountnumber as string,",
-						"          cog_accounttype as string,",
-						"          cog_bankdetailsid as string,",
-						"          cog_branchcode as string,",
-						"          cog_cvc as string,",
-						"          cog_expireydate as string,",
-						"          statecode as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_bankdetails\">\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_cvc\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <attribute name=\"cog_bank\"/>\\n          <attribute name=\"cog_accounttype\"/>\\n          <attribute name=\"cog_contactid\"/>\\n          <attribute name=\"cog_bankdetailsid\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"cog_contactid\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
-						"     manifestType: 'model') ~> bankdetails",
-						"donororder, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
-						"     joinType:'left',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> joindonororderbankdetails",
-						"TransactionFields split(cog_donororderfrom=='181310001',",
-						"     cog_donororderfrom=='181310000',",
-						"     disjoint: false) ~> From@(FromAccount, FromContact)",
-						"From@FromAccount aggregate(groupBy(cog_competition,",
-						"          cog_account,",
-						"          cog_paymentmethod,",
-						"          cog_bankdetails,",
-						"          cog_donororderfrom,",
-						"          cog_transactiondate),",
-						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
-						"          each(match(name=='cog_donornumber'||name=='new_statecode'||name=='new_statuscode'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_contact'), $$ = first($$))) ~> aggregatefromaccount",
-						"From@FromContact aggregate(groupBy(cog_competition,",
-						"          cog_contact,",
-						"          cog_paymentmethod,",
-						"          cog_bankdetails,",
-						"          cog_donororderfrom,",
-						"          cog_transactiondate),",
-						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
-						"          each(match(name=='cog_donornumber'||name=='new_statecode'||name=='new_statuscode'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'), $$ = first($$))) ~> aggregatefromcontact",
-						"joindonororderbankdetails derive(cog_transactionamount = iif(equals(isNull(cog_donationamount),true()),cog_totalticketamount,cog_donationamount),",
-						"          cog_transactiondate = currentUTC(),",
-						"          new_statuscode = case (\r",
-						"  isNull(cog_datepaid)==true()&&statuscode=='181310001',1,  \r",
-						"  isNull(cog_datepaid)==false()&&statuscode=='2',1\r",
-						"  ),",
-						"          new_statecode = case (\r",
-						"  isNull(cog_datepaid)==true()&&statuscode=='181310001',0,  \r",
-						"  isNull(cog_datepaid)==false()&&statuscode=='2',0\r",
-						"  ),",
-						"          cog_donornumber = iif(equals(cog_donororderfrom,'181310000'),{ContactNumber.cog_contactnumber},{AccountNumber.accountnumber})) ~> TransactionFields",
-						"TransactionFields alterRow(updateIf(isNull(cog_transactiondate)==false())) ~> alterRow1",
-						"aggregatefromaccount sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     mapColumn(",
-						"          cog_division = cog_competition,",
-						"          cog_account,",
-						"          cog_contact,",
-						"          cog_paymentmethod,",
-						"          cog_bankdetails,",
-						"          cog_transactionamount,",
-						"          cog_transactionfrom = cog_donororderfrom,",
-						"          cog_transactiondate,",
-						"          cog_bank,",
-						"          cog_accounttype,",
-						"          cog_branchcode,",
-						"          cog_cvc,",
-						"          cog_expireydate,",
-						"          cog_accountholder,",
-						"          cog_accountnumber,",
-						"          statuscode = new_statuscode,",
-						"          statecode = new_statecode,",
-						"          cog_donornumber",
-						"     )) ~> accounttransactions",
-						"aggregatefromcontact sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:true,",
-						"     updateable:false,",
-						"     upsertable:false,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          cog_division = cog_competition,",
-						"          cog_contact,",
-						"          cog_paymentmethod,",
-						"          cog_bankdetails,",
-						"          cog_transactionamount,",
-						"          cog_transactionfrom = cog_donororderfrom,",
-						"          cog_bank,",
-						"          cog_accountholder,",
-						"          cog_accountnumber,",
-						"          cog_accounttype,",
-						"          cog_branchcode,",
-						"          cog_cvc,",
-						"          cog_expireydate,",
-						"          cog_transactiondate,",
-						"          statuscode = new_statuscode,",
-						"          statecode = new_statecode,",
-						"          cog_donornumber",
-						"     )) ~> ContactTransactions",
-						"alterRow1 sink(allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     deletable:false,",
-						"     insertable:false,",
-						"     updateable:true,",
-						"     upsertable:false,",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          cog_donororderid,",
-						"          cog_transactiondate",
-						"     )) ~> DonorOrderTrxDate"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
-				"[concat(variables('factoryId'), '/datasets/Sandbox_BankDetail')]",
-				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]"
-			]
-		},
-		{
 			"name": "[concat(parameters('factoryName'), '/MG Aggregation Create DO Trans File')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
@@ -1417,7 +1196,8 @@
 						"parameters{",
 						"     submissiondate as string ('SubmissionDate'),",
 						"     division as string ('Division'),",
-						"     paymentmethod as string ('PaymentMethod')",
+						"     paymentmethod as string ('PaymentMethod'),",
+						"     actiondate as string ('ActionDate')",
 						"}",
 						"source(output(",
 						"          {@odata.etag} as string,",
@@ -1587,6 +1367,232 @@
 			]
 		},
 		{
+			"name": "[concat(parameters('factoryName'), '/MG Debit Order Monthend Aggregate DO')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Contact, MG, Bankdetails",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "SandboxDonorOrder",
+								"type": "DatasetReference"
+							},
+							"name": "donororder"
+						},
+						{
+							"dataset": {
+								"referenceName": "Sandbox_BankDetail",
+								"type": "DatasetReference"
+							},
+							"name": "bankdetails"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "Sandbox_Transaction",
+								"type": "DatasetReference"
+							},
+							"name": "accounttransactions"
+						},
+						{
+							"dataset": {
+								"referenceName": "Sandbox_Transaction",
+								"type": "DatasetReference"
+							},
+							"name": "ContactTransactions"
+						},
+						{
+							"dataset": {
+								"referenceName": "SandboxDonorOrder",
+								"type": "DatasetReference"
+							},
+							"name": "DonorOrderTrxDate"
+						}
+					],
+					"transformations": [
+						{
+							"name": "joindonororderbankdetails"
+						},
+						{
+							"name": "From"
+						},
+						{
+							"name": "aggregatefromaccount"
+						},
+						{
+							"name": "aggregatefromcontact"
+						},
+						{
+							"name": "TransactionFields"
+						},
+						{
+							"name": "alterRow1"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     dateconverted as string ('Date Converted')",
+						"}",
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          {AccountNumber.accountnumber} as string,",
+						"          {ContactNumber.cog_contactnumber} as string,",
+						"          cog_account as string,",
+						"          cog_bankdetails as string,",
+						"          cog_contact as string,",
+						"          transactioncurrencyid as string,",
+						"          cog_competition as string,",
+						"          cog_dateconverted as string,",
+						"          cog_datepaid as string,",
+						"          cog_donationamount as string,",
+						"          cog_donororderfrom as string,",
+						"          cog_donororderid as string,",
+						"          cog_name as string,",
+						"          cog_paymentmethod as string,",
+						"          cog_paymenttype as string,",
+						"          cog_preferreddebitorderdate as string,",
+						"          cog_preferredsubmissiondate as string,",
+						"          cog_shutoffdate as string,",
+						"          cog_totalticketamount as string,",
+						"          statecode as string,",
+						"          statuscode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <attribute name=\"cog_datepaid\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"cog_preferreddebitorderdate\"/>\\n          <attribute name=\"cog_preferredsubmissiondate\"/>\\n          <attribute name=\"cog_shutoffdate\"/>\\n          <attribute name=\"cog_dateconverted\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n               <condition attribute=\"cog_dateconverted\" operator=\"on-or-before\" value=\",pipeline().parameters.dateconverted\"/>\\n               <filter type=\"or\">\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>181310001</value>\\n                              <value>181310013</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"null\"/>\\n                    </filter>\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>2</value>\\n                              <value>181310017</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"not-null\"/>\\n                    </filter>\\n               </filter>\\n          </filter>\\n                     <link-entity name=\"account\" from=\"accountid\" to=\"cog_account\" link-type=\"outer\" alias=\"AccountNumber\" visible=\"false\">\\n               <attribute name=\"accountnumber\"/>\\n          </link-entity>\\n          <link-entity name=\"contact\" from=\"contactid\" to=\"cog_contact\" link-type=\"outer\" alias=\"ContactNumber\" visible=\"false\">\\n               <attribute name=\"cog_contactnumber\"/>\\n          </link-entity>\\n     </entity>\\n</fetch>',",
+						"     manifestType: 'model') ~> donororder",
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          cog_bank as string,",
+						"          cog_contactid as string,",
+						"          cog_accountholder as string,",
+						"          cog_accountnumber as string,",
+						"          cog_accounttype as string,",
+						"          cog_bankdetailsid as string,",
+						"          cog_branchcode as string,",
+						"          cog_cvc as string,",
+						"          cog_expireydate as string,",
+						"          statecode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_bankdetails\">\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_cvc\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <attribute name=\"cog_bank\"/>\\n          <attribute name=\"cog_accounttype\"/>\\n          <attribute name=\"cog_contactid\"/>\\n          <attribute name=\"cog_bankdetailsid\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"cog_contactid\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     manifestType: 'model') ~> bankdetails",
+						"donororder, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
+						"     joinType:'left',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindonororderbankdetails",
+						"TransactionFields split(cog_donororderfrom=='181310001',",
+						"     cog_donororderfrom=='181310000',",
+						"     disjoint: false) ~> From@(FromAccount, FromContact)",
+						"From@FromAccount aggregate(groupBy(cog_competition,",
+						"          cog_account,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_donororderfrom,",
+						"          cog_transactiondate),",
+						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
+						"          each(match(name=='cog_donornumber'||name=='new_statecode'||name=='new_statuscode'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_contact'), $$ = first($$))) ~> aggregatefromaccount",
+						"From@FromContact aggregate(groupBy(cog_competition,",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_donororderfrom,",
+						"          cog_transactiondate),",
+						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
+						"          each(match(name=='cog_donornumber'||name=='new_statecode'||name=='new_statuscode'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'), $$ = first($$))) ~> aggregatefromcontact",
+						"joindonororderbankdetails derive(cog_transactionamount = iif(equals(isNull(cog_donationamount),true()),cog_totalticketamount,cog_donationamount),",
+						"          cog_transactiondate = currentUTC(),",
+						"          new_statuscode = case (\r",
+						"  isNull(cog_datepaid)==true()&&statuscode=='181310001',1,  \r",
+						"  isNull(cog_datepaid)==false()&&statuscode=='2',1\r",
+						"  ),",
+						"          new_statecode = case (\r",
+						"  isNull(cog_datepaid)==true()&&statuscode=='181310001',0,  \r",
+						"  isNull(cog_datepaid)==false()&&statuscode=='2',0\r",
+						"  ),",
+						"          cog_donornumber = iif(equals(cog_donororderfrom,'181310000'),{ContactNumber.cog_contactnumber},{AccountNumber.accountnumber})) ~> TransactionFields",
+						"TransactionFields alterRow(updateIf(isNull(cog_transactiondate)==false())) ~> alterRow1",
+						"aggregatefromaccount sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     mapColumn(",
+						"          cog_division = cog_competition,",
+						"          cog_account,",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_transactionamount,",
+						"          cog_transactionfrom = cog_donororderfrom,",
+						"          cog_transactiondate,",
+						"          cog_bank,",
+						"          cog_accounttype,",
+						"          cog_branchcode,",
+						"          cog_cvc,",
+						"          cog_expireydate,",
+						"          cog_accountholder,",
+						"          cog_accountnumber,",
+						"          statuscode = new_statuscode,",
+						"          statecode = new_statecode,",
+						"          cog_donornumber",
+						"     )) ~> accounttransactions",
+						"aggregatefromcontact sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:true,",
+						"     updateable:false,",
+						"     upsertable:false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          cog_division = cog_competition,",
+						"          cog_contact,",
+						"          cog_paymentmethod,",
+						"          cog_bankdetails,",
+						"          cog_transactionamount,",
+						"          cog_transactionfrom = cog_donororderfrom,",
+						"          cog_bank,",
+						"          cog_accountholder,",
+						"          cog_accountnumber,",
+						"          cog_accounttype,",
+						"          cog_branchcode,",
+						"          cog_cvc,",
+						"          cog_expireydate,",
+						"          cog_transactiondate,",
+						"          statuscode = new_statuscode,",
+						"          statecode = new_statecode,",
+						"          cog_donornumber",
+						"     )) ~> ContactTransactions",
+						"alterRow1 sink(allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     deletable:false,",
+						"     insertable:false,",
+						"     updateable:true,",
+						"     upsertable:false,",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          cog_donororderid,",
+						"          cog_transactiondate",
+						"     )) ~> DonorOrderTrxDate"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
+				"[concat(variables('factoryId'), '/datasets/Sandbox_BankDetail')]",
+				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]"
+			]
+		},
+		{
 			"name": "[concat(parameters('factoryName'), '/MG Debit Order Month-end')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
@@ -1717,7 +1723,12 @@
 							"dataflow": {
 								"referenceName": "MG Debit Order Monthend Aggregate DO",
 								"type": "DataFlowReference",
-								"parameters": {},
+								"parameters": {
+									"dateconverted": {
+										"value": "'@{pipeline().parameters.dateconverted}'",
+										"type": "Expression"
+									}
+								},
 								"datasetParameters": {
 									"donororder": {},
 									"bankdetails": {},
@@ -1776,6 +1787,12 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"parameters": {
+					"dateconverted": {
+						"type": "string",
+						"defaultValue": "'YYYYmmdd'"
+					}
 				},
 				"annotations": []
 			},

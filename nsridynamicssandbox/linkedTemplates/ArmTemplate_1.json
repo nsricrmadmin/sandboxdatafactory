@@ -46,6 +46,10 @@
 									"paymentmethod": {
 										"value": "'@{pipeline().parameters.paymentmethod}'",
 										"type": "Expression"
+									},
+									"actiondate": {
+										"value": "'@{pipeline().parameters.actiondate}'",
+										"type": "Expression"
 									}
 								},
 								"datasetParameters": {
@@ -478,6 +482,10 @@
 					"paymentmethod": {
 						"type": "string",
 						"defaultValue": "DO"
+					},
+					"actiondate": {
+						"type": "string",
+						"defaultValue": "YYYmmdd"
 					}
 				},
 				"annotations": []
@@ -552,7 +560,9 @@
 							"dataflow": {
 								"referenceName": "MG Debit Order Monthend Aggregate DO",
 								"type": "DataFlowReference",
-								"parameters": {},
+								"parameters": {
+									"dateconverted": "'Date Converted'"
+								},
 								"datasetParameters": {
 									"donororder": {},
 									"bankdetails": {},
