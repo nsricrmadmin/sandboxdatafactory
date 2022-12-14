@@ -17,7 +17,10 @@
 				"typeProperties": {
 					"dataflow": {
 						"referenceName": "MG Debit Order Monthend Aggregate DO",
-						"type": "DataFlowReference"
+						"type": "DataFlowReference",
+						"parameters": {
+							"dateconverted": "'Date Converted'"
+						}
 					},
 					"compute": {
 						"coreCount": 8,
