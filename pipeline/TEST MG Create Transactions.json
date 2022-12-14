@@ -36,7 +36,7 @@
 		"parameters": {
 			"dateconverted": {
 				"type": "string",
-				"defaultValue": "YYYY-mm-dd"
+				"defaultValue": "\"2022-12-31\""
 			}
 		},
 		"annotations": []
