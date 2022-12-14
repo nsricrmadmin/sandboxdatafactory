@@ -64,6 +64,9 @@
 				}
 			],
 			"scriptLines": [
+				"parameters{",
+				"     dateconverted as string ('DateConverted')",
+				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
 				"          {AccountNumber.accountnumber} as string,",
