@@ -561,7 +561,10 @@
 								"referenceName": "MG Debit Order Monthend Aggregate DO",
 								"type": "DataFlowReference",
 								"parameters": {
-									"dateconverted": "'Date Converted'"
+									"dateconverted": {
+										"value": "'@{pipeline().parameters.dateconverted}'",
+										"type": "Expression"
+									}
 								},
 								"datasetParameters": {
 									"donororder": {},
@@ -569,7 +572,8 @@
 									"accounttransactions": {},
 									"ContactTransactions": {},
 									"DonorOrderTrxDate": {}
-								}
+								},
+								"linkedServiceParameters": {}
 							},
 							"staging": {},
 							"compute": {
@@ -583,6 +587,12 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"parameters": {
+					"dateconverted": {
+						"type": "string",
+						"defaultValue": "'Date Converted'"
+					}
 				},
 				"annotations": []
 			},
