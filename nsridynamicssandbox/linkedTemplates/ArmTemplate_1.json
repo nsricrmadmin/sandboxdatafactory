@@ -572,8 +572,7 @@
 									"accounttransactions": {},
 									"ContactTransactions": {},
 									"DonorOrderTrxDate": {}
-								},
-								"linkedServiceParameters": {}
+								}
 							},
 							"staging": {},
 							"compute": {
@@ -591,7 +590,7 @@
 				"parameters": {
 					"dateconverted": {
 						"type": "string",
-						"defaultValue": "'Date Converted'"
+						"defaultValue": "\"2022-12-31\""
 					}
 				},
 				"annotations": []
