@@ -30,6 +30,10 @@
 							"paymentmethod": {
 								"value": "'@{pipeline().parameters.paymentmethod}'",
 								"type": "Expression"
+							},
+							"actiondate": {
+								"value": "'@{pipeline().parameters.actiondate}'",
+								"type": "Expression"
 							}
 						},
 						"datasetParameters": {
@@ -455,6 +459,10 @@
 			"paymentmethod": {
 				"type": "string",
 				"defaultValue": "DO"
+			},
+			"actiondate": {
+				"type": "string",
+				"defaultValue": "YYYmmdd"
 			}
 		},
 		"annotations": []

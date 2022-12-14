@@ -73,6 +73,7 @@
 				"          cog_contact as string,",
 				"          transactioncurrencyid as string,",
 				"          cog_competition as string,",
+				"          cog_dateconverted as string,",
 				"          cog_datepaid as string,",
 				"          cog_donationamount as string,",
 				"          cog_donororderfrom as string,",
