@@ -1,5 +1,5 @@
 {
-	"name": "Tst - MG DO Month-end Create File",
+	"name": "Tst - MG DO Month-end Create Aggregation File",
 	"properties": {
 		"activities": [
 			{
@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG Aggregation Create DO Trans File",
+						"referenceName": "MG DO Monthend Create Aggregation File",
 						"type": "DataFlowReference"
 					},
 					"compute": {
