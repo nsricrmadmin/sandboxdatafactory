@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "donor_order_aggregates",
+				"folderPath": "donor_order_aggregate_files",
 				"fileSystem": "monthly-giving"
 			},
 			"columnDelimiter": ",",
