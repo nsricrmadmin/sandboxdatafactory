@@ -68,7 +68,7 @@
 			],
 			"scriptLines": [
 				"parameters{",
-				"     dateconverted as string",
+				"     dateconverted as string ('2022-12-05')",
 				"}",
 				"source(output(",
 				"          {@odata.etag} as string,",
@@ -151,7 +151,7 @@
 				"  ),",
 				"          cog_donornumber = iif(equals(cog_donororderfrom,'181310000'),{ContactNumber.cog_contactnumber},{AccountNumber.accountnumber})) ~> TransactionFields",
 				"TransactionFields alterRow(updateIf(isNull(cog_transactiondate)==false())) ~> alterRow1",
-				"donororder filter(toDate(cog_dateconverted) <= toDate('$dateconverted')) ~> dateconverted",
+				"donororder filter(cog_dateconverted <= $dateconverted) ~> dateconverted",
 				"aggregatefromaccount sink(allowSchemaDrift: true,",
 				"     validateSchema: false,",
 				"     deletable:false,",
