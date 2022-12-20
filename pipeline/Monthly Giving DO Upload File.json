@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG DO Create File",
+						"referenceName": "MG DO Monthend Create File",
 						"type": "DataFlowReference",
 						"parameters": {
 							"submissiondate": {
