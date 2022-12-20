@@ -1125,7 +1125,7 @@
 				"parameters": {
 					"dateconverted": {
 						"type": "string",
-						"defaultValue": "2022-12-31"
+						"defaultValue": "yyyy-mm-dd"
 					}
 				},
 				"annotations": []
@@ -2536,7 +2536,7 @@
 					],
 					"scriptLines": [
 						"parameters{",
-						"     dateconverted as string ('2022-10-01')",
+						"     dateconverted as string",
 						"}",
 						"source(output(",
 						"          {@odata.etag} as string,",
