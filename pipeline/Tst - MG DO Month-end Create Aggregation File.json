@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "MG DO Monthend Create File",
+				"name": "MG DO Monthend Create Aggregation File",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {

@@ -98,7 +98,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "file_mg_do_monthend_aggregation",
+						"referenceName": "mg_do_monthend_aggregation_file",
 						"type": "DatasetReference"
 					}
 				],
@@ -160,7 +160,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG Aggregation Create DO Trans File",
+						"referenceName": "MG DO Monthend Create Aggregation File",
 						"type": "DataFlowReference"
 					},
 					"compute": {

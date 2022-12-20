@@ -97,19 +97,20 @@
 				"donororder@statuscode=='181310001','181310013',\r",
 				"donororder@statuscode=='2','181310019'\r",
 				")) ~> submittecdolumns",
-				"submittecdolumns sink(allowSchemaDrift: true,",
+				"submittecdolumns sink(allowSchemaDrift: false,",
 				"     validateSchema: false,",
 				"     input(",
 				"          cog_donororderid as string,",
 				"          cog_transactionid as string",
 				"     ),",
-				"     filePattern:('MG_DO_Monthend_Aggregation-'+toString(currentUTC())+'.csv'),",
+				"     partitionFileNames:[('MG_DO_Monthend_Aggregation-'+toString(currentUTC())+'.csv')],",
 				"     truncate: true,",
 				"     umask: 0022,",
 				"     preCommands: [],",
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
-				"     skipDuplicateMapOutputs: true) ~> mgaggregationfile"
+				"     skipDuplicateMapOutputs: true,",
+				"     partitionBy('hash', 1)) ~> mgaggregationfile"
 			]
 		}
 	}

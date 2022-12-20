@@ -92,7 +92,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "file_mg_do_monthend_aggregation",
+						"referenceName": "mg_do_monthend_aggregation_file",
 						"type": "DatasetReference"
 					}
 				],
