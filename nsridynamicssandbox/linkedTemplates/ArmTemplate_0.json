@@ -1367,7 +1367,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG Debit Order Monthend Aggregate DO')]",
+			"name": "[concat(parameters('factoryName'), '/MG DO Monthend Aggregation')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1438,7 +1438,7 @@
 					],
 					"scriptLines": [
 						"parameters{",
-						"     dateconverted as string",
+						"     dateconverted as string ('2022-12-05')",
 						"}",
 						"source(output(",
 						"          {@odata.etag} as string,",
@@ -1729,7 +1729,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG Debit Order Monthend Aggregate DO",
+								"referenceName": "MG DO Monthend Aggregation",
 								"type": "DataFlowReference",
 								"parameters": {
 									"dateconverted": {
@@ -1807,7 +1807,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
-				"[concat(variables('factoryId'), '/dataflows/MG Debit Order Monthend Aggregate DO')]",
+				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Aggregation')]",
 				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create DO Trans File')]"
 			]
 		},
