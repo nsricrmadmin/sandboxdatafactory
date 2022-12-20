@@ -110,6 +110,10 @@
 				"     postCommands: [],",
 				"     skipDuplicateMapInputs: true,",
 				"     skipDuplicateMapOutputs: true,",
+				"     mapColumn(",
+				"          cog_donororderid,",
+				"          cog_transactionid",
+				"     ),",
 				"     partitionBy('hash', 1)) ~> mgaggregationfile"
 			]
 		}
