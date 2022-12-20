@@ -235,7 +235,7 @@
 				"parameters": {
 					"dateconverted": {
 						"type": "string",
-						"defaultValue": "'YYYYmmdd'"
+						"defaultValue": "yyyy-mm-dd"
 					}
 				},
 				"annotations": []
@@ -2598,7 +2598,7 @@
 						"          cog_donororderfrom,",
 						"          cog_transactiondate),",
 						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
-						"          each(match(name=='cog_donornumber'||name=='new_statecode'||name=='new_statuscode'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_contact'), $$ = first($$))) ~> aggregatefromaccount",
+						"          each(match(name== 'cog_preferredsubmissiondate'||name== 'cog_preferreddebitorderdate'||name=='cog_donornumber'||name=='new_statecode'||name=='new_statuscode'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'||name=='cog_contact'), $$ = first($$))) ~> aggregatefromaccount",
 						"From@FromContact aggregate(groupBy(cog_competition,",
 						"          cog_contact,",
 						"          cog_paymentmethod,",
@@ -2606,7 +2606,7 @@
 						"          cog_donororderfrom,",
 						"          cog_transactiondate),",
 						"     cog_transactionamount = sum(toInteger(cog_transactionamount)),",
-						"          each(match(name=='cog_donornumber'||name=='new_statecode'||name=='new_statuscode'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'), $$ = first($$))) ~> aggregatefromcontact",
+						"          each(match(name== 'cog_preferredsubmissiondate'||name== 'cog_preferreddebitorderdate'||name=='cog_donornumber'||name=='new_statecode'||name=='new_statuscode'||name=='cog_accountnumber'||name=='cog_expireydate'||name=='cog_cvc'||name=='cog_branchcode'||name=='cog_bank'||name=='cog_accounttype'||name=='cog_accountholder'), $$ = first($$))) ~> aggregatefromcontact",
 						"joindonororderbankdetails derive(cog_transactionamount = iif(equals(isNull(cog_donationamount),true()),cog_totalticketamount,cog_donationamount),",
 						"          cog_transactiondate = currentUTC(),",
 						"          new_statuscode = case (\r",
@@ -2644,7 +2644,9 @@
 						"          cog_accountnumber,",
 						"          statuscode = new_statuscode,",
 						"          statecode = new_statecode,",
-						"          cog_donornumber",
+						"          cog_donornumber,",
+						"          cog_preferreddebitorderdate,",
+						"          cog_preferredsubmissiondate",
 						"     )) ~> accounttransactions",
 						"aggregatefromcontact sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
@@ -2671,7 +2673,9 @@
 						"          cog_transactiondate,",
 						"          statuscode = new_statuscode,",
 						"          statecode = new_statecode,",
-						"          cog_donornumber",
+						"          cog_donornumber,",
+						"          cog_preferreddebitorderdate,",
+						"          cog_preferredsubmissiondate",
 						"     )) ~> ContactTransactions",
 						"alterRow1 sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
