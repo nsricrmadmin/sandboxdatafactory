@@ -778,13 +778,13 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TEST MG Update Donor Orders')]",
+			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Update Orders')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "MG DO Update",
+						"name": "MG DO Month-end Update Orders",
 						"type": "Copy",
 						"dependsOn": [],
 						"policy": {
@@ -1153,7 +1153,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG DO Create File')]",
+			"name": "[concat(parameters('factoryName'), '/MG DO Monthend Create File')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {

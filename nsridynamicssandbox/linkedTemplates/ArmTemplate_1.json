@@ -32,7 +32,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG DO Create File",
+								"referenceName": "MG DO Monthend Create File",
 								"type": "DataFlowReference",
 								"parameters": {
 									"submissiondate": {
@@ -493,13 +493,13 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TEST MG Create File')]",
+			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Create File')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "MG Create File",
+						"name": "MG DO Monthend Create File",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -539,7 +539,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/TEST MG Create Transactions')]",
+			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Create Transactions')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
