@@ -1,9 +1,9 @@
 {
-	"name": "Tst MG DO Month-end Create File",
+	"name": "Tst - MG DO Month-end Create File",
 	"properties": {
 		"activities": [
 			{
-				"name": "MG Create File",
+				"name": "MG DO Monthend Create File",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
