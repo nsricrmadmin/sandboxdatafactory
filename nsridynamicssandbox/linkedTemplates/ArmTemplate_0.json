@@ -741,7 +741,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/file_mg_aggregation')]",
+			"name": "[concat(parameters('factoryName'), '/file_mg_do_monthend_aggregation')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -754,7 +754,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "donor_order_aggregates",
+						"folderPath": "donor_order_aggregate_files",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -872,7 +872,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "file_mg_aggregation",
+								"referenceName": "file_mg_do_monthend_aggregation",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -893,7 +893,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
+				"[concat(variables('factoryId'), '/datasets/file_mg_do_monthend_aggregation')]",
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]"
 			]
 		},
@@ -924,7 +924,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "file_mg_aggregation",
+								"referenceName": "file_mg_do_monthend_aggregation",
 								"type": "DatasetReference"
 							},
 							"name": "mgaggregationfile"
@@ -1004,7 +1004,7 @@
 						"          cog_donororderid as string,",
 						"          cog_transactionid as string",
 						"     ),",
-						"     filePattern:('MG-Aggregation-'+toString(currentUTC())+'.csv'),",
+						"     filePattern:('MG_DO_Monthend_Aggregation-'+toString(currentUTC())+'.csv'),",
 						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -1018,7 +1018,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
-				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]"
+				"[concat(variables('factoryId'), '/datasets/file_mg_do_monthend_aggregation')]"
 			]
 		},
 		{
@@ -1702,7 +1702,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "file_mg_aggregation",
+								"referenceName": "file_mg_do_monthend_aggregation",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -1805,7 +1805,7 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/file_mg_aggregation')]",
+				"[concat(variables('factoryId'), '/datasets/file_mg_do_monthend_aggregation')]",
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
 				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Aggregation')]",
 				"[concat(variables('factoryId'), '/dataflows/MG Aggregation Create DO Trans File')]"
