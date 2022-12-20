@@ -23,7 +23,7 @@
 			"sinks": [
 				{
 					"dataset": {
-						"referenceName": "file_mg_aggregation",
+						"referenceName": "file_mg_do_monthend_aggregation",
 						"type": "DatasetReference"
 					},
 					"name": "mgaggregationfile"
