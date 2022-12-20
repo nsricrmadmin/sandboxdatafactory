@@ -20,7 +20,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": false,
-							"wildcardFolderPath": "donor_order_aggregates_files",
+							"wildcardFolderPath": "donor_order_aggregate_files/debit order monthend",
 							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
