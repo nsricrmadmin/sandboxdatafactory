@@ -1,5 +1,5 @@
 {
-	"name": "MG DO Create File",
+	"name": "MG DO Monthend Create File",
 	"properties": {
 		"type": "MappingDataFlow",
 		"typeProperties": {
