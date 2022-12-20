@@ -16,7 +16,7 @@
 				"userProperties": [],
 				"typeProperties": {
 					"dataflow": {
-						"referenceName": "MG Debit Order Monthend Aggregate DO",
+						"referenceName": "MG DO Monthend Aggregation",
 						"type": "DataFlowReference",
 						"parameters": {
 							"dateconverted": {
