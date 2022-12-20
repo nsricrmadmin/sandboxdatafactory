@@ -2529,11 +2529,14 @@
 						},
 						{
 							"name": "alterRow1"
+						},
+						{
+							"name": "dateconverted"
 						}
 					],
 					"scriptLines": [
 						"parameters{",
-						"     dateconverted as string",
+						"     dateconverted as string ('2022-10-01')",
 						"}",
 						"source(output(",
 						"          {@odata.etag} as string,",
@@ -2561,7 +2564,7 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <attribute name=\"cog_datepaid\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"cog_preferreddebitorderdate\"/>\\n          <attribute name=\"cog_preferredsubmissiondate\"/>\\n          <attribute name=\"cog_shutoffdate\"/>\\n          <attribute name=\"cog_dateconverted\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n               <condition attribute=\"cog_dateconverted\" operator=\"on-or-before\" value=\"@{$dateconverted}\"/>\\n               <filter type=\"or\">\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>181310001</value>\\n                              <value>181310013</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"null\"/>\\n                    </filter>\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>2</value>\\n                              <value>181310017</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"not-null\"/>\\n                    </filter>\\n               </filter>\\n          </filter>\\n                     <link-entity name=\"account\" from=\"accountid\" to=\"cog_account\" link-type=\"outer\" alias=\"AccountNumber\" visible=\"false\">\\n               <attribute name=\"accountnumber\"/>\\n          </link-entity>\\n          <link-entity name=\"contact\" from=\"contactid\" to=\"cog_contact\" link-type=\"outer\" alias=\"ContactNumber\" visible=\"false\">\\n               <attribute name=\"cog_contactnumber\"/>\\n          </link-entity>\\n     </entity>\\n</fetch>',",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <attribute name=\"cog_donationamount\"/>\\n          <attribute name=\"cog_datepaid\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"cog_preferreddebitorderdate\"/>\\n          <attribute name=\"cog_preferredsubmissiondate\"/>\\n          <attribute name=\"cog_shutoffdate\"/>\\n          <attribute name=\"cog_dateconverted\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n               <filter type=\"or\">\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>181310001</value>\\n                              <value>181310013</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"null\"/>\\n                    </filter>\\n                    <filter type=\"and\">\\n                         <condition attribute=\"statuscode\" operator=\"in\">\\n                              <value>2</value>\\n                              <value>181310017</value>\\n                         </condition>\\n                         <condition attribute=\"cog_datepaid\" operator=\"not-null\"/>\\n                    </filter>\\n               </filter>\\n          </filter>\\n                     <link-entity name=\"account\" from=\"accountid\" to=\"cog_account\" link-type=\"outer\" alias=\"AccountNumber\" visible=\"false\">\\n               <attribute name=\"accountnumber\"/>\\n          </link-entity>\\n          <link-entity name=\"contact\" from=\"contactid\" to=\"cog_contact\" link-type=\"outer\" alias=\"ContactNumber\" visible=\"false\">\\n               <attribute name=\"cog_contactnumber\"/>\\n          </link-entity>\\n     </entity>\\n</fetch>',",
 						"     manifestType: 'model') ~> donororder",
 						"source(output(",
 						"          {@odata.etag} as string,",
@@ -2580,7 +2583,7 @@
 						"     validateSchema: false,",
 						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_bankdetails\">\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_cvc\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <attribute name=\"cog_bank\"/>\\n          <attribute name=\"cog_accounttype\"/>\\n          <attribute name=\"cog_contactid\"/>\\n          <attribute name=\"cog_bankdetailsid\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"statecode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"cog_contactid\" operator=\"not-null\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
 						"     manifestType: 'model') ~> bankdetails",
-						"donororder, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
+						"dateconverted, bankdetails join(cog_bankdetails == cog_bankdetailsid,",
 						"     joinType:'left',",
 						"     matchType:'exact',",
 						"     ignoreSpaces: false,",
@@ -2616,6 +2619,7 @@
 						"  ),",
 						"          cog_donornumber = iif(equals(cog_donororderfrom,'181310000'),{ContactNumber.cog_contactnumber},{AccountNumber.accountnumber})) ~> TransactionFields",
 						"TransactionFields alterRow(updateIf(isNull(cog_transactiondate)==false())) ~> alterRow1",
+						"donororder filter(toString(cog_dateconverted) <= '$dateconverted') ~> dateconverted",
 						"aggregatefromaccount sink(allowSchemaDrift: true,",
 						"     validateSchema: false,",
 						"     deletable:false,",
