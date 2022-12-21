@@ -450,7 +450,7 @@
 		"parameters": {
 			"submissiondate": {
 				"type": "string",
-				"defaultValue": "YYYYmmdd"
+				"defaultValue": "yyyy-mm-dd"
 			},
 			"division": {
 				"type": "string",
@@ -462,7 +462,7 @@
 			},
 			"actiondate": {
 				"type": "string",
-				"defaultValue": "YYYmmdd"
+				"defaultValue": "yyyy-mm-dd"
 			}
 		},
 		"annotations": []
