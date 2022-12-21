@@ -3,11 +3,11 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "MG Donor Order Update",
+				"name": "MG DO Month-end Update Order",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "MG Create Files",
+						"activity": "MG DO Month-end Create Files",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -110,7 +110,7 @@
 				]
 			},
 			{
-				"name": "MG Debit Order Month-end",
+				"name": "MG DO Month-end Transactions",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -140,11 +140,11 @@
 				}
 			},
 			{
-				"name": "MG Create Files",
+				"name": "MG DO Month-end Create Files",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
-						"activity": "MG Debit Order Month-end",
+						"activity": "MG DO Month-end Transactions",
 						"dependencyConditions": [
 							"Succeeded"
 						]
