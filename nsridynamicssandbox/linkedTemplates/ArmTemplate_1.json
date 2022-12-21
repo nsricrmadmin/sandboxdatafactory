@@ -13,13 +13,13 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Monthly Giving DO Upload File')]",
+			"name": "[concat(parameters('factoryName'), '/Monthly Giving CC Upload File')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Monthly Giving DO Upload Create File",
+						"name": "Monthly Giving CC Upload Create File",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -32,7 +32,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG DO Monthend Create File",
+								"referenceName": "MG CC Create File",
 								"type": "DataFlowReference",
 								"parameters": {
 									"submissiondate": {
@@ -45,10 +45,6 @@
 									},
 									"paymentmethod": {
 										"value": "'@{pipeline().parameters.paymentmethod}'",
-										"type": "Expression"
-									},
-									"actiondate": {
-										"value": "'@{pipeline().parameters.actiondate}'",
 										"type": "Expression"
 									}
 								},
@@ -72,6 +68,11 @@
 											"division": "'Division'",
 											"paymentmethod": "'PaymentMethod'"
 										},
+										"schemaLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
 										"rejectedDataLinkedService": {
 											"submissiondate": "'SubmissionDate'",
 											"division": "'Division'",
@@ -80,6 +81,11 @@
 									},
 									"CreateFileHistory": {
 										"linkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"schemaLinkedService": {
 											"submissiondate": "'SubmissionDate'",
 											"division": "'Division'",
 											"paymentmethod": "'PaymentMethod'"
@@ -105,7 +111,7 @@
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Monthly Giving DO Upload Create File",
+								"activity": "Monthly Giving CC Upload Create File",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -125,7 +131,7 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "bank_file_uploads/temp_files/debit_order",
+									"wildcardFolderPath": "bank_file_uploads/temp_files/credit_card",
 									"wildcardFileName": {
 										"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
 										"type": "Expression"
@@ -146,7 +152,7 @@
 									"maxRowsPerFile": 3,
 									"fileNamePrefix": "",
 									"quoteAllText": true,
-									"fileExtension": ".asc"
+									"fileExtension": ".csv"
 								}
 							},
 							"enableStaging": false,
@@ -155,278 +161,86 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "Field1",
+											"name": "Type",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Field1",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 1
 										}
 									},
 									{
 										"source": {
-											"name": "Customer Number",
+											"name": " Transaction Reference",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Customer Number",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 2
 										}
 									},
 									{
 										"source": {
-											"name": "Type of Service",
+											"name": "Card Holder Name",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Type of Service",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 3
 										}
 									},
 									{
 										"source": {
-											"name": "Name of member",
+											"name": " Card Number",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Name of member",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 4
 										}
 									},
 									{
 										"source": {
-											"name": "Account Name",
+											"name": " Expiry Date",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Account Name",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 5
 										}
 									},
 									{
 										"source": {
-											"name": "Account Number",
+											"name": " Budget Period",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Account Number",
 											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 6
 										}
 									},
 									{
 										"source": {
-											"name": "Filler2",
+											"name": " Amount",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"name": "Filler2",
 											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Branch Code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Branch Code",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Type of Account",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Type of Account",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Description",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Description",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Nominated Account",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Nominated Account",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Filler3",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Filler3",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Amount",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Amount",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Amount Arrear",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Amount Arrear",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Max Amount",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Max Amount",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Capital Amount",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Capital Amount",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Special Amount",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Special Amount",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Action Date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Action Date",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Cancellation Date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Cancellation Date",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Frequency",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Frequency",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Filler4",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Filler4",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Record Type Code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Record Type Code",
-											"type": "String",
-											"physicalType": "String"
-										}
-									},
-									{
-										"source": {
-											"name": "Entry Class Code",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"name": "Entry Class Code",
-											"type": "String",
-											"physicalType": "String"
+											"physicalType": "String",
+											"ordinal": 7
 										}
 									}
 								],
@@ -439,7 +253,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "MG_debit_order_temp",
+								"referenceName": "MG_credit_card_temp",
 								"type": "DatasetReference",
 								"parameters": {
 									"submissiondate": {
@@ -459,7 +273,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "MG_debit_order_batch",
+								"referenceName": "MG_credit_card_batch",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -481,11 +295,7 @@
 					},
 					"paymentmethod": {
 						"type": "string",
-						"defaultValue": "DO"
-					},
-					"actiondate": {
-						"type": "string",
-						"defaultValue": "YYYmmdd"
+						"defaultValue": "CC"
 					}
 				},
 				"annotations": []

@@ -754,7 +754,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "donor_order_aggregate_files/debit order monthend",
+						"folderPath": "debit order/aggregation files/month end",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -801,7 +801,7 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": false,
-									"wildcardFolderPath": "donor_order_aggregate_files/debit order monthend",
+									"wildcardFolderPath": "debit order/aggregation files/month end",
 									"wildcardFileName": "*.csv",
 									"enablePartitionDiscovery": false
 								},
@@ -1348,7 +1348,7 @@
 						"          cog_donororderid as string,",
 						"          cog_transactionid as string",
 						"     ),",
-						"     partitionFileNames:[('MG_DO_Monthend_Aggregation-'+toString(currentTimestamp())+'.csv')],",
+						"     partitionFileNames:[('MG_DO_Monthend_Aggregation-'+toString(currentUTC()+hours(2))+'.csv')],",
 						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -1411,10 +1411,10 @@
 					],
 					"scriptLines": [
 						"parameters{",
-						"     submissiondate as string ('SubmissionDate'),",
-						"     division as string ('Division'),",
-						"     paymentmethod as string ('PaymentMethod'),",
-						"     actiondate as string ('ActionDate')",
+						"     submissiondate as string ('2022-12-21'),",
+						"     division as string ('MG'),",
+						"     paymentmethod as string ('DO'),",
+						"     actiondate as string ('2022-12-21')",
 						"}",
 						"source(output(",
 						"          {@odata.etag} as string,",
@@ -1435,7 +1435,7 @@
 						"     ),",
 						"     allowSchemaDrift: true,",
 						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <attribute name=\"cog_donornumber\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
+						"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <attribute name=\"cog_donornumber\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n                <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
 						"transaction derive(Field1 = '0000000000',",
 						"          {Customer Number} = cog_donornumber,",
 						"          {Type of Service} = 'A',",
@@ -1488,7 +1488,7 @@
 						"          {Record Type Code} as string,",
 						"          {Entry Class Code} as string",
 						"     ),",
-						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
+						"     filePattern:($division+'_'+$paymentmethod+'_monthend_'+$submissiondate+'.csv'),",
 						"     truncate: true,",
 						"     umask: 0022,",
 						"     preCommands: [],",
@@ -1545,7 +1545,7 @@
 						"          {Record Type Code} as string,",
 						"          {Entry Class Code} as string",
 						"     ),",
-						"     filePattern:($division+'-'+$paymentmethod+'-'+$submissiondate+'.csv'),",
+						"     filePattern:($division+'_'+$paymentmethod+'_monthend_'+$submissiondate+'.csv'),",
 						"     umask: 0022,",
 						"     preCommands: [],",
 						"     postCommands: [],",
@@ -1581,6 +1581,490 @@
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
 				"[concat(variables('factoryId'), '/datasets/MG_debit_order_temp')]",
 				"[concat(variables('factoryId'), '/datasets/MG_debit_order_history')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG DO Month-end Upload File')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MG DO Monthend Upload Create File",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MG DO Monthend Create File",
+								"type": "DataFlowReference",
+								"parameters": {
+									"submissiondate": {
+										"value": "'@{pipeline().parameters.submissiondate}'",
+										"type": "Expression"
+									},
+									"division": {
+										"value": "'@{pipeline().parameters.division}'",
+										"type": "Expression"
+									},
+									"paymentmethod": {
+										"value": "'@{pipeline().parameters.paymentmethod}'",
+										"type": "Expression"
+									},
+									"actiondate": {
+										"value": "'@{pipeline().parameters.actiondate}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"transaction": {},
+									"CreateFileTemp": {
+										"submissiondate": "'SubmissionDate'",
+										"division": "'Division'",
+										"paymentmethod": "'PaymentMethod'"
+									},
+									"CreateFileHistory": {
+										"submissiondate": "'SubmissionDate'",
+										"division": "'Division'",
+										"paymentmethod": "'PaymentMethod'"
+									}
+								},
+								"linkedServiceParameters": {
+									"CreateFileTemp": {
+										"linkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"rejectedDataLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										}
+									},
+									"CreateFileHistory": {
+										"linkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										},
+										"rejectedDataLinkedService": {
+											"submissiondate": "'SubmissionDate'",
+											"division": "'Division'",
+											"paymentmethod": "'PaymentMethod'"
+										}
+									}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "MG DO Monthend Split Into Batches",
+						"type": "Copy",
+						"dependsOn": [
+							{
+								"activity": "MG DO Monthend Upload Create File",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"source": {
+								"type": "DelimitedTextSource",
+								"storeSettings": {
+									"type": "AzureBlobFSReadSettings",
+									"recursive": true,
+									"wildcardFolderPath": "bank_file_uploads/temp_files/debit_order",
+									"wildcardFileName": {
+										"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
+										"type": "Expression"
+									},
+									"enablePartitionDiscovery": false
+								},
+								"formatSettings": {
+									"type": "DelimitedTextReadSettings"
+								}
+							},
+							"sink": {
+								"type": "DelimitedTextSink",
+								"storeSettings": {
+									"type": "AzureBlobFSWriteSettings"
+								},
+								"formatSettings": {
+									"type": "DelimitedTextWriteSettings",
+									"maxRowsPerFile": 3,
+									"fileNamePrefix": "",
+									"quoteAllText": true,
+									"fileExtension": ".asc"
+								}
+							},
+							"enableStaging": false,
+							"translator": {
+								"type": "TabularTranslator",
+								"mappings": [
+									{
+										"source": {
+											"name": "Field1",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Field1",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Customer Number",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Customer Number",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Type of Service",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Type of Service",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Name of member",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Name of member",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Account Name",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Account Name",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Account Number",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Account Number",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Filler2",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Filler2",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Branch Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Branch Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Type of Account",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Type of Account",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Description",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Description",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Nominated Account",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Nominated Account",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Filler3",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Filler3",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Amount Arrear",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Amount Arrear",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Max Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Max Amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Capital Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Capital Amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Special Amount",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Special Amount",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Action Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Action Date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Cancellation Date",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Cancellation Date",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Frequency",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Frequency",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Filler4",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Filler4",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Record Type Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Record Type Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									},
+									{
+										"source": {
+											"name": "Entry Class Code",
+											"type": "String",
+											"physicalType": "String"
+										},
+										"sink": {
+											"name": "Entry Class Code",
+											"type": "String",
+											"physicalType": "String"
+										}
+									}
+								],
+								"typeConversion": true,
+								"typeConversionSettings": {
+									"allowDataTruncation": true,
+									"treatBooleanAsNumber": false
+								}
+							}
+						},
+						"inputs": [
+							{
+								"referenceName": "MG_debit_order_temp",
+								"type": "DatasetReference",
+								"parameters": {
+									"submissiondate": {
+										"value": "@pipeline().parameters.submissiondate",
+										"type": "Expression"
+									},
+									"division": {
+										"value": "@pipeline().parameters.division",
+										"type": "Expression"
+									},
+									"paymentmethod": {
+										"value": "@pipeline().parameters.paymentmethod",
+										"type": "Expression"
+									}
+								}
+							}
+						],
+						"outputs": [
+							{
+								"referenceName": "MG_debit_order_batch",
+								"type": "DatasetReference",
+								"parameters": {}
+							}
+						]
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
+				},
+				"parameters": {
+					"submissiondate": {
+						"type": "string",
+						"defaultValue": "yyyy-mm-dd"
+					},
+					"division": {
+						"type": "string",
+						"defaultValue": "MG"
+					},
+					"paymentmethod": {
+						"type": "string",
+						"defaultValue": "DO"
+					},
+					"actiondate": {
+						"type": "string",
+						"defaultValue": "yyyy-mm-dd"
+					}
+				},
+				"annotations": []
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Create File')]",
+				"[concat(variables('factoryId'), '/datasets/MG_debit_order_temp')]",
+				"[concat(variables('factoryId'), '/datasets/MG_debit_order_batch')]"
 			]
 		},
 		{
@@ -1792,300 +2276,6 @@
 				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
 				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Aggregation')]",
 				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Create Aggregation File')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Monthly Giving CC Upload File')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
-					{
-						"name": "Monthly Giving CC Upload Create File",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "MG CC Create File",
-								"type": "DataFlowReference",
-								"parameters": {
-									"submissiondate": {
-										"value": "'@{pipeline().parameters.submissiondate}'",
-										"type": "Expression"
-									},
-									"division": {
-										"value": "'@{pipeline().parameters.division}'",
-										"type": "Expression"
-									},
-									"paymentmethod": {
-										"value": "'@{pipeline().parameters.paymentmethod}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"transaction": {},
-									"CreateFileTemp": {
-										"submissiondate": "'SubmissionDate'",
-										"division": "'Division'",
-										"paymentmethod": "'PaymentMethod'"
-									},
-									"CreateFileHistory": {
-										"submissiondate": "'SubmissionDate'",
-										"division": "'Division'",
-										"paymentmethod": "'PaymentMethod'"
-									}
-								},
-								"linkedServiceParameters": {
-									"CreateFileTemp": {
-										"linkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										},
-										"schemaLinkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										},
-										"rejectedDataLinkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										}
-									},
-									"CreateFileHistory": {
-										"linkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										},
-										"schemaLinkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										},
-										"rejectedDataLinkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										}
-									}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "MG DO Split Into Batches",
-						"type": "Copy",
-						"dependsOn": [
-							{
-								"activity": "Monthly Giving CC Upload Create File",
-								"dependencyConditions": [
-									"Succeeded"
-								]
-							}
-						],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"source": {
-								"type": "DelimitedTextSource",
-								"storeSettings": {
-									"type": "AzureBlobFSReadSettings",
-									"recursive": true,
-									"wildcardFolderPath": "bank_file_uploads/temp_files/credit_card",
-									"wildcardFileName": {
-										"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
-										"type": "Expression"
-									},
-									"enablePartitionDiscovery": false
-								},
-								"formatSettings": {
-									"type": "DelimitedTextReadSettings"
-								}
-							},
-							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"maxRowsPerFile": 3,
-									"fileNamePrefix": "",
-									"quoteAllText": true,
-									"fileExtension": ".csv"
-								}
-							},
-							"enableStaging": false,
-							"translator": {
-								"type": "TabularTranslator",
-								"mappings": [
-									{
-										"source": {
-											"name": "Type",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 1
-										}
-									},
-									{
-										"source": {
-											"name": " Transaction Reference",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 2
-										}
-									},
-									{
-										"source": {
-											"name": "Card Holder Name",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 3
-										}
-									},
-									{
-										"source": {
-											"name": " Card Number",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 4
-										}
-									},
-									{
-										"source": {
-											"name": " Expiry Date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 5
-										}
-									},
-									{
-										"source": {
-											"name": " Budget Period",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 6
-										}
-									},
-									{
-										"source": {
-											"name": " Amount",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 7
-										}
-									}
-								],
-								"typeConversion": true,
-								"typeConversionSettings": {
-									"allowDataTruncation": true,
-									"treatBooleanAsNumber": false
-								}
-							}
-						},
-						"inputs": [
-							{
-								"referenceName": "MG_credit_card_temp",
-								"type": "DatasetReference",
-								"parameters": {
-									"submissiondate": {
-										"value": "@pipeline().parameters.submissiondate",
-										"type": "Expression"
-									},
-									"division": {
-										"value": "@pipeline().parameters.division",
-										"type": "Expression"
-									},
-									"paymentmethod": {
-										"value": "@pipeline().parameters.paymentmethod",
-										"type": "Expression"
-									}
-								}
-							}
-						],
-						"outputs": [
-							{
-								"referenceName": "MG_credit_card_batch",
-								"type": "DatasetReference",
-								"parameters": {}
-							}
-						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"submissiondate": {
-						"type": "string",
-						"defaultValue": "YYYYmmdd"
-					},
-					"division": {
-						"type": "string",
-						"defaultValue": "MG"
-					},
-					"paymentmethod": {
-						"type": "string",
-						"defaultValue": "CC"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/MG CC Create File')]",
-				"[concat(variables('factoryId'), '/datasets/MG_credit_card_temp')]",
-				"[concat(variables('factoryId'), '/datasets/MG_credit_card_batch')]"
 			]
 		}
 	]
