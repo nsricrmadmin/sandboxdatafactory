@@ -103,7 +103,7 @@
 				"          cog_donororderid as string,",
 				"          cog_transactionid as string",
 				"     ),",
-				"     partitionFileNames:[('MG_DO_Monthend_Aggregation-'+toString(currentTimestamp())+'.csv')],",
+				"     partitionFileNames:[('MG_DO_Monthend_Aggregation-'+toString(toDate(currentUTC(),'UTC','South African Standard Time'))+'.csv')],",
 				"     truncate: true,",
 				"     umask: 0022,",
 				"     preCommands: [],",
