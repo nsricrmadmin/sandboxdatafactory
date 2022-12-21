@@ -7,7 +7,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "MG DO Month-end Create Files",
+						"activity": "MG DO Month-end Create File",
 						"dependencyConditions": [
 							"Succeeded"
 						]
@@ -27,7 +27,7 @@
 						"storeSettings": {
 							"type": "AzureBlobFSReadSettings",
 							"recursive": true,
-							"wildcardFolderPath": "donor_order_aggregates",
+							"wildcardFolderPath": "transactions/month end",
 							"wildcardFileName": "*.csv",
 							"enablePartitionDiscovery": false
 						},
@@ -140,7 +140,7 @@
 				}
 			},
 			{
-				"name": "MG DO Month-end Create Files",
+				"name": "MG DO Month-end Create File",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [
 					{
