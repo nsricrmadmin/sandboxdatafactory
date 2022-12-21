@@ -1,9 +1,9 @@
 {
-	"name": "Monthly Giving DO Upload File",
+	"name": "MG DO Month-end Upload File",
 	"properties": {
 		"activities": [
 			{
-				"name": "Monthly Giving DO Upload Create File",
+				"name": "MG DO Monthend Upload Create File",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -83,11 +83,11 @@
 				}
 			},
 			{
-				"name": "MG DO Split Into Batches",
+				"name": "MG DO Monthend Split Into Batches",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Monthly Giving DO Upload Create File",
+						"activity": "MG DO Monthend Upload Create File",
 						"dependencyConditions": [
 							"Succeeded"
 						]
