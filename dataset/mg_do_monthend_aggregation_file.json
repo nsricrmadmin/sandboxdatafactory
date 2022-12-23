@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "transactions/month end",
+				"folderPath": "debit order month end/transactions",
 				"fileSystem": "monthly-giving"
 			},
 			"columnDelimiter": ",",
