@@ -27,7 +27,7 @@
 				"folderPath": "debit order month end/bank uploads/history",
 				"fileSystem": "monthly-giving"
 			},
-			"columnDelimiter": ",",
+			"columnDelimiter": "\t",
 			"escapeChar": "\\",
 			"firstRowAsHeader": true,
 			"quoteChar": "\""
