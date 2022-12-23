@@ -109,7 +109,7 @@
 							"recursive": true,
 							"wildcardFolderPath": "debit order month end/bank uploads/temporary",
 							"wildcardFileName": {
-								"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
+								"value": "@concat(pipeline().parameters.division,'_',pipeline().parameters.paymentmethod,'_monthend_',pipeline().parameters.submissiondate,'-00001.csv')",
 								"type": "Expression"
 							},
 							"enablePartitionDiscovery": false
