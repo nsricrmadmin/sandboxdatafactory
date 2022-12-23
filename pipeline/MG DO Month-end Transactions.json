@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "MG DO Month-end Update Order",
+				"name": "MG DO Month-end Update Orders",
 				"type": "Copy",
 				"dependsOn": [
 					{
