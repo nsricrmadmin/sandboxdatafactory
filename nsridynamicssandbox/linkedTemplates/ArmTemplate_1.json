@@ -13,13 +13,13 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/Monthly Giving CC Upload File')]",
+			"name": "[concat(parameters('factoryName'), '/MG CC Bank Upload File')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Monthly Giving CC Upload Create File",
+						"name": "Monthly Giving CC Bank Upload Create File",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -68,11 +68,6 @@
 											"division": "'Division'",
 											"paymentmethod": "'PaymentMethod'"
 										},
-										"schemaLinkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										},
 										"rejectedDataLinkedService": {
 											"submissiondate": "'SubmissionDate'",
 											"division": "'Division'",
@@ -81,11 +76,6 @@
 									},
 									"CreateFileHistory": {
 										"linkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										},
-										"schemaLinkedService": {
 											"submissiondate": "'SubmissionDate'",
 											"division": "'Division'",
 											"paymentmethod": "'PaymentMethod'"
@@ -107,11 +97,11 @@
 						}
 					},
 					{
-						"name": "MG DO Split Into Batches",
+						"name": "MG CC Split Into Batches",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Monthly Giving CC Upload Create File",
+								"activity": "Monthly Giving CC Bank Upload Create File",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -253,7 +243,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "MG_credit_card_temp",
+								"referenceName": "MG_CC_temporary",
 								"type": "DatasetReference",
 								"parameters": {
 									"submissiondate": {
@@ -273,7 +263,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "MG_credit_card_batch",
+								"referenceName": "MG_CC_batch",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -303,13 +293,13 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Create Aggregation File')]",
+			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Transactions')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "MG DO Monthend Create Aggregation File",
+						"name": "MG DO Monthend Transactions",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -355,7 +345,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "Monthly Giving Aggregation",
+						"name": "MG DO Month-end Create File",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {

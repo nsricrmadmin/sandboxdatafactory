@@ -91,7 +91,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG_credit_card_batch')]",
+			"name": "[concat(parameters('factoryName'), '/MG_CC_batch')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -104,7 +104,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/credit_card_batch",
+						"folderPath": "credit card/bank uploads/batch",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -148,7 +148,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG_credit_card_history')]",
+			"name": "[concat(parameters('factoryName'), '/MG_CC_history')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -175,7 +175,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/credit_card_history",
+						"folderPath": "credit card/bank uploads/history",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -219,7 +219,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG_credit_card_temp')]",
+			"name": "[concat(parameters('factoryName'), '/MG_CC_temporary')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -246,7 +246,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/temp_files/credit_card",
+						"folderPath": "credit card/bank uploads/temporary",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -290,7 +290,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG_debit_order_batch')]",
+			"name": "[concat(parameters('factoryName'), '/MG_DO_Monthend_batch')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -303,7 +303,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/debit_order_batch",
+						"folderPath": "debit order month end/bank uploads/batch",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -411,142 +411,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG_debit_order_history')]",
-			"type": "Microsoft.DataFactory/factories/datasets",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"linkedServiceName": {
-					"referenceName": "sandboxdatalake",
-					"type": "LinkedServiceReference"
-				},
-				"parameters": {
-					"submissiondate": {
-						"type": "string",
-						"defaultValue": "'SubmissionDate'"
-					},
-					"division": {
-						"type": "string",
-						"defaultValue": "'Division'"
-					},
-					"paymentmethod": {
-						"type": "string",
-						"defaultValue": "'PaymentMethod'"
-					}
-				},
-				"annotations": [],
-				"type": "DelimitedText",
-				"typeProperties": {
-					"location": {
-						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/debit_order_history",
-						"fileSystem": "monthly-giving"
-					},
-					"columnDelimiter": ",",
-					"escapeChar": "\\",
-					"firstRowAsHeader": true,
-					"quoteChar": "\""
-				},
-				"schema": [
-					{
-						"name": "Field1",
-						"type": "String"
-					},
-					{
-						"name": "Customer Number",
-						"type": "String"
-					},
-					{
-						"name": "Type of Service",
-						"type": "String"
-					},
-					{
-						"name": "Name of member",
-						"type": "String"
-					},
-					{
-						"name": "Account Name",
-						"type": "String"
-					},
-					{
-						"name": "Account Number",
-						"type": "String"
-					},
-					{
-						"name": "Filler2",
-						"type": "String"
-					},
-					{
-						"name": "Branch Code",
-						"type": "String"
-					},
-					{
-						"name": "Type of Account",
-						"type": "String"
-					},
-					{
-						"name": "Description",
-						"type": "String"
-					},
-					{
-						"name": "Nominated Account",
-						"type": "String"
-					},
-					{
-						"name": "Filler3",
-						"type": "String"
-					},
-					{
-						"name": "Amount",
-						"type": "String"
-					},
-					{
-						"name": "Amount Arrear",
-						"type": "String"
-					},
-					{
-						"name": "Max Amount",
-						"type": "String"
-					},
-					{
-						"name": "Capital Amount",
-						"type": "String"
-					},
-					{
-						"name": "Special Amount",
-						"type": "String"
-					},
-					{
-						"name": "Action Date",
-						"type": "String"
-					},
-					{
-						"name": "Cancellation Date",
-						"type": "String"
-					},
-					{
-						"name": "Frequency",
-						"type": "String"
-					},
-					{
-						"name": "Filler4",
-						"type": "String"
-					},
-					{
-						"name": "Record Type Code",
-						"type": "String"
-					},
-					{
-						"name": "Entry Class Code",
-						"type": "String"
-					}
-				]
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MG_debit_order_temp')]",
+			"name": "[concat(parameters('factoryName'), '/MG_DO_Monthend_history')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -573,7 +438,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "bank_file_uploads/temp_files/debit_order",
+						"folderPath": "debit order month end/bank uploads/history",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -681,7 +546,142 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/SandboxDonorOrder')]",
+			"name": "[concat(parameters('factoryName'), '/MG_DO_Monthend_temporary')]",
+			"type": "Microsoft.DataFactory/factories/datasets",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"linkedServiceName": {
+					"referenceName": "sandboxdatalake",
+					"type": "LinkedServiceReference"
+				},
+				"parameters": {
+					"submissiondate": {
+						"type": "string",
+						"defaultValue": "'SubmissionDate'"
+					},
+					"division": {
+						"type": "string",
+						"defaultValue": "'Division'"
+					},
+					"paymentmethod": {
+						"type": "string",
+						"defaultValue": "'PaymentMethod'"
+					}
+				},
+				"annotations": [],
+				"type": "DelimitedText",
+				"typeProperties": {
+					"location": {
+						"type": "AzureBlobFSLocation",
+						"folderPath": "debit order month end/bank uploads/temporary",
+						"fileSystem": "monthly-giving"
+					},
+					"columnDelimiter": ",",
+					"escapeChar": "\\",
+					"firstRowAsHeader": true,
+					"quoteChar": "\""
+				},
+				"schema": [
+					{
+						"name": "Field1",
+						"type": "String"
+					},
+					{
+						"name": "Customer Number",
+						"type": "String"
+					},
+					{
+						"name": "Type of Service",
+						"type": "String"
+					},
+					{
+						"name": "Name of member",
+						"type": "String"
+					},
+					{
+						"name": "Account Name",
+						"type": "String"
+					},
+					{
+						"name": "Account Number",
+						"type": "String"
+					},
+					{
+						"name": "Filler2",
+						"type": "String"
+					},
+					{
+						"name": "Branch Code",
+						"type": "String"
+					},
+					{
+						"name": "Type of Account",
+						"type": "String"
+					},
+					{
+						"name": "Description",
+						"type": "String"
+					},
+					{
+						"name": "Nominated Account",
+						"type": "String"
+					},
+					{
+						"name": "Filler3",
+						"type": "String"
+					},
+					{
+						"name": "Amount",
+						"type": "String"
+					},
+					{
+						"name": "Amount Arrear",
+						"type": "String"
+					},
+					{
+						"name": "Max Amount",
+						"type": "String"
+					},
+					{
+						"name": "Capital Amount",
+						"type": "String"
+					},
+					{
+						"name": "Special Amount",
+						"type": "String"
+					},
+					{
+						"name": "Action Date",
+						"type": "String"
+					},
+					{
+						"name": "Cancellation Date",
+						"type": "String"
+					},
+					{
+						"name": "Frequency",
+						"type": "String"
+					},
+					{
+						"name": "Filler4",
+						"type": "String"
+					},
+					{
+						"name": "Record Type Code",
+						"type": "String"
+					},
+					{
+						"name": "Entry Class Code",
+						"type": "String"
+					}
+				]
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/linkedServices/sandboxdatalake')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Sandbox_DonorOrder')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -741,7 +741,7 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/mg_do_monthend_aggregation_file')]",
+			"name": "[concat(parameters('factoryName'), '/MG_DO_Monthend_Transactions')]",
 			"type": "Microsoft.DataFactory/factories/datasets",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -754,7 +754,7 @@
 				"typeProperties": {
 					"location": {
 						"type": "AzureBlobFSLocation",
-						"folderPath": "debit order/aggregation files/month end",
+						"folderPath": "debit order month end/transactions",
 						"fileSystem": "monthly-giving"
 					},
 					"columnDelimiter": ",",
@@ -851,14 +851,14 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "mg_do_monthend_aggregation_file",
+								"referenceName": "MG_DO_Monthend_Transactions",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "SandboxDonorOrder",
+								"referenceName": "Sandbox_DonorOrder",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -872,8 +872,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/mg_do_monthend_aggregation_file')]",
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]"
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_Transactions')]",
+				"[concat(variables('factoryId'), '/datasets/Sandbox_DonorOrder')]"
 			]
 		},
 		{
@@ -895,14 +895,14 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "MG_credit_card_temp",
+								"referenceName": "MG_CC_temporary",
 								"type": "DatasetReference"
 							},
 							"name": "CreateFileTemp"
 						},
 						{
 							"dataset": {
-								"referenceName": "MG_credit_card_history",
+								"referenceName": "MG_CC_history",
 								"type": "DatasetReference"
 							},
 							"name": "CreateFileHistory"
@@ -1003,8 +1003,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
-				"[concat(variables('factoryId'), '/datasets/MG_credit_card_temp')]",
-				"[concat(variables('factoryId'), '/datasets/MG_credit_card_history')]"
+				"[concat(variables('factoryId'), '/datasets/MG_CC_temporary')]",
+				"[concat(variables('factoryId'), '/datasets/MG_CC_history')]"
 			]
 		},
 		{
@@ -1018,7 +1018,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "SandboxDonorOrder",
+								"referenceName": "Sandbox_DonorOrder",
 								"type": "DatasetReference"
 							},
 							"name": "donororder"
@@ -1048,7 +1048,7 @@
 						},
 						{
 							"dataset": {
-								"referenceName": "SandboxDonorOrder",
+								"referenceName": "Sandbox_DonorOrder",
 								"type": "DatasetReference"
 							},
 							"name": "DonorOrderTrxDate"
@@ -1236,7 +1236,7 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
+				"[concat(variables('factoryId'), '/datasets/Sandbox_DonorOrder')]",
 				"[concat(variables('factoryId'), '/datasets/Sandbox_BankDetail')]",
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]"
 			]
@@ -1252,7 +1252,7 @@
 					"sources": [
 						{
 							"dataset": {
-								"referenceName": "SandboxDonorOrder",
+								"referenceName": "Sandbox_DonorOrder",
 								"type": "DatasetReference"
 							},
 							"name": "donororder"
@@ -1268,7 +1268,7 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "mg_do_monthend_aggregation_file",
+								"referenceName": "MG_DO_Monthend_Transactions",
 								"type": "DatasetReference"
 							},
 							"name": "mgaggregationfile"
@@ -1364,9 +1364,9 @@
 				}
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
+				"[concat(variables('factoryId'), '/datasets/Sandbox_DonorOrder')]",
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
-				"[concat(variables('factoryId'), '/datasets/mg_do_monthend_aggregation_file')]"
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_Transactions')]"
 			]
 		},
 		{
@@ -1388,14 +1388,14 @@
 					"sinks": [
 						{
 							"dataset": {
-								"referenceName": "MG_debit_order_temp",
+								"referenceName": "MG_DO_Monthend_temporary",
 								"type": "DatasetReference"
 							},
 							"name": "CreateFileTemp"
 						},
 						{
 							"dataset": {
-								"referenceName": "MG_debit_order_history",
+								"referenceName": "MG_DO_Monthend_history",
 								"type": "DatasetReference"
 							},
 							"name": "CreateFileHistory"
@@ -1579,8 +1579,8 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
-				"[concat(variables('factoryId'), '/datasets/MG_debit_order_temp')]",
-				"[concat(variables('factoryId'), '/datasets/MG_debit_order_history')]"
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_temporary')]",
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_history')]"
 			]
 		},
 		{
@@ -2010,7 +2010,7 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "MG_debit_order_temp",
+								"referenceName": "MG_DO_Monthend_temporary",
 								"type": "DatasetReference",
 								"parameters": {
 									"submissiondate": {
@@ -2030,7 +2030,7 @@
 						],
 						"outputs": [
 							{
-								"referenceName": "MG_debit_order_batch",
+								"referenceName": "MG_DO_Monthend_batch",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
@@ -2063,22 +2063,22 @@
 			},
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Create File')]",
-				"[concat(variables('factoryId'), '/datasets/MG_debit_order_temp')]",
-				"[concat(variables('factoryId'), '/datasets/MG_debit_order_batch')]"
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_temporary')]",
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_batch')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG Debit Order Month-end')]",
+			"name": "[concat(parameters('factoryName'), '/MG DO Month-end Transactions')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "MG Donor Order Update",
+						"name": "MG DO Month-end Update Orders",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "MG Create Files",
+								"activity": "MG DO Month-end Create File",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2098,7 +2098,7 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "donor_order_aggregates",
+									"wildcardFolderPath": "transactions/month end",
 									"wildcardFileName": "*.csv",
 									"enablePartitionDiscovery": false
 								},
@@ -2169,21 +2169,21 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "mg_do_monthend_aggregation_file",
+								"referenceName": "MG_DO_Monthend_Transactions",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "SandboxDonorOrder",
+								"referenceName": "Sandbox_DonorOrder",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						]
 					},
 					{
-						"name": "MG Debit Order Month-end",
+						"name": "MG DO Month-end Transactions",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -2221,11 +2221,11 @@
 						}
 					},
 					{
-						"name": "MG Create Files",
+						"name": "MG DO Month-end Create File",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [
 							{
-								"activity": "MG Debit Order Month-end",
+								"activity": "MG DO Month-end Transactions",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -2272,8 +2272,8 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/mg_do_monthend_aggregation_file')]",
-				"[concat(variables('factoryId'), '/datasets/SandboxDonorOrder')]",
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_Transactions')]",
+				"[concat(variables('factoryId'), '/datasets/Sandbox_DonorOrder')]",
 				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Aggregation')]",
 				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Create Aggregation File')]"
 			]
