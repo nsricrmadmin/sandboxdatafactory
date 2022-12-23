@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "MG DO Month-end Transactions",
+				"name": "MG DO Month-end Create File",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
