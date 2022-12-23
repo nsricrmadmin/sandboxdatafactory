@@ -421,7 +421,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "MG_debit_order_temp",
+						"referenceName": "MG_DO_Monthend_temporary",
 						"type": "DatasetReference",
 						"parameters": {
 							"submissiondate": {
@@ -441,7 +441,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "MG_debit_order_batch",
+						"referenceName": "MG_DO_Monthend_batch",
 						"type": "DatasetReference"
 					}
 				]

@@ -104,7 +104,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "SandboxDonorOrder",
+						"referenceName": "Sandbox_DonorOrder",
 						"type": "DatasetReference"
 					}
 				]

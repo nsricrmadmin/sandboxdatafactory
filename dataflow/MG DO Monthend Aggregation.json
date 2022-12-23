@@ -7,7 +7,7 @@
 			"sources": [
 				{
 					"dataset": {
-						"referenceName": "SandboxDonorOrder",
+						"referenceName": "Sandbox_DonorOrder",
 						"type": "DatasetReference"
 					},
 					"name": "donororder"
@@ -37,7 +37,7 @@
 				},
 				{
 					"dataset": {
-						"referenceName": "SandboxDonorOrder",
+						"referenceName": "Sandbox_DonorOrder",
 						"type": "DatasetReference"
 					},
 					"name": "DonorOrderTrxDate"

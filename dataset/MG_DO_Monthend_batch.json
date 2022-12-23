@@ -1,5 +1,5 @@
 {
-	"name": "MG_debit_order_batch",
+	"name": "MG_DO_Monthend_batch",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",
