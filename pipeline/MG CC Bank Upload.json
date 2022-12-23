@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Monthly Giving CC Bank Upload Create File",
+				"name": "MG CC Bank Upload Create File",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -83,7 +83,7 @@
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Monthly Giving CC Bank Upload Create File",
+						"activity": "MG CC Bank Upload Create File",
 						"dependencyConditions": [
 							"Succeeded"
 						]
