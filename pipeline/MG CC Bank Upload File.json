@@ -1,9 +1,9 @@
 {
-	"name": "Monthly Giving CC Upload File",
+	"name": "MG CC Bank Upload File",
 	"properties": {
 		"activities": [
 			{
-				"name": "Monthly Giving CC Upload Create File",
+				"name": "Monthly Giving CC Bank Upload Create File",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
@@ -79,11 +79,11 @@
 				}
 			},
 			{
-				"name": "MG DO Split Into Batches",
+				"name": "MG CC Split Into Batches",
 				"type": "Copy",
 				"dependsOn": [
 					{
-						"activity": "Monthly Giving CC Upload Create File",
+						"activity": "Monthly Giving CC Bank Upload Create File",
 						"dependencyConditions": [
 							"Succeeded"
 						]

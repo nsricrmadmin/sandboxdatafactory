@@ -10,7 +10,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "bank_file_uploads/credit_card_batch",
+				"folderPath": "credit card/bank uploads/batch",
 				"fileSystem": "monthly-giving"
 			},
 			"columnDelimiter": ",",

@@ -24,7 +24,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "bank_file_uploads/credit_card_history",
+				"folderPath": "credit card/bank uploads/history",
 				"fileSystem": "monthly-giving"
 			},
 			"columnDelimiter": ",",
