@@ -3,7 +3,7 @@
 	"properties": {
 		"activities": [
 			{
-				"name": "Monthly Giving Aggregation",
+				"name": "MG DO Month-end Transactions",
 				"type": "ExecuteDataFlow",
 				"dependsOn": [],
 				"policy": {
