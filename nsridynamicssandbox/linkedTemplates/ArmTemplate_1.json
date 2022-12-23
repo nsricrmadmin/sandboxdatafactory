@@ -13,95 +13,17 @@
 	},
 	"resources": [
 		{
-			"name": "[concat(parameters('factoryName'), '/MG CC Bank Upload File')]",
+			"name": "[concat(parameters('factoryName'), '/MG DO Month-end Transactions')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
 				"activities": [
 					{
-						"name": "Monthly Giving CC Bank Upload Create File",
-						"type": "ExecuteDataFlow",
-						"dependsOn": [],
-						"policy": {
-							"timeout": "0.12:00:00",
-							"retry": 0,
-							"retryIntervalInSeconds": 30,
-							"secureOutput": false,
-							"secureInput": false
-						},
-						"userProperties": [],
-						"typeProperties": {
-							"dataflow": {
-								"referenceName": "MG CC Create File",
-								"type": "DataFlowReference",
-								"parameters": {
-									"submissiondate": {
-										"value": "'@{pipeline().parameters.submissiondate}'",
-										"type": "Expression"
-									},
-									"division": {
-										"value": "'@{pipeline().parameters.division}'",
-										"type": "Expression"
-									},
-									"paymentmethod": {
-										"value": "'@{pipeline().parameters.paymentmethod}'",
-										"type": "Expression"
-									}
-								},
-								"datasetParameters": {
-									"transaction": {},
-									"CreateFileTemp": {
-										"submissiondate": "'SubmissionDate'",
-										"division": "'Division'",
-										"paymentmethod": "'PaymentMethod'"
-									},
-									"CreateFileHistory": {
-										"submissiondate": "'SubmissionDate'",
-										"division": "'Division'",
-										"paymentmethod": "'PaymentMethod'"
-									}
-								},
-								"linkedServiceParameters": {
-									"CreateFileTemp": {
-										"linkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										},
-										"rejectedDataLinkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										}
-									},
-									"CreateFileHistory": {
-										"linkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										},
-										"rejectedDataLinkedService": {
-											"submissiondate": "'SubmissionDate'",
-											"division": "'Division'",
-											"paymentmethod": "'PaymentMethod'"
-										}
-									}
-								}
-							},
-							"staging": {},
-							"compute": {
-								"coreCount": 8,
-								"computeType": "General"
-							},
-							"traceLevel": "Fine"
-						}
-					},
-					{
-						"name": "MG CC Split Into Batches",
+						"name": "MG DO Month-end Update Orders",
 						"type": "Copy",
 						"dependsOn": [
 							{
-								"activity": "Monthly Giving CC Bank Upload Create File",
+								"activity": "MG DO Month-end Create File",
 								"dependencyConditions": [
 									"Succeeded"
 								]
@@ -121,11 +43,8 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "bank_file_uploads/temp_files/credit_card",
-									"wildcardFileName": {
-										"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
-										"type": "Expression"
-									},
+									"wildcardFolderPath": "debit order month end/transactions",
+									"wildcardFileName": "*.csv",
 									"enablePartitionDiscovery": false
 								},
 								"formatSettings": {
@@ -133,17 +52,9 @@
 								}
 							},
 							"sink": {
-								"type": "DelimitedTextSink",
-								"storeSettings": {
-									"type": "AzureBlobFSWriteSettings"
-								},
-								"formatSettings": {
-									"type": "DelimitedTextWriteSettings",
-									"maxRowsPerFile": 3,
-									"fileNamePrefix": "",
-									"quoteAllText": true,
-									"fileExtension": ".csv"
-								}
+								"type": "CommonDataServiceForAppsSink",
+								"writeBatchSize": 10,
+								"writeBehavior": "upsert"
 							},
 							"enableStaging": false,
 							"translator": {
@@ -151,86 +62,46 @@
 								"mappings": [
 									{
 										"source": {
-											"name": "Type",
+											"name": "cog_donororderid",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 1
+											"name": "cog_donororderid",
+											"type": "Guid"
 										}
 									},
 									{
 										"source": {
-											"name": " Transaction Reference",
+											"name": "cog_transactionid",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 2
+											"name": "cog_donortransaction",
+											"type": "Guid"
 										}
 									},
 									{
 										"source": {
-											"name": "Card Holder Name",
+											"name": "statecode",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 3
+											"name": "statecode",
+											"type": "Int32"
 										}
 									},
 									{
 										"source": {
-											"name": " Card Number",
+											"name": "new_statuscode",
 											"type": "String",
 											"physicalType": "String"
 										},
 										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 4
-										}
-									},
-									{
-										"source": {
-											"name": " Expiry Date",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 5
-										}
-									},
-									{
-										"source": {
-											"name": " Budget Period",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 6
-										}
-									},
-									{
-										"source": {
-											"name": " Amount",
-											"type": "String",
-											"physicalType": "String"
-										},
-										"sink": {
-											"type": "String",
-											"physicalType": "String",
-											"ordinal": 7
+											"name": "statuscode",
+											"type": "Int32"
 										}
 									}
 								],
@@ -243,65 +114,68 @@
 						},
 						"inputs": [
 							{
-								"referenceName": "MG_CC_temporary",
+								"referenceName": "MG_DO_Monthend_Transactions",
 								"type": "DatasetReference",
-								"parameters": {
-									"submissiondate": {
-										"value": "@pipeline().parameters.submissiondate",
-										"type": "Expression"
-									},
-									"division": {
-										"value": "@pipeline().parameters.division",
-										"type": "Expression"
-									},
-									"paymentmethod": {
-										"value": "@pipeline().parameters.paymentmethod",
-										"type": "Expression"
-									}
-								}
+								"parameters": {}
 							}
 						],
 						"outputs": [
 							{
-								"referenceName": "MG_CC_batch",
+								"referenceName": "Sandbox_DonorOrder",
 								"type": "DatasetReference",
 								"parameters": {}
 							}
 						]
-					}
-				],
-				"policy": {
-					"elapsedTimeMetric": {},
-					"cancelAfter": {}
-				},
-				"parameters": {
-					"submissiondate": {
-						"type": "string",
-						"defaultValue": "YYYYmmdd"
 					},
-					"division": {
-						"type": "string",
-						"defaultValue": "MG"
-					},
-					"paymentmethod": {
-						"type": "string",
-						"defaultValue": "CC"
-					}
-				},
-				"annotations": []
-			},
-			"dependsOn": []
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Transactions')]",
-			"type": "Microsoft.DataFactory/factories/pipelines",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"activities": [
 					{
-						"name": "MG DO Monthend Transactions",
+						"name": "MG DO Month-end Transactions",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MG DO Monthend Aggregation",
+								"type": "DataFlowReference",
+								"parameters": {
+									"dateconverted": {
+										"value": "'@{pipeline().parameters.dateconverted}'",
+										"type": "Expression"
+									}
+								},
+								"datasetParameters": {
+									"donororder": {},
+									"bankdetails": {},
+									"accounttransactions": {},
+									"ContactTransactions": {},
+									"DonorOrderTrxDate": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					},
+					{
+						"name": "MG DO Month-end Create File",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [
+							{
+								"activity": "MG DO Month-end Transactions",
+								"dependencyConditions": [
+									"Succeeded"
+								]
+							}
+						],
 						"policy": {
 							"timeout": "0.12:00:00",
 							"retry": 0,
@@ -333,6 +207,12 @@
 				"policy": {
 					"elapsedTimeMetric": {},
 					"cancelAfter": {}
+				},
+				"parameters": {
+					"dateconverted": {
+						"type": "string",
+						"defaultValue": "yyyy-mm-dd"
+					}
 				},
 				"annotations": []
 			},
@@ -392,6 +272,52 @@
 						"type": "string",
 						"defaultValue": "2022-12-05"
 					}
+				},
+				"annotations": []
+			},
+			"dependsOn": []
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Transactions')]",
+			"type": "Microsoft.DataFactory/factories/pipelines",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"activities": [
+					{
+						"name": "MG DO Monthend Transactions",
+						"type": "ExecuteDataFlow",
+						"dependsOn": [],
+						"policy": {
+							"timeout": "0.12:00:00",
+							"retry": 0,
+							"retryIntervalInSeconds": 30,
+							"secureOutput": false,
+							"secureInput": false
+						},
+						"userProperties": [],
+						"typeProperties": {
+							"dataflow": {
+								"referenceName": "MG DO Monthend Create Aggregation File",
+								"type": "DataFlowReference",
+								"parameters": {},
+								"datasetParameters": {
+									"donororder": {},
+									"transaction": {},
+									"mgaggregationfile": {}
+								}
+							},
+							"staging": {},
+							"compute": {
+								"coreCount": 8,
+								"computeType": "General"
+							},
+							"traceLevel": "Fine"
+						}
+					}
+				],
+				"policy": {
+					"elapsedTimeMetric": {},
+					"cancelAfter": {}
 				},
 				"annotations": []
 			},
