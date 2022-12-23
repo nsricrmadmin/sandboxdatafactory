@@ -1,5 +1,5 @@
 {
-	"name": "MG DO Monthend Aggregation",
+	"name": "MG DO Monthend Transactions",
 	"properties": {
 		"description": "Contact, MG, Bankdetails",
 		"type": "MappingDataFlow",
