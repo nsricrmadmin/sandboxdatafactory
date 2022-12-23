@@ -125,7 +125,7 @@
 						},
 						"formatSettings": {
 							"type": "DelimitedTextWriteSettings",
-							"maxRowsPerFile": 3,
+							"maxRowsPerFile": 5000,
 							"fileNamePrefix": "",
 							"quoteAllText": true,
 							"fileExtension": ".asc"
