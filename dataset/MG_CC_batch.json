@@ -1,5 +1,5 @@
 {
-	"name": "MG_credit_card_batch",
+	"name": "MG_CC_batch",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",

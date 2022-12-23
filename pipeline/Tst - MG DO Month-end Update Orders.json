@@ -70,7 +70,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "mg_do_monthend_aggregation_file",
+						"referenceName": "MG_DO_Monthend_Transactions",
 						"type": "DatasetReference"
 					}
 				],

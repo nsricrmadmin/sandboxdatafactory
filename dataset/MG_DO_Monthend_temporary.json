@@ -24,7 +24,7 @@
 		"typeProperties": {
 			"location": {
 				"type": "AzureBlobFSLocation",
-				"folderPath": "bank_file_uploads/temp_files/debit_order",
+				"folderPath": "debit order month end/bank uploads/temporary",
 				"fileSystem": "monthly-giving"
 			},
 			"columnDelimiter": ",",

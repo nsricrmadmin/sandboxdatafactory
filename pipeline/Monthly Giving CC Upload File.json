@@ -225,7 +225,7 @@
 				},
 				"inputs": [
 					{
-						"referenceName": "MG_credit_card_temp",
+						"referenceName": "MG_CC_temporary",
 						"type": "DatasetReference",
 						"parameters": {
 							"submissiondate": {
@@ -245,7 +245,7 @@
 				],
 				"outputs": [
 					{
-						"referenceName": "MG_credit_card_batch",
+						"referenceName": "MG_CC_batch",
 						"type": "DatasetReference"
 					}
 				]

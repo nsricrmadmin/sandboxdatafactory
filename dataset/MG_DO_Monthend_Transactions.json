@@ -1,5 +1,5 @@
 {
-	"name": "mg_do_monthend_aggregation_file",
+	"name": "MG_DO_Monthend_Transactions",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",

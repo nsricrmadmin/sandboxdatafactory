@@ -1,5 +1,5 @@
 {
-	"name": "MG_credit_card_temp",
+	"name": "MG_CC_temporary",
 	"properties": {
 		"linkedServiceName": {
 			"referenceName": "sandboxdatalake",
