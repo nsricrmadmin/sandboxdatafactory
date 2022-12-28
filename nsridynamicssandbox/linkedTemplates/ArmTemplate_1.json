@@ -141,7 +141,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG DO Monthend Aggregation",
+								"referenceName": "MG DO Monthend Transactions",
 								"type": "DataFlowReference",
 								"parameters": {
 									"dateconverted": {
@@ -225,7 +225,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "MG DO Month-end Create File",
+						"name": "MG DO Month-end Create Transactions",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -238,7 +238,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG DO Monthend Aggregation",
+								"referenceName": "MG DO Monthend Transactions",
 								"type": "DataFlowReference",
 								"parameters": {
 									"dateconverted": {
@@ -278,7 +278,7 @@
 			"dependsOn": []
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Transactions')]",
+			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Transaction File')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {

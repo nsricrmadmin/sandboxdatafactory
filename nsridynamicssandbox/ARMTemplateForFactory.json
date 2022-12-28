@@ -433,9 +433,9 @@
 								"storeSettings": {
 									"type": "AzureBlobFSReadSettings",
 									"recursive": true,
-									"wildcardFolderPath": "bank_file_uploads/temp_files/debit_order",
+									"wildcardFolderPath": "debit order month end/bank uploads/temporary",
 									"wildcardFileName": {
-										"value": "@concat(pipeline().parameters.division,'-',pipeline().parameters.paymentmethod,'-',pipeline().parameters.submissiondate,'-00001.csv')",
+										"value": "@concat(pipeline().parameters.division,'_',pipeline().parameters.paymentmethod,'_monthend_',pipeline().parameters.submissiondate,'-00001.csv')",
 										"type": "Expression"
 									},
 									"enablePartitionDiscovery": false
@@ -933,7 +933,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG DO Monthend Aggregation",
+								"referenceName": "MG DO Monthend Transactions",
 								"type": "DataFlowReference",
 								"parameters": {
 									"dateconverted": {
@@ -1011,7 +1011,7 @@
 			"dependsOn": [
 				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_Transactions')]",
 				"[concat(variables('factoryId'), '/datasets/Sandbox_DonorOrder')]",
-				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Aggregation')]",
+				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Transactions')]",
 				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Create Aggregation File')]"
 			]
 		},
@@ -1022,7 +1022,7 @@
 			"properties": {
 				"activities": [
 					{
-						"name": "MG DO Month-end Create File",
+						"name": "MG DO Month-end Create Transactions",
 						"type": "ExecuteDataFlow",
 						"dependsOn": [],
 						"policy": {
@@ -1035,7 +1035,7 @@
 						"userProperties": [],
 						"typeProperties": {
 							"dataflow": {
-								"referenceName": "MG DO Monthend Aggregation",
+								"referenceName": "MG DO Monthend Transactions",
 								"type": "DataFlowReference",
 								"parameters": {
 									"dateconverted": {
@@ -1073,11 +1073,11 @@
 				"annotations": []
 			},
 			"dependsOn": [
-				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Aggregation')]"
+				"[concat(variables('factoryId'), '/dataflows/MG DO Monthend Transactions')]"
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Transactions')]",
+			"name": "[concat(parameters('factoryName'), '/Tst - MG DO Month-end Transaction File')]",
 			"type": "Microsoft.DataFactory/factories/pipelines",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -1476,7 +1476,7 @@
 						"folderPath": "debit order month end/bank uploads/batch",
 						"fileSystem": "monthly-giving"
 					},
-					"columnDelimiter": ",",
+					"columnDelimiter": "\t",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
@@ -1611,7 +1611,7 @@
 						"folderPath": "debit order month end/bank uploads/history",
 						"fileSystem": "monthly-giving"
 					},
-					"columnDelimiter": ",",
+					"columnDelimiter": "\t",
 					"escapeChar": "\\",
 					"firstRowAsHeader": true,
 					"quoteChar": "\""
@@ -2096,7 +2096,349 @@
 			]
 		},
 		{
-			"name": "[concat(parameters('factoryName'), '/MG DO Monthend Aggregation')]",
+			"name": "[concat(parameters('factoryName'), '/MG DO Monthend Create Aggregation File')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"description": "Contact, MG, Bankdetails",
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Sandbox_DonorOrder",
+								"type": "DatasetReference"
+							},
+							"name": "donororder"
+						},
+						{
+							"dataset": {
+								"referenceName": "Sandbox_Transaction",
+								"type": "DatasetReference"
+							},
+							"name": "transaction"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "MG_DO_Monthend_Transactions",
+								"type": "DatasetReference"
+							},
+							"name": "mgaggregationfile"
+						}
+					],
+					"transformations": [
+						{
+							"name": "joindonorordertransaction"
+						},
+						{
+							"name": "DerivedDonorOrderKey"
+						},
+						{
+							"name": "DerivedTransactionKey"
+						},
+						{
+							"name": "submittecdolumns"
+						}
+					],
+					"scriptLines": [
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          cog_account as string,",
+						"          cog_bankdetails as string,",
+						"          cog_contact as string,",
+						"          transactioncurrencyid as string,",
+						"          cog_competition as string,",
+						"          cog_donationamount as string,",
+						"          cog_donororderfrom as string,",
+						"          cog_donororderid as string,",
+						"          cog_name as string,",
+						"          cog_paymentmethod as string,",
+						"          cog_paymenttype as string,",
+						"          cog_totalticketamount as string,",
+						"          cog_transactiondate as string,",
+						"          statecode as string,",
+						"          statuscode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>181310013</value>\\n                    <value>181310019</value>\\n                    <value>181310005</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
+						"     manifestType: 'model') ~> donororder",
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          cog_account as string,",
+						"          cog_bankdetails as string,",
+						"          cog_contact as string,",
+						"          transactioncurrencyid as string,",
+						"          cog_division as string,",
+						"          cog_paymentmethod as string,",
+						"          cog_transactionamount as string,",
+						"          cog_transactiondate as string,",
+						"          cog_transactionfrom as string,",
+						"          cog_transactionid as string,",
+						"          cog_transactionno as string,",
+						"          statuscode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <attribute name=\"cog_division\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_transactionfrom\"/>\\n          <attribute name=\"cog_transactiondate\"/> \\n          <filter type=\"and\">\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n          </filter>       \\n     </entity>\\n</fetch>',",
+						"     manifestType: 'model') ~> transaction",
+						"DerivedDonorOrderKey, DerivedTransactionKey join(DonorOrderKey == TransactionKey,",
+						"     joinType:'inner',",
+						"     matchType:'exact',",
+						"     ignoreSpaces: false,",
+						"     broadcast: 'auto')~> joindonorordertransaction",
+						"donororder derive(DonorOrderKey = cog_transactiondate+toString(cog_donororderfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_competition)+iif(cog_donororderfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod),",
+						"          Target = 'cog_transaction') ~> DerivedDonorOrderKey",
+						"transaction derive(TransactionKey = cog_transactiondate+toString(cog_transactionfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_division)+iif(cog_transactionfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
+						"joindonorordertransaction derive(new_statuscode = case(\r",
+						"donororder@statuscode=='181310001','181310013',\r",
+						"donororder@statuscode=='2','181310019'\r",
+						")) ~> submittecdolumns",
+						"submittecdolumns sink(allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     input(",
+						"          cog_donororderid as string,",
+						"          cog_transactionid as string",
+						"     ),",
+						"     partitionFileNames:[('MG_DO_Monthend_Aggregation-'+toString(currentUTC()+hours(2))+'.csv')],",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     skipDuplicateMapInputs: true,",
+						"     skipDuplicateMapOutputs: true,",
+						"     mapColumn(",
+						"          cog_donororderid,",
+						"          cog_transactionid",
+						"     ),",
+						"     partitionBy('hash', 1)) ~> mgaggregationfile"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Sandbox_DonorOrder')]",
+				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_Transactions')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG DO Monthend Create File')]",
+			"type": "Microsoft.DataFactory/factories/dataflows",
+			"apiVersion": "2018-06-01",
+			"properties": {
+				"type": "MappingDataFlow",
+				"typeProperties": {
+					"sources": [
+						{
+							"dataset": {
+								"referenceName": "Sandbox_Transaction",
+								"type": "DatasetReference"
+							},
+							"name": "transaction"
+						}
+					],
+					"sinks": [
+						{
+							"dataset": {
+								"referenceName": "MG_DO_Monthend_temporary",
+								"type": "DatasetReference"
+							},
+							"name": "CreateFileTemp"
+						},
+						{
+							"dataset": {
+								"referenceName": "MG_DO_Monthend_history",
+								"type": "DatasetReference"
+							},
+							"name": "CreateFileHistory"
+						}
+					],
+					"transformations": [
+						{
+							"name": "derivedColumns"
+						},
+						{
+							"name": "windowIndex"
+						}
+					],
+					"scriptLines": [
+						"parameters{",
+						"     submissiondate as string ('2022-12-23'),",
+						"     division as string ('MG'),",
+						"     paymentmethod as string ('DO'),",
+						"     actiondate as string ('2022-12-23')",
+						"}",
+						"source(output(",
+						"          {@odata.etag} as string,",
+						"          cog_account as string,",
+						"          cog_contact as string,",
+						"          transactioncurrencyid as string,",
+						"          cog_accountholder as string,",
+						"          cog_accountnumber as string,",
+						"          cog_branchcode as string,",
+						"          cog_donornumber as string,",
+						"          cog_expireydate as string,",
+						"          cog_transactionamount as string,",
+						"          cog_transactiondate as string,",
+						"          cog_transactionid as string,",
+						"          cog_transactionno as string,",
+						"          statecode as string,",
+						"          statuscode as string",
+						"     ),",
+						"     allowSchemaDrift: true,",
+						"     validateSchema: false,",
+						"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <attribute name=\"cog_donornumber\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n                <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
+						"transaction derive(Field1 = '0000000000',",
+						"          {Customer Number} = '001'+right(cog_donornumber,8),",
+						"          {Type of Service} = 'A',",
+						"          {Name of Member} = upper(cog_accountholder),",
+						"          {Account Name} = replace(upper(cog_accountholder),' ',''),",
+						"          {Account Number} = cog_accountnumber,",
+						"          Filler2 = '          ',",
+						"          {Branch Code} = cog_branchcode,",
+						"          {Type of Account} = '1',",
+						"          Description = '                    ',",
+						"          {Nominated Account} = '02',",
+						"          Filler3 = '00000',",
+						"          Amount = concat(replace(cog_transactionamount,'.',''),'0'),",
+						"          {Amount Arrear} = '00000000000',",
+						"          {Max Amount} = '99999999999',",
+						"          {Capital Amount} = '00000000000',",
+						"          {Special Amount} = '00000000000',",
+						"          {Action Date} = toString($actiondate,'yyyy-mm-dd'),",
+						"          {Cancellation Date} = '00000000000',",
+						"          Frequency = '01',",
+						"          Filler4 = '  ',",
+						"          {Record Type Code} = '00',",
+						"          {Entry Class Code} = '00') ~> derivedColumns",
+						"derivedColumns window(asc({@odata.etag}, true),",
+						"     index = rowNumber()) ~> windowIndex",
+						"windowIndex sink(allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Field1 as string,",
+						"          {Customer Number} as string,",
+						"          {Type of Service} as string,",
+						"          {Name of member} as string,",
+						"          {Account Name} as string,",
+						"          {Account Number} as string,",
+						"          Filler2 as string,",
+						"          {Branch Code} as string,",
+						"          {Type of Account} as string,",
+						"          Description as string,",
+						"          {Nominated Account} as string,",
+						"          Filler3 as string,",
+						"          Amount as string,",
+						"          {Amount Arrear} as string,",
+						"          {Max Amount} as string,",
+						"          {Capital Amount} as string,",
+						"          {Special Amount} as string,",
+						"          {Action Date} as string,",
+						"          {Cancellation Date} as string,",
+						"          Frequency as string,",
+						"          Filler4 as string,",
+						"          {Record Type Code} as string,",
+						"          {Entry Class Code} as string",
+						"     ),",
+						"     filePattern:($division+'_'+$paymentmethod+'_monthend_'+$submissiondate+'.csv'),",
+						"     truncate: true,",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     mapColumn(",
+						"          Field1,",
+						"          {Customer Number},",
+						"          {Type of Service},",
+						"          {Name of member} = {Name of Member},",
+						"          {Account Name},",
+						"          {Account Number},",
+						"          Filler2,",
+						"          {Branch Code},",
+						"          {Type of Account},",
+						"          Description,",
+						"          {Nominated Account},",
+						"          Filler3,",
+						"          Amount,",
+						"          {Amount Arrear},",
+						"          {Max Amount},",
+						"          {Capital Amount},",
+						"          {Special Amount},",
+						"          {Action Date},",
+						"          {Cancellation Date},",
+						"          Frequency,",
+						"          Filler4,",
+						"          {Record Type Code},",
+						"          {Entry Class Code}",
+						"     )) ~> CreateFileTemp",
+						"windowIndex sink(allowSchemaDrift: false,",
+						"     validateSchema: false,",
+						"     input(",
+						"          Field1 as string,",
+						"          {Customer Number} as string,",
+						"          {Type of Service} as string,",
+						"          {Name of member} as string,",
+						"          {Account Name} as string,",
+						"          {Account Number} as string,",
+						"          Filler2 as string,",
+						"          {Branch Code} as string,",
+						"          {Type of Account} as string,",
+						"          Description as string,",
+						"          {Nominated Account} as string,",
+						"          Filler3 as string,",
+						"          Amount as string,",
+						"          {Amount Arrear} as string,",
+						"          {Max Amount} as string,",
+						"          {Capital Amount} as string,",
+						"          {Special Amount} as string,",
+						"          {Action Date} as string,",
+						"          {Cancellation Date} as string,",
+						"          Frequency as string,",
+						"          Filler4 as string,",
+						"          {Record Type Code} as string,",
+						"          {Entry Class Code} as string",
+						"     ),",
+						"     filePattern:($division+'_'+$paymentmethod+'_monthend_'+$submissiondate+'.csv'),",
+						"     umask: 0022,",
+						"     preCommands: [],",
+						"     postCommands: [],",
+						"     mapColumn(",
+						"          Field1,",
+						"          {Customer Number},",
+						"          {Type of Service},",
+						"          {Name of member} = {Name of Member},",
+						"          {Account Name},",
+						"          {Account Number},",
+						"          Filler2,",
+						"          {Branch Code},",
+						"          {Type of Account},",
+						"          Description,",
+						"          {Nominated Account},",
+						"          Filler3,",
+						"          Amount,",
+						"          {Amount Arrear},",
+						"          {Max Amount},",
+						"          {Capital Amount},",
+						"          {Special Amount},",
+						"          {Action Date},",
+						"          {Cancellation Date},",
+						"          Frequency,",
+						"          Filler4,",
+						"          {Record Type Code},",
+						"          {Entry Class Code}",
+						"     )) ~> CreateFileHistory"
+					]
+				}
+			},
+			"dependsOn": [
+				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_temporary')]",
+				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_history')]"
+			]
+		},
+		{
+			"name": "[concat(parameters('factoryName'), '/MG DO Monthend Transactions')]",
 			"type": "Microsoft.DataFactory/factories/dataflows",
 			"apiVersion": "2018-06-01",
 			"properties": {
@@ -2327,348 +2669,6 @@
 				"[concat(variables('factoryId'), '/datasets/Sandbox_DonorOrder')]",
 				"[concat(variables('factoryId'), '/datasets/Sandbox_BankDetail')]",
 				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MG DO Monthend Create Aggregation File')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"description": "Contact, MG, Bankdetails",
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Sandbox_DonorOrder",
-								"type": "DatasetReference"
-							},
-							"name": "donororder"
-						},
-						{
-							"dataset": {
-								"referenceName": "Sandbox_Transaction",
-								"type": "DatasetReference"
-							},
-							"name": "transaction"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "MG_DO_Monthend_Transactions",
-								"type": "DatasetReference"
-							},
-							"name": "mgaggregationfile"
-						}
-					],
-					"transformations": [
-						{
-							"name": "joindonorordertransaction"
-						},
-						{
-							"name": "DerivedDonorOrderKey"
-						},
-						{
-							"name": "DerivedTransactionKey"
-						},
-						{
-							"name": "submittecdolumns"
-						}
-					],
-					"scriptLines": [
-						"source(output(",
-						"          {@odata.etag} as string,",
-						"          cog_account as string,",
-						"          cog_bankdetails as string,",
-						"          cog_contact as string,",
-						"          transactioncurrencyid as string,",
-						"          cog_competition as string,",
-						"          cog_donationamount as string,",
-						"          cog_donororderfrom as string,",
-						"          cog_donororderid as string,",
-						"          cog_name as string,",
-						"          cog_paymentmethod as string,",
-						"          cog_paymenttype as string,",
-						"          cog_totalticketamount as string,",
-						"          cog_transactiondate as string,",
-						"          statecode as string,",
-						"          statuscode as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_donororder\">\\n          <attribute name=\"cog_name\"/>\\n          <attribute name=\"cog_donororderid\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_competition\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <attribute name=\"cog_paymenttype\"/>\\n          <attribute name=\"cog_donororderfrom\"/>\\n          <attribute name=\"cog_totalticketamount\"/>\\n          <order attribute=\"cog_donationamount\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statuscode\" operator=\"in\">\\n                    <value>181310001</value>\\n                    <value>181310013</value>\\n                    <value>181310019</value>\\n                    <value>181310005</value>\\n                    <value>2</value>\\n               </condition>\\n               <condition attribute=\"cog_competition\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n          </filter>\\n     </entity>\\n</fetch>',",
-						"     manifestType: 'model') ~> donororder",
-						"source(output(",
-						"          {@odata.etag} as string,",
-						"          cog_account as string,",
-						"          cog_bankdetails as string,",
-						"          cog_contact as string,",
-						"          transactioncurrencyid as string,",
-						"          cog_division as string,",
-						"          cog_paymentmethod as string,",
-						"          cog_transactionamount as string,",
-						"          cog_transactiondate as string,",
-						"          cog_transactionfrom as string,",
-						"          cog_transactionid as string,",
-						"          cog_transactionno as string,",
-						"          statuscode as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" mapping=\"logical\" no-lock=\"false\" distinct=\"true\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_paymentmethod\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <attribute name=\"cog_division\"/>\\n          <attribute name=\"cog_bankdetails\"/>\\n          <attribute name=\"cog_transactionfrom\"/>\\n          <attribute name=\"cog_transactiondate\"/> \\n          <filter type=\"and\">\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n               <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n          </filter>       \\n     </entity>\\n</fetch>',",
-						"     manifestType: 'model') ~> transaction",
-						"DerivedDonorOrderKey, DerivedTransactionKey join(DonorOrderKey == TransactionKey,",
-						"     joinType:'inner',",
-						"     matchType:'exact',",
-						"     ignoreSpaces: false,",
-						"     broadcast: 'auto')~> joindonorordertransaction",
-						"donororder derive(DonorOrderKey = cog_transactiondate+toString(cog_donororderfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_competition)+iif(cog_donororderfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod),",
-						"          Target = 'cog_transaction') ~> DerivedDonorOrderKey",
-						"transaction derive(TransactionKey = cog_transactiondate+toString(cog_transactionfrom)+iif(equals(isNull(cog_bankdetails),true()),' ',cog_bankdetails)+toString(cog_division)+iif(cog_transactionfrom=='181310000',cog_contact,cog_account)+toString(cog_paymentmethod)) ~> DerivedTransactionKey",
-						"joindonorordertransaction derive(new_statuscode = case(\r",
-						"donororder@statuscode=='181310001','181310013',\r",
-						"donororder@statuscode=='2','181310019'\r",
-						")) ~> submittecdolumns",
-						"submittecdolumns sink(allowSchemaDrift: false,",
-						"     validateSchema: false,",
-						"     input(",
-						"          cog_donororderid as string,",
-						"          cog_transactionid as string",
-						"     ),",
-						"     partitionFileNames:[('MG_DO_Monthend_Aggregation-'+toString(currentUTC()+hours(2))+'.csv')],",
-						"     truncate: true,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     skipDuplicateMapInputs: true,",
-						"     skipDuplicateMapOutputs: true,",
-						"     mapColumn(",
-						"          cog_donororderid,",
-						"          cog_transactionid",
-						"     ),",
-						"     partitionBy('hash', 1)) ~> mgaggregationfile"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Sandbox_DonorOrder')]",
-				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
-				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_Transactions')]"
-			]
-		},
-		{
-			"name": "[concat(parameters('factoryName'), '/MG DO Monthend Create File')]",
-			"type": "Microsoft.DataFactory/factories/dataflows",
-			"apiVersion": "2018-06-01",
-			"properties": {
-				"type": "MappingDataFlow",
-				"typeProperties": {
-					"sources": [
-						{
-							"dataset": {
-								"referenceName": "Sandbox_Transaction",
-								"type": "DatasetReference"
-							},
-							"name": "transaction"
-						}
-					],
-					"sinks": [
-						{
-							"dataset": {
-								"referenceName": "MG_DO_Monthend_temporary",
-								"type": "DatasetReference"
-							},
-							"name": "CreateFileTemp"
-						},
-						{
-							"dataset": {
-								"referenceName": "MG_DO_Monthend_history",
-								"type": "DatasetReference"
-							},
-							"name": "CreateFileHistory"
-						}
-					],
-					"transformations": [
-						{
-							"name": "derivedColumns"
-						},
-						{
-							"name": "windowIndex"
-						}
-					],
-					"scriptLines": [
-						"parameters{",
-						"     submissiondate as string ('2022-12-21'),",
-						"     division as string ('MG'),",
-						"     paymentmethod as string ('DO'),",
-						"     actiondate as string ('2022-12-21')",
-						"}",
-						"source(output(",
-						"          {@odata.etag} as string,",
-						"          cog_account as string,",
-						"          cog_contact as string,",
-						"          transactioncurrencyid as string,",
-						"          cog_accountholder as string,",
-						"          cog_accountnumber as string,",
-						"          cog_branchcode as string,",
-						"          cog_donornumber as string,",
-						"          cog_expireydate as string,",
-						"          cog_transactionamount as string,",
-						"          cog_transactiondate as string,",
-						"          cog_transactionid as string,",
-						"          cog_transactionno as string,",
-						"          statecode as string,",
-						"          statuscode as string",
-						"     ),",
-						"     allowSchemaDrift: true,",
-						"     validateSchema: false,",
-						"     query: '<fetch version=\"1.0\" output-format=\"xml-platform\" mapping=\"logical\" distinct=\"false\" no-lock=\"false\">\\n     <entity name=\"cog_transaction\">\\n          <attribute name=\"cog_transactionno\"/>\\n          <attribute name=\"cog_transactionamount\"/>\\n          <attribute name=\"cog_transactionid\"/>\\n          <order attribute=\"cog_transactionno\" descending=\"true\"/>\\n          <attribute name=\"cog_accountholder\"/>\\n          <attribute name=\"cog_accountnumber\"/>\\n          <attribute name=\"cog_expireydate\"/>\\n          <attribute name=\"cog_account\"/>\\n          <attribute name=\"cog_contact\"/>\\n          <attribute name=\"statecode\"/>\\n          <attribute name=\"statuscode\"/>\\n          <attribute name=\"cog_transactiondate\"/>\\n          <attribute name=\"cog_donornumber\"/>\\n          <attribute name=\"cog_branchcode\"/>\\n          <filter type=\"and\">\\n               <condition attribute=\"statecode\" operator=\"eq\" value=\"0\"/>\\n               <condition attribute=\"statuscode\" operator=\"eq\" value=\"1\"/>\\n               <condition attribute=\"cog_division\" operator=\"eq\" value=\"181310001\"/>\\n                <condition attribute=\"cog_preferreddebitorderdate\" operator=\"eq\" value=\"181310002\"/>\\n               <condition attribute=\"cog_paymentmethod\" operator=\"eq\" value=\"181310003\"/>\\n          </filter>\\n     </entity>\\n</fetch>') ~> transaction",
-						"transaction derive(Field1 = '0000000000',",
-						"          {Customer Number} = cog_donornumber,",
-						"          {Type of Service} = 'A',",
-						"          {Name of Member} = upper(cog_accountholder),",
-						"          {Account Name} = replace(upper(cog_accountholder),' ',''),",
-						"          {Account Number} = cog_accountnumber,",
-						"          Filler2 = '          ',",
-						"          {Branch Code} = cog_branchcode,",
-						"          {Type of Account} = '1',",
-						"          Description = '                    ',",
-						"          {Nominated Account} = '02',",
-						"          Filler3 = '00000',",
-						"          Amount = concat(replace(cog_transactionamount,'.',''),'0'),",
-						"          {Amount Arrear} = '00000000000',",
-						"          {Max Amount} = '99999999999',",
-						"          {Capital Amount} = '00000000000',",
-						"          {Special Amount} = '00000000000',",
-						"          {Action Date} = toString($submissiondate,'yyyy-mm-dd'),",
-						"          {Cancellation Date} = '00000000000',",
-						"          Frequency = '01',",
-						"          Filler4 = '  ',",
-						"          {Record Type Code} = '00',",
-						"          {Entry Class Code} = '00') ~> derivedColumns",
-						"derivedColumns window(asc({@odata.etag}, true),",
-						"     index = rowNumber()) ~> windowIndex",
-						"windowIndex sink(allowSchemaDrift: false,",
-						"     validateSchema: false,",
-						"     input(",
-						"          Field1 as string,",
-						"          {Customer Number} as string,",
-						"          {Type of Service} as string,",
-						"          {Name of member} as string,",
-						"          {Account Name} as string,",
-						"          {Account Number} as string,",
-						"          Filler2 as string,",
-						"          {Branch Code} as string,",
-						"          {Type of Account} as string,",
-						"          Description as string,",
-						"          {Nominated Account} as string,",
-						"          Filler3 as string,",
-						"          Amount as string,",
-						"          {Amount Arrear} as string,",
-						"          {Max Amount} as string,",
-						"          {Capital Amount} as string,",
-						"          {Special Amount} as string,",
-						"          {Action Date} as string,",
-						"          {Cancellation Date} as string,",
-						"          Frequency as string,",
-						"          Filler4 as string,",
-						"          {Record Type Code} as string,",
-						"          {Entry Class Code} as string",
-						"     ),",
-						"     filePattern:($division+'_'+$paymentmethod+'_monthend_'+$submissiondate+'.csv'),",
-						"     truncate: true,",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     mapColumn(",
-						"          Field1,",
-						"          {Customer Number},",
-						"          {Type of Service},",
-						"          {Name of member} = {Name of Member},",
-						"          {Account Name},",
-						"          {Account Number},",
-						"          Filler2,",
-						"          {Branch Code},",
-						"          {Type of Account},",
-						"          Description,",
-						"          {Nominated Account},",
-						"          Filler3,",
-						"          Amount,",
-						"          {Amount Arrear},",
-						"          {Max Amount},",
-						"          {Capital Amount},",
-						"          {Special Amount},",
-						"          {Action Date},",
-						"          {Cancellation Date},",
-						"          Frequency,",
-						"          Filler4,",
-						"          {Record Type Code},",
-						"          {Entry Class Code}",
-						"     )) ~> CreateFileTemp",
-						"windowIndex sink(allowSchemaDrift: false,",
-						"     validateSchema: false,",
-						"     input(",
-						"          Field1 as string,",
-						"          {Customer Number} as string,",
-						"          {Type of Service} as string,",
-						"          {Name of member} as string,",
-						"          {Account Name} as string,",
-						"          {Account Number} as string,",
-						"          Filler2 as string,",
-						"          {Branch Code} as string,",
-						"          {Type of Account} as string,",
-						"          Description as string,",
-						"          {Nominated Account} as string,",
-						"          Filler3 as string,",
-						"          Amount as string,",
-						"          {Amount Arrear} as string,",
-						"          {Max Amount} as string,",
-						"          {Capital Amount} as string,",
-						"          {Special Amount} as string,",
-						"          {Action Date} as string,",
-						"          {Cancellation Date} as string,",
-						"          Frequency as string,",
-						"          Filler4 as string,",
-						"          {Record Type Code} as string,",
-						"          {Entry Class Code} as string",
-						"     ),",
-						"     filePattern:($division+'_'+$paymentmethod+'_monthend_'+$submissiondate+'.csv'),",
-						"     umask: 0022,",
-						"     preCommands: [],",
-						"     postCommands: [],",
-						"     mapColumn(",
-						"          Field1,",
-						"          {Customer Number},",
-						"          {Type of Service},",
-						"          {Name of member} = {Name of Member},",
-						"          {Account Name},",
-						"          {Account Number},",
-						"          Filler2,",
-						"          {Branch Code},",
-						"          {Type of Account},",
-						"          Description,",
-						"          {Nominated Account},",
-						"          Filler3,",
-						"          Amount,",
-						"          {Amount Arrear},",
-						"          {Max Amount},",
-						"          {Capital Amount},",
-						"          {Special Amount},",
-						"          {Action Date},",
-						"          {Cancellation Date},",
-						"          Frequency,",
-						"          Filler4,",
-						"          {Record Type Code},",
-						"          {Entry Class Code}",
-						"     )) ~> CreateFileHistory"
-					]
-				}
-			},
-			"dependsOn": [
-				"[concat(variables('factoryId'), '/datasets/Sandbox_Transaction')]",
-				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_temporary')]",
-				"[concat(variables('factoryId'), '/datasets/MG_DO_Monthend_history')]"
 			]
 		}
 	]
